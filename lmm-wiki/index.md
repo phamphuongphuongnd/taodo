@@ -10,13 +10,12 @@ updated: 2026-10-22
 > Wiki vận hành theo phương pháp Karpathy "LLM Wiki". Quy tắc đầy đủ ở [[SCHEMA]].
 
 ## Tổng quan dự án
-*(chưa khởi tạo — điền khi chốt ý tưởng)*
-- **Tên:** …
-- **Mục đích:** …
-- **Loại dự án:** …
-- **Ngôn ngữ & stack:** …
-- **Thư mục chính:** …
-- **Lệnh:** chạy … · test … · kiểm tra biên dịch …
+- **Tên:** Tọa Độ (`toado`, mã định danh `com.phuong.toado`).
+- **Mục đích:** đo vị trí hiện tại offline, hiện tọa độ dạng `21°01'43"N 105°48'12"E`, tách thành cặp số và tra Bảng số Thiên Cung.
+- **Loại dự án:** app mobile native Android + iOS, không có server.
+- **Ngôn ngữ & stack:** Dart / Flutter, `geolocator`, `shared_preferences`.
+- **Thư mục chính:** `mobile/` (`mobile/lib/`, `mobile/test/`); ý nghĩa các cung sửa ở `mobile/lib/thien_cung_data.dart`.
+- **Lệnh** (chạy trong `mobile/`, Flutter ở `C:\src\flutter\bin\flutter`, chưa có trong PATH): chạy `flutter run` · test `flutter test` · kiểm tra biên dịch `flutter analyze`.
 
 ## Bộ luật & nhật ký
 - [[SCHEMA]] — quy ước trang + 3 thao tác Ingest / Query / Lint.
