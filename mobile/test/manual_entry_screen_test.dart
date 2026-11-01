@@ -8,6 +8,11 @@ import 'package:toado/main.dart';
 import 'package:toado/manual_entry_screen.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
+import 'package:toado/widgets.dart';
+
+Finder _coords(String text) => find.byWidgetPredicate(
+  (widget) => widget is CoordsDisplay && widget.coordsText == text,
+);
 
 class _FakeLocationService implements LocationService {
   final _controller = StreamController<LocationState>.broadcast(sync: true);
@@ -56,6 +61,9 @@ Future<_FakeLocationService> _pumpApp(
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
+  tester.platformDispatcher.accessibilityFeaturesTestValue =
+      const FakeAccessibilityFeatures(disableAnimations: true);
+  addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
 
   final service = _FakeLocationService();
   await tester.pumpWidget(
@@ -132,7 +140,7 @@ void main() {
       await _tapView(tester, 'Xem');
 
       expect(find.byType(ResultScreen), findsOneWidget);
-      expect(find.text('21°01\'43"N 105°48\'12"E'), findsOneWidget);
+      expect(_coords('21°01\'43"N 105°48\'12"E'), findsOneWidget);
       expect(find.text('31'), findsOneWidget);
     });
 
@@ -141,7 +149,7 @@ void main() {
       await _openManualEntry(tester, 'Nhập tay');
       await _tapView(tester, 'Xem');
 
-      expect(find.text('00°00\'00"N 00°00\'00"E'), findsOneWidget);
+      expect(_coords('00°00\'00"N 00°00\'00"E'), findsOneWidget);
     });
 
     testWidgets('chọn S và W', (tester) async {
@@ -154,7 +162,7 @@ void main() {
       await tester.pumpAndSettle();
       await _tapView(tester, 'Xem');
 
-      expect(find.text('21°01\'43"S 105°48\'12"W'), findsOneWidget);
+      expect(_coords('21°01\'43"S 105°48\'12"W'), findsOneWidget);
     });
 
     testWidgets('phút từ 60 báo lỗi và không mở kết quả', (tester) async {
@@ -204,7 +212,10 @@ void main() {
       await _openManualEntry(tester, 'Nhập tay');
       await _fill(tester, ['21']);
       await _tapView(tester, 'Xem');
-      await tester.tap(find.byType(CupertinoNavigationBarBackButton));
+      await tester.tap(find.descendant(
+      of: find.byType(BackLink),
+      matching: find.byType(CupertinoButton),
+    ));
       await tester.pumpAndSettle();
 
       expect(find.byType(ManualEntryScreen), findsOneWidget);

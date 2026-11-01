@@ -6,10 +6,8 @@ import 'package:flutter/services.dart';
 import 'coords.dart';
 import 'language_store.dart';
 import 'result_screen.dart';
-
-const _secondaryText = Color(0xFFAEAEB2);
-const _warningText = Color(0xFFFF9F0A);
-const _fieldBackground = Color(0xFF1C1C1E);
+import 'theme.dart';
+import 'widgets.dart';
 
 /// Nhập độ, phút, giây bằng tay rồi xem kết quả như tọa độ đo được.
 class ManualEntryScreen extends StatefulWidget {
@@ -20,49 +18,51 @@ class ManualEntryScreen extends StatefulWidget {
 }
 
 class _ManualEntryScreenState extends State<ManualEntryScreen> {
-  final _latDeg = TextEditingController();
-  final _latMin = TextEditingController();
-  final _latSec = TextEditingController();
-  final _lonDeg = TextEditingController();
-  final _lonMin = TextEditingController();
-  final _lonSec = TextEditingController();
+  final _controllers = {
+    for (final field in ManualField.values) field: TextEditingController(),
+  };
   bool _north = true;
   bool _east = true;
-  bool _invalid = false;
+  Set<ManualField> _invalid = const {};
 
   @override
   void dispose() {
-    _latDeg.dispose();
-    _latMin.dispose();
-    _latSec.dispose();
-    _lonDeg.dispose();
-    _lonMin.dispose();
-    _lonSec.dispose();
+    for (final controller in _controllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
   /// Ô trống tính là 0.
-  int _value(TextEditingController field) => int.tryParse(field.text) ?? 0;
+  int _value(ManualField field) => int.tryParse(_controllers[field]!.text) ?? 0;
 
   void _clearError() {
-    if (_invalid) setState(() => _invalid = false);
+    if (_invalid.isNotEmpty) setState(() => _invalid = const {});
   }
 
   void _openResult() {
-    final coordsText = formatManualCoords(
-      latDeg: _value(_latDeg),
-      latMin: _value(_latMin),
-      latSec: _value(_latSec),
-      north: _north,
-      lonDeg: _value(_lonDeg),
-      lonMin: _value(_lonMin),
-      lonSec: _value(_lonSec),
-      east: _east,
+    final invalid = invalidManualFields(
+      latDeg: _value(ManualField.latDeg),
+      latMin: _value(ManualField.latMin),
+      latSec: _value(ManualField.latSec),
+      lonDeg: _value(ManualField.lonDeg),
+      lonMin: _value(ManualField.lonMin),
+      lonSec: _value(ManualField.lonSec),
     );
-    if (coordsText == null) {
-      setState(() => _invalid = true);
+    if (invalid.isNotEmpty) {
+      setState(() => _invalid = invalid);
       return;
     }
+    final coordsText = formatManualCoords(
+      latDeg: _value(ManualField.latDeg),
+      latMin: _value(ManualField.latMin),
+      latSec: _value(ManualField.latSec),
+      north: _north,
+      lonDeg: _value(ManualField.lonDeg),
+      lonMin: _value(ManualField.lonMin),
+      lonSec: _value(ManualField.lonSec),
+      east: _east,
+    )!;
     unawaited(
       Navigator.of(context).push(
         CupertinoPageRoute<void>(
@@ -75,83 +75,153 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
   @override
   Widget build(BuildContext context) {
     final strings = LanguageScope.of(context).strings;
+    final metrics = AppMetrics.of(context);
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        leading: CupertinoNavigationBarBackButton(
-          color: CupertinoColors.white,
-          previousPageTitle: strings.back,
-        ),
-        middle: Text(
-          strings.manualEntryTitle,
-          style: const TextStyle(color: CupertinoColors.white),
-        ),
-        border: null,
-        transitionBetweenRoutes: false,
-      ),
+      backgroundColor: AppColors.screen,
       child: SafeArea(
-        child: ListView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-          children: [
-            _CoordinateFields(
-              label: strings.latitude,
-              degrees: _latDeg,
-              minutes: _latMin,
-              seconds: _latSec,
-              onChanged: _clearError,
-              positiveLabel: 'N',
-              positiveSpoken: strings.north,
-              negativeLabel: 'S',
-              negativeSpoken: strings.south,
-              isPositive: _north,
-              onHemisphereChanged: (value) => setState(() {
-                _north = value;
-                _invalid = false;
-              }),
-            ),
-            const SizedBox(height: 28),
-            _CoordinateFields(
-              label: strings.longitude,
-              degrees: _lonDeg,
-              minutes: _lonMin,
-              seconds: _lonSec,
-              onChanged: _clearError,
-              positiveLabel: 'E',
-              positiveSpoken: strings.east,
-              negativeLabel: 'W',
-              negativeSpoken: strings.west,
-              isPositive: _east,
-              onHemisphereChanged: (value) => setState(() {
-                _east = value;
-                _invalid = false;
-              }),
-            ),
-            if (_invalid) ...[
-              const SizedBox(height: 20),
-              Semantics(
-                liveRegion: true,
-                child: Text(
-                  strings.invalidCoords,
-                  style: const TextStyle(
-                    color: _warningText,
-                    fontSize: 15,
-                    height: 1.35,
-                  ),
+        child: LayoutBuilder(
+          builder: (context, viewport) => SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: viewport.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    BackLink(label: strings.back),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        metrics.homeMargin,
+                        8,
+                        metrics.homeMargin,
+                        24,
+                      ),
+                      child: Text(
+                        strings.manualEntryTitle,
+                        style: appText(
+                          size: 32,
+                          weight: 800,
+                          letterSpacing: -0.64,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: metrics.pageMargin,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _CoordinateCard(
+                            title: strings.latitude,
+                            fields: const [
+                              ManualField.latDeg,
+                              ManualField.latMin,
+                              ManualField.latSec,
+                            ],
+                            controllers: _controllers,
+                            invalid: _invalid,
+                            onChanged: _clearError,
+                            positive: ('N', strings.north),
+                            negative: ('S', strings.south),
+                            isPositive: _north,
+                            onHemisphereChanged: (value) => setState(() {
+                              _north = value;
+                              _invalid = const {};
+                            }),
+                          ),
+                          const SizedBox(height: 16),
+                          _CoordinateCard(
+                            title: strings.longitude,
+                            fields: const [
+                              ManualField.lonDeg,
+                              ManualField.lonMin,
+                              ManualField.lonSec,
+                            ],
+                            controllers: _controllers,
+                            invalid: _invalid,
+                            onChanged: _clearError,
+                            positive: ('E', strings.east),
+                            negative: ('W', strings.west),
+                            isPositive: _east,
+                            onHemisphereChanged: (value) => setState(() {
+                              _east = value;
+                              _invalid = const {};
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        metrics.pageMargin,
+                        16,
+                        metrics.pageMargin,
+                        28,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (_invalid.isNotEmpty) ...[
+                            _ErrorBox(strings.invalidCoords),
+                            const SizedBox(height: 14),
+                          ],
+                          PrimaryButton(
+                            label: strings.view,
+                            onPressed: _openResult,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-            const SizedBox(height: 28),
-            CupertinoButton(
-              color: CupertinoColors.white,
-              foregroundColor: const Color(0xFF000000),
-              onPressed: _openResult,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorBox extends StatelessWidget {
+  const _ErrorBox(this.message);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          color: AppColors.warningSurface,
+          border: Border.all(color: AppColors.warningBoxBorder),
+          borderRadius: const BorderRadius.all(Radius.circular(18)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 1),
+              child: Icon(
+                CupertinoIcons.exclamationmark_triangle,
+                size: 20,
+                color: AppColors.warning,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
               child: Text(
-                strings.view,
-                style: const TextStyle(
-                  color: Color(0xFF000000),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                message,
+                style: appText(
+                  size: 14,
+                  weight: 500,
+                  color: AppColors.warning,
+                  height: 1.5,
                 ),
               ),
             ),
@@ -162,145 +232,302 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
   }
 }
 
-class _CoordinateFields extends StatelessWidget {
-  const _CoordinateFields({
-    required this.label,
-    required this.degrees,
-    required this.minutes,
-    required this.seconds,
+class _CoordinateCard extends StatelessWidget {
+  const _CoordinateCard({
+    required this.title,
+    required this.fields,
+    required this.controllers,
+    required this.invalid,
     required this.onChanged,
-    required this.positiveLabel,
-    required this.positiveSpoken,
-    required this.negativeLabel,
-    required this.negativeSpoken,
+    required this.positive,
+    required this.negative,
     required this.isPositive,
     required this.onHemisphereChanged,
   });
 
-  final String label;
-  final TextEditingController degrees;
-  final TextEditingController minutes;
-  final TextEditingController seconds;
+  final String title;
+
+  /// Ba ô theo thứ tự độ, phút, giây.
+  final List<ManualField> fields;
+  final Map<ManualField, TextEditingController> controllers;
+  final Set<ManualField> invalid;
   final VoidCallback onChanged;
-  final String positiveLabel;
-  final String positiveSpoken;
-  final String negativeLabel;
-  final String negativeSpoken;
+  final (String, String) positive;
+  final (String, String) negative;
   final bool isPositive;
   final ValueChanged<bool> onHemisphereChanged;
 
   @override
   Widget build(BuildContext context) {
     final strings = LanguageScope.of(context).strings;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(color: _secondaryText, fontSize: 15),
+    final units = [
+      ('°', strings.degrees, 3),
+      ("'", strings.minutes, 2),
+      ('"', strings.seconds, 2),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        border: Border.all(color: AppColors.cardBorder),
+        borderRadius: const BorderRadius.all(Radius.circular(24)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(title, style: appText(size: 17, weight: 700)),
               ),
-            ),
-            CupertinoSlidingSegmentedControl<bool>(
-              groupValue: isPositive,
-              onValueChanged: (value) {
-                if (value != null) onHemisphereChanged(value);
-              },
-              children: {
-                true: Text(positiveLabel, semanticsLabel: positiveSpoken),
-                false: Text(negativeLabel, semanticsLabel: negativeSpoken),
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: _NumberField(
-                controller: degrees,
-                maxLength: 3,
-                unit: '°',
-                spokenLabel: '$label, ${strings.degrees}',
-                onChanged: onChanged,
+              _HemisphereSwitch(
+                positive: positive,
+                negative: negative,
+                isPositive: isPositive,
+                onChanged: onHemisphereChanged,
               ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _NumberField(
-                controller: minutes,
-                maxLength: 2,
-                unit: "'",
-                spokenLabel: '$label, ${strings.minutes}',
-                onChanged: onChanged,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _NumberField(
-                controller: seconds,
-                maxLength: 2,
-                unit: '"',
-                spokenLabel: '$label, ${strings.seconds}',
-                onChanged: onChanged,
-              ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var index = 0; index < 3; index++) ...[
+                if (index > 0) const SizedBox(width: 8),
+                Expanded(
+                  child: _NumberField(
+                    controller: controllers[fields[index]]!,
+                    unit: units[index].$1,
+                    label: units[index].$2,
+                    maxLength: units[index].$3,
+                    spokenLabel: '$title, ${units[index].$2}',
+                    invalidLabel: strings.invalidField,
+                    hasError: invalid.contains(fields[index]),
+                    onChanged: onChanged,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _NumberField extends StatelessWidget {
+class _HemisphereSwitch extends StatelessWidget {
+  const _HemisphereSwitch({
+    required this.positive,
+    required this.negative,
+    required this.isPositive,
+    required this.onChanged,
+  });
+
+  final (String, String) positive;
+  final (String, String) negative;
+  final bool isPositive;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: const ShapeDecoration(
+        color: AppColors.field,
+        shape: StadiumBorder(),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _HemisphereOption(
+            option: positive,
+            selected: isPositive,
+            onPressed: () => onChanged(true),
+          ),
+          const SizedBox(width: 4),
+          _HemisphereOption(
+            option: negative,
+            selected: !isPositive,
+            onPressed: () => onChanged(false),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HemisphereOption extends StatelessWidget {
+  const _HemisphereOption({
+    required this.option,
+    required this.selected,
+    required this.onPressed,
+  });
+
+  final (String, String) option;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      selected: selected,
+      child: CupertinoButton(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(52, 44),
+        pressedOpacity: 0.7,
+        onPressed: onPressed,
+        child: Container(
+          width: 52,
+          height: 44,
+          alignment: Alignment.center,
+          decoration: ShapeDecoration(
+            color: selected ? AppColors.text : null,
+            shape: const StadiumBorder(),
+          ),
+          child: Text(
+            option.$1,
+            semanticsLabel: option.$2,
+            textScaler: TextScaler.noScaling,
+            style: appText(
+              size: 15,
+              weight: selected ? 800 : 700,
+              color: selected ? AppColors.screen : AppColors.label,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NumberField extends StatefulWidget {
   const _NumberField({
     required this.controller,
-    required this.maxLength,
     required this.unit,
+    required this.label,
+    required this.maxLength,
     required this.spokenLabel,
+    required this.invalidLabel,
+    required this.hasError,
     required this.onChanged,
   });
 
   final TextEditingController controller;
-  final int maxLength;
   final String unit;
+  final String label;
+  final int maxLength;
   final String spokenLabel;
+  final String invalidLabel;
+  final bool hasError;
   final VoidCallback onChanged;
 
   @override
+  State<_NumberField> createState() => _NumberFieldState();
+}
+
+class _NumberFieldState extends State<_NumberField> {
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChanged);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChanged);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChanged() => setState(() {});
+
+  @override
   Widget build(BuildContext context) {
+    final hasError = widget.hasError;
+    final borderColor = hasError
+        ? AppColors.warningBorder
+        : _focusNode.hasFocus
+        ? AppColors.accent
+        : const Color(0x00000000);
+    final accent = hasError ? AppColors.warning : AppColors.muted;
+
     final field = CupertinoTextField(
-      controller: controller,
+      controller: widget.controller,
+      focusNode: _focusNode,
       keyboardType: TextInputType.number,
       textAlign: TextAlign.center,
+      textAlignVertical: TextAlignVertical.center,
       textInputAction: TextInputAction.next,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(maxLength),
+        LengthLimitingTextInputFormatter(widget.maxLength),
       ],
-      onChanged: (_) => onChanged(),
+      onChanged: (_) => widget.onChanged(),
       placeholder: '0',
-      placeholderStyle: const TextStyle(color: _secondaryText, fontSize: 22),
-      style: const TextStyle(
-        color: CupertinoColors.white,
-        fontSize: 22,
-        fontFeatures: [FontFeature.tabularFigures()],
+      placeholderStyle: appText(
+        size: 30,
+        weight: 700,
+        color: AppColors.fieldHint,
+        tabular: true,
       ),
-      suffix: Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Text(
-          unit,
-          style: const TextStyle(color: _secondaryText, fontSize: 20),
-        ),
+      style: appText(
+        size: 30,
+        weight: 700,
+        color: hasError ? AppColors.warning : AppColors.text,
+        tabular: true,
       ),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-      decoration: const BoxDecoration(
-        color: _fieldBackground,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+      padding: const EdgeInsets.only(left: 6, right: 22),
+      decoration: BoxDecoration(
+        color: hasError ? AppColors.warningSurface : AppColors.field,
+        border: Border.all(color: borderColor, width: 1.5),
+        borderRadius: const BorderRadius.all(Radius.circular(18)),
       ),
     );
-    return Semantics(label: spokenLabel, child: field);
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 76,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Semantics(
+                  label: hasError
+                      ? '${widget.spokenLabel}, ${widget.invalidLabel}'
+                      : widget.spokenLabel,
+                  child: field,
+                ),
+              ),
+              Positioned(
+                top: 12,
+                right: 12,
+                child: ExcludeSemantics(
+                  child: Text(
+                    widget.unit,
+                    textScaler: TextScaler.noScaling,
+                    style: appText(size: 16, weight: 400, color: accent),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        ExcludeSemantics(
+          child: Text(
+            widget.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: appText(
+              size: 12,
+              weight: hasError ? 700 : 400,
+              color: accent,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

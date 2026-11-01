@@ -1,0 +1,37 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-01T00:00:00Z" },
+  "title": "Tọa Độ – Giao diện mobile",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "1 · Chính — đã có tọa độ" },
+    "Home-GPS.dc.html": { "x": 470, "y": 0, "w": 390, "h": 844, "title": "1b · Chính — chờ GPS" },
+    "Home-Quyen.dc.html": { "x": 940, "y": 0, "w": 390, "h": 844, "title": "1c · Chính — chưa cấp quyền" },
+    "Home-Tat.dc.html": { "x": 1410, "y": 0, "w": 390, "h": 844, "title": "1d · Chính — định vị đang tắt" },
+    "Nhap-Trong.dc.html": { "x": 0, "y": 964, "w": 390, "h": 844, "title": "2 · Nhập tọa độ — mới vào" },
+    "Nhap-Loi.dc.html": { "x": 470, "y": 964, "w": 390, "h": 844, "title": "2b · Nhập tọa độ — báo lỗi" },
+    "Ket-qua.dc.html": { "x": 940, "y": 964, "w": 390, "h": 844, "title": "3 · Kết quả — bình thường" },
+    "Ket-qua-khong-khop.dc.html": { "x": 1410, "y": 964, "w": 390, "h": 844, "title": "3c · Kết quả — không khớp số nào" },
+    "Ket-qua-canh-bao.dc.html": { "x": 1880, "y": 964, "w": 390, "h": 844, "title": "3b · Kết quả — có cảnh báo, danh sách dài" },
+    "Main-Android.dc.html": { "x": 0, "y": 1928, "w": 360, "h": 800, "title": "Android 360×800 · Chính" },
+    "Ket-qua-Android.dc.html": { "x": 440, "y": 1928, "w": 360, "h": 800, "title": "Android 360×800 · Kết quả" }
+  },
+  "order": [
+    "Main.dc.html",
+    "Home-GPS.dc.html",
+    "Home-Quyen.dc.html",
+    "Home-Tat.dc.html",
+    "Nhap-Trong.dc.html",
+    "Nhap-Loi.dc.html",
+    "Ket-qua.dc.html",
+    "Ket-qua-khong-khop.dc.html",
+    "Ket-qua-canh-bao.dc.html",
+    "Main-Android.dc.html",
+    "Ket-qua-Android.dc.html"
+  ],
+  "notes": {
+    "t1": { "x": 0, "y": -260, "text": "Tọa Độ — giao diện mobile (tối)", "kind": "title1", "maxW": 1800 }
+  },
+  "designSystems": []
+}

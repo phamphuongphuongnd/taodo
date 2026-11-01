@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart'
+    show LicenseEntryWithLineBreaks, LicenseRegistry;
 import 'package:flutter/material.dart' show DefaultMaterialLocalizations;
 import 'package:flutter/services.dart';
 
@@ -9,8 +11,14 @@ import 'language_store.dart';
 import 'location_screen.dart';
 import 'location_service.dart';
 import 'strings.dart';
+import 'theme.dart';
 
 void main() {
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks(const [
+      'Manrope',
+    ], await rootBundle.loadString('assets/fonts/OFL.txt'));
+  });
   runApp(
     ToaDoApp(
       locationService: GeolocatorLocationService(),
@@ -37,20 +45,33 @@ class ToaDoApp extends StatefulWidget {
   State<ToaDoApp> createState() => _ToaDoAppState();
 }
 
-class _ToaDoAppState extends State<ToaDoApp> {
+class _ToaDoAppState extends State<ToaDoApp> with WidgetsBindingObserver {
   /// `null` khi chưa đọc xong lựa chọn đã lưu.
   AppLanguage? _language;
+
+  /// Người dùng chưa chọn ngôn ngữ thì đi theo ngôn ngữ máy.
+  bool _followsDevice = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     unawaited(_loadLanguage());
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     unawaited(widget.locationService.dispose());
     super.dispose();
+  }
+
+  // Lúc app khởi động, nền tảng có thể chưa báo ngôn ngữ thật của máy.
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    if (!_followsDevice || widget.deviceLocale != null) return;
+    if (locales == null || locales.isEmpty) return;
+    setState(() => _language = defaultLanguage(locales.first));
   }
 
   Future<void> _loadLanguage() async {
@@ -62,10 +83,12 @@ class _ToaDoAppState extends State<ToaDoApp> {
     }
     if (!mounted) return;
     final device = widget.deviceLocale ?? PlatformDispatcher.instance.locale;
+    _followsDevice = saved == null;
     setState(() => _language = saved ?? defaultLanguage(device));
   }
 
   void _changeLanguage(AppLanguage language) {
+    _followsDevice = false;
     setState(() => _language = language);
     unawaited(_saveLanguage(language));
   }
@@ -82,7 +105,7 @@ class _ToaDoAppState extends State<ToaDoApp> {
   Widget build(BuildContext context) {
     final language = _language;
     if (language == null) {
-      return const ColoredBox(color: Color(0xFF000000));
+      return const ColoredBox(color: AppColors.screen);
     }
     return LanguageScope(
       language: language,
@@ -90,7 +113,7 @@ class _ToaDoAppState extends State<ToaDoApp> {
       child: CupertinoApp(
         title: 'Tọa Độ',
         debugShowCheckedModeBanner: false,
-        color: const Color(0xFF000000),
+        color: AppColors.screen,
         // Locale này chỉ dành cho nhãn có sẵn của Cupertino, vốn chỉ có tiếng
         // Anh. Chữ của app đi qua LanguageScope.
         locale: const Locale('en'),
@@ -100,11 +123,14 @@ class _ToaDoAppState extends State<ToaDoApp> {
           DefaultCupertinoLocalizations.delegate,
           DefaultWidgetsLocalizations.delegate,
         ],
-        theme: const CupertinoThemeData(
+        theme: CupertinoThemeData(
           brightness: Brightness.dark,
-          primaryColor: CupertinoColors.white,
-          scaffoldBackgroundColor: Color(0xFF000000),
-          barBackgroundColor: Color(0xFF000000),
+          primaryColor: AppColors.text,
+          scaffoldBackgroundColor: AppColors.screen,
+          barBackgroundColor: AppColors.screen,
+          textTheme: CupertinoTextThemeData(
+            textStyle: appText(size: 16, weight: 400),
+          ),
         ),
         builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,

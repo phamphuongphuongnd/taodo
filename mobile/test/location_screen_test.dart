@@ -10,6 +10,7 @@ import 'package:toado/main.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/thien_cung.dart';
+import 'package:toado/widgets.dart';
 
 /// Hà Nội: `21°01'43"N 105°48'12"E`.
 const _hanoi = LocationAvailable(21.02862, 105.80334);
@@ -84,6 +85,10 @@ Future<_FakeLocationService> _pumpApp(
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
+  // Hoạt ảnh lặp sẽ làm pumpAndSettle không bao giờ dừng.
+  tester.platformDispatcher.accessibilityFeaturesTestValue =
+      const FakeAccessibilityFeatures(disableAnimations: true);
+  addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
 
   final service = _FakeLocationService();
   await tester.pumpWidget(
@@ -108,11 +113,18 @@ Future<void> _emit(
 
 Finder _button(String label) => find.widgetWithText(CupertinoButton, label);
 
+Finder _coords(String text) => find.byWidgetPredicate(
+  (widget) => widget is CoordsDisplay && widget.coordsText == text,
+);
+
 VoidCallback? _onPressed(WidgetTester tester, String label) =>
     tester.widget<CupertinoButton>(_button(label)).onPressed;
 
 Future<void> _goBack(WidgetTester tester) async {
-  await tester.tap(find.byType(CupertinoNavigationBarBackButton));
+  await tester.tap(find.descendant(
+      of: find.byType(BackLink),
+      matching: find.byType(CupertinoButton),
+    ));
   await tester.pumpAndSettle();
 }
 
@@ -250,6 +262,8 @@ void main() {
           expect(_onPressed(tester, t.manual), isNotNull);
           expect(service.requestPermissionCount, 0);
 
+          await tester.ensureVisible(_button(t.allow));
+          await tester.pump();
           await tester.tap(_button(t.allow));
           expect(service.requestPermissionCount, 1);
           expect(tester.takeException(), isNull);
@@ -295,7 +309,7 @@ void main() {
           );
           await _emit(tester, service, _hanoi);
 
-          expect(find.text(_hanoiText), findsOneWidget);
+          expect(_coords(_hanoiText), findsOneWidget);
           expect(find.text(t.waiting), findsNothing);
           expect(_onPressed(tester, t.view), isNotNull);
           expect(tester.takeException(), isNull);
@@ -311,10 +325,12 @@ void main() {
           );
           await _emit(tester, service, _longest);
 
-          final text = find.text(_longestText);
-          expect(tester.getBottomLeft(text).dx, greaterThanOrEqualTo(0));
-          expect(tester.getBottomRight(text).dx, lessThanOrEqualTo(size.width));
-          expect(tester.getSize(text).height, lessThan(70));
+          final coords = _coords(_longestText);
+          expect(tester.getBottomLeft(coords).dx, greaterThanOrEqualTo(0));
+          expect(
+            tester.getBottomRight(coords).dx,
+            lessThanOrEqualTo(size.width),
+          );
           expect(tester.takeException(), isNull);
         });
       }
@@ -326,8 +342,8 @@ void main() {
       await _emit(tester, service, _hanoi);
       await _emit(tester, service, _empty);
 
-      expect(find.text(_hanoiText), findsNothing);
-      expect(find.text(_emptyText), findsOneWidget);
+      expect(_coords(_hanoiText), findsNothing);
+      expect(_coords(_emptyText), findsOneWidget);
     });
 
     testWidgets('mất tọa độ thì khóa lại nút Xem', (tester) async {
@@ -336,7 +352,7 @@ void main() {
       await _emit(tester, service, _hanoi);
       await _emit(tester, service, const LocationWaiting());
 
-      expect(find.text(_hanoiText), findsNothing);
+      expect(_coords(_hanoiText), findsNothing);
       expect(_onPressed(tester, 'Xem'), isNull);
     });
 
@@ -357,7 +373,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(ResultScreen), findsOneWidget);
-      expect(find.text(_hanoiText), findsOneWidget);
+      expect(_coords(_hanoiText), findsOneWidget);
       expect(find.text('Quay lại'), findsOneWidget);
       expect(find.text('Chăm Chỉ'), findsOneWidget);
     });
@@ -373,22 +389,22 @@ void main() {
       await _emit(tester, service, _empty);
       await tester.pumpAndSettle();
 
-      expect(find.text(_hanoiText), findsOneWidget);
+      expect(_coords(_hanoiText), findsOneWidget);
       expect(find.text('Chăm Chỉ'), findsOneWidget);
-      expect(find.text(_emptyText), findsNothing);
+      expect(_coords(_emptyText), findsNothing);
 
       await _goBack(tester);
-      expect(find.text(_emptyText), findsOneWidget);
+      expect(_coords(_emptyText), findsOneWidget);
 
       await tester.tap(_button('Xem'));
       await tester.pumpAndSettle();
 
-      expect(find.text(_emptyText), findsOneWidget);
+      expect(_coords(_emptyText), findsOneWidget);
       expect(
         find.text('Tọa độ này không có số nào trong bảng'),
         findsOneWidget,
       );
-      expect(find.text('Kết luận'), findsNothing);
+      expect(find.text('KẾT LUẬN'), findsNothing);
     });
 
     testWidgets('đổi ngôn ngữ áp dụng ngay cho cả hai màn hình', (
@@ -406,11 +422,11 @@ void main() {
 
       expect(find.text(lookupPair('14').single.palaceEn), findsOneWidget);
       expect(find.text('Chăm Chỉ'), findsNothing);
-      expect(find.text(_hanoiText), findsOneWidget);
+      expect(_coords(_hanoiText), findsOneWidget);
 
       await _goBack(tester);
       expect(_button('View'), findsOneWidget);
-      expect(find.text(_hanoiText), findsOneWidget);
+      expect(_coords(_hanoiText), findsOneWidget);
     });
   });
 

@@ -6,6 +6,7 @@ import 'package:toado/language_store.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/thien_cung.dart';
+import 'package:toado/widgets.dart';
 
 /// Tách ra 12, 48, 05, 31, 14, 10, 02; chỉ 12, 31, 14 có trong bảng.
 const _exampleCoords = '21°01\'43"N 105°48\'12"E';
@@ -24,6 +25,14 @@ const _multiPalaceCoords = '10°20\'30"N 40°50\'27"E';
 
 /// Có số 14, thuộc một cung chưa có dữ liệu.
 const _noDataCoords = '10°20\'30"N 40°50\'14"E';
+
+Finder _pair(String pair) => find.byWidgetPredicate(
+  (widget) => widget is PairBox && widget.pair == pair,
+);
+
+Finder _coords(String text) => find.byWidgetPredicate(
+  (widget) => widget is CoordsDisplay && widget.coordsText == text,
+);
 
 Future<void> _pumpResult(
   WidgetTester tester,
@@ -67,19 +76,19 @@ void main() {
   ) async {
     await _pumpResult(tester, _exampleCoords);
 
-    expect(find.text(_exampleCoords), findsOneWidget);
-    expect(find.text('12'), findsOneWidget);
-    expect(find.text('31'), findsOneWidget);
-    expect(find.text('14'), findsOneWidget);
+    expect(_coords(_exampleCoords), findsOneWidget);
+    expect(_pair('12'), findsOneWidget);
+    expect(_pair('31'), findsOneWidget);
+    expect(_pair('14'), findsOneWidget);
     expect(find.text('Chăm Chỉ'), findsOneWidget);
     expect(find.text('Chưa có dữ liệu'), findsNWidgets(2));
     expect(find.text('Thiên Tài (Đại tài)'), findsOneWidget);
     expect(find.text('Tích Lũy Tài Sản'), findsOneWidget);
     expect(find.text(lookupPair('31').single.meaningVi), findsOneWidget);
 
-    final y12 = tester.getTopLeft(find.text('12')).dy;
-    final y31 = tester.getTopLeft(find.text('31')).dy;
-    final y14 = tester.getTopLeft(find.text('14')).dy;
+    final y12 = tester.getTopLeft(_pair('12')).dy;
+    final y31 = tester.getTopLeft(_pair('31')).dy;
+    final y14 = tester.getTopLeft(_pair('14')).dy;
     expect(y12, lessThan(y31));
     expect(y31, lessThan(y14));
   });
@@ -88,20 +97,24 @@ void main() {
     await _pumpResult(tester, _exampleCoords);
 
     for (final hidden in ['48', '05', '10', '02']) {
-      expect(find.text(hidden), findsNothing);
+      expect(_pair(hidden), findsNothing);
     }
   });
 
   testWidgets('một số thuộc nhiều cung thì hiện đủ', (tester) async {
-    await _pumpResult(tester, _multiPalaceCoords);
+    await _pumpResult(
+      tester,
+      _multiPalaceCoords,
+      size: const Size(390, 2000),
+    );
 
-    expect(find.text('27'), findsNWidgets(3));
+    expect(_pair('27'), findsNWidgets(3));
     expect(find.text('Thiên Tài (Tiểu tài)'), findsOneWidget);
     expect(find.text('Thông Minh (IQ cao)'), findsOneWidget);
     expect(find.text('Thần Linh Trời Định (Số trời)'), findsOneWidget);
   });
 
-  testWidgets('phần Kết luận nằm cuối trang', (tester) async {
+  testWidgets('phần Kết luận nằm trên danh sách chi tiết', (tester) async {
     await _pumpResult(tester, _exampleCoords);
 
     final sentence = find.text(
@@ -109,10 +122,10 @@ void main() {
     );
     await _scrollTo(tester, sentence);
 
-    expect(find.text('Kết luận'), findsOneWidget);
+    expect(find.text('KẾT LUẬN'), findsOneWidget);
     expect(
-      tester.getTopLeft(find.text('Kết luận')).dy,
-      greaterThan(tester.getTopLeft(find.text('14')).dy),
+      tester.getTopLeft(find.text('KẾT LUẬN')).dy,
+      lessThan(tester.getTopLeft(_pair('12')).dy),
     );
     expect(find.textContaining('Lưu ý'), findsNothing);
   });
@@ -131,17 +144,17 @@ void main() {
       'This location stands out for $talentLabel, 1 time.',
     );
     await _scrollTo(tester, sentence);
-    expect(find.text('Conclusion'), findsOneWidget);
+    expect(find.text('CONCLUSION'), findsOneWidget);
   });
 
   group('chỉ có cung chưa có dữ liệu', () {
     testWidgets('vẫn hiện cặp số và báo chưa thể kết luận', (tester) async {
       await _pumpResult(tester, _noDataCoords);
 
-      expect(find.text('14'), findsOneWidget);
+      expect(_pair('14'), findsOneWidget);
       expect(find.text('Tích Lũy Tài Sản'), findsOneWidget);
       expect(find.text('Chưa có dữ liệu'), findsOneWidget);
-      expect(find.text('Kết luận'), findsOneWidget);
+      expect(find.text('KẾT LUẬN'), findsOneWidget);
       expect(find.text('Chưa có dữ liệu để kết luận'), findsOneWidget);
     });
 
@@ -157,16 +170,14 @@ void main() {
     testWidgets('chỉ hiện tọa độ và một câu', (tester) async {
       await _pumpResult(tester, _emptyCoords);
 
-      expect(find.text(_emptyCoords), findsOneWidget);
+      expect(_coords(_emptyCoords), findsOneWidget);
       expect(
         find.text('Tọa độ này không có số nào trong bảng'),
         findsOneWidget,
       );
-      expect(find.text('Kết luận'), findsNothing);
-      expect(
-        find.descendant(of: find.byType(ListView), matching: find.byType(Text)),
-        findsNWidgets(2),
-      );
+      expect(find.text('KẾT LUẬN'), findsNothing);
+      expect(find.text('CHI TIẾT THEO CẶP SỐ'), findsNothing);
+      expect(find.byType(ListView), findsNothing);
     });
 
     testWidgets('tiếng Anh', (tester) async {
@@ -176,7 +187,7 @@ void main() {
         find.text('These coordinates have no numbers in the table'),
         findsOneWidget,
       );
-      expect(find.text('Conclusion'), findsNothing);
+      expect(find.text('CONCLUSION'), findsNothing);
     });
   });
 
@@ -231,11 +242,11 @@ void main() {
 
             expect(tester.takeException(), isNull);
             expect(
-              tester.getBottomRight(find.text(coords)).dx,
+              tester.getBottomRight(_coords(coords)).dx,
               lessThanOrEqualTo(size.width),
             );
             await tester.fling(
-              find.byType(ListView),
+              find.byType(Scrollable).last,
               const Offset(0, -600),
               800,
             );

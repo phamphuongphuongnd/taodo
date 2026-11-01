@@ -142,12 +142,19 @@ void main() {
   ).firstMatch(pubspec)![1]!;
   final packages = parseLockPackages(File('pubspec.lock').readAsStringSync());
   final roots = packageRoots('.dart_tool/package_config.json');
+  // Font đóng gói trong assets, không nằm trong pubspec.lock.
+  const font = LockedPackage(
+    name: 'Manrope',
+    version: 'google-fonts-2026-11-01',
+    source: 'asset',
+  );
 
   final sbom = buildSbom(
     appVersion: version,
     created: DateTime.now(),
-    packages: packages,
-    licenseOf: (package) => _licenseOf(package, roots),
+    packages: [...packages, font],
+    licenseOf: (package) =>
+        package == font ? 'OFL-1.1' : _licenseOf(package, roots),
   );
   final output = File('../docs/compliance/sbom.spdx.json')
     ..createSync(recursive: true)

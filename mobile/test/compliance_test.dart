@@ -10,6 +10,7 @@ import 'package:toado/location_service.dart';
 import 'package:toado/main.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
+import 'package:toado/theme.dart';
 
 class _FakeLocationService implements LocationService {
   final _controller = StreamController<LocationState>.broadcast(sync: true);
@@ -65,6 +66,9 @@ Future<_FakeLocationService> _pumpApp(
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
   addTearDown(tester.view.reset);
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+  tester.platformDispatcher.accessibilityFeaturesTestValue =
+      const FakeAccessibilityFeatures(disableAnimations: true);
+  addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
 
   final service = _FakeLocationService();
   await tester.pumpWidget(
@@ -79,6 +83,11 @@ Future<_FakeLocationService> _pumpApp(
 
 Future<void> _tapButton(WidgetTester tester, String label) async {
   await tester.tap(find.widgetWithText(CupertinoButton, label));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openAbout(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('about-button')));
   await tester.pumpAndSettle();
 }
 
@@ -174,13 +183,16 @@ void main() {
   });
 
   group('chữ phóng to 200%', () {
-    for (final size in const [Size(390, 844), Size(320, 568)]) {
+    for (final size in const [
+      Size(390, 844),
+      Size(360, 800),
+      Size(320, 568),
+    ]) {
       for (final language in AppLanguage.values) {
         final manual = language == AppLanguage.vi
             ? 'Nhập tay'
             : 'Enter manually';
         final view = language == AppLanguage.vi ? 'Xem' : 'View';
-        final about = language == AppLanguage.vi ? 'Thông tin' : 'About';
 
         testWidgets('$size ${language.name}: các trạng thái', (tester) async {
           final service = await _pumpApp(
@@ -235,7 +247,7 @@ void main() {
             size: size,
             textScale: 2,
           );
-          await _tapButton(tester, about);
+          await _openAbout(tester);
 
           expect(find.byType(AboutScreen), findsOneWidget);
           expect(tester.takeException(), isNull);
@@ -244,10 +256,43 @@ void main() {
     }
   });
 
+  group('độ tương phản chữ', () {
+    double contrast(Color foreground, Color background) {
+      final a = foreground.computeLuminance();
+      final b = background.computeLuminance();
+      final light = a > b ? a : b;
+      final dark = a > b ? b : a;
+      return (light + 0.05) / (dark + 0.05);
+    }
+
+    const pairs = {
+      'chữ chính trên nền': (AppColors.text, AppColors.screen),
+      'nhãn trên nền': (AppColors.label, AppColors.screen),
+      'chữ phụ trên nền': (AppColors.muted, AppColors.screen),
+      'chữ phụ trên thẻ': (AppColors.muted, AppColors.card),
+      'ý nghĩa trên thẻ': (AppColors.meaning, AppColors.card),
+      'nhấn trên nền': (AppColors.accent, AppColors.screen),
+      'nhấn trên thẻ Kết luận': (AppColors.accent, AppColors.conclusionSurface),
+      'nhấn trên ô cặp số': (AppColors.accent, AppColors.pairSurface),
+      'gợi ý trên ô nhập': (AppColors.fieldHint, AppColors.field),
+      'cảnh báo trên nền': (AppColors.warning, AppColors.screen),
+      'cảnh báo trên nền cảnh báo': (AppColors.warning, AppColors.warningSurface),
+      'chữ nút chính': (AppColors.screen, AppColors.text),
+      'nút Xem bị khóa': (AppColors.muted, AppColors.disabledSurface),
+      'nút ngôn ngữ': (AppColors.pillText, AppColors.pillSurface),
+    };
+
+    for (final MapEntry(key: name, value: pair) in pairs.entries) {
+      test('$name đạt 4.5:1', () {
+        expect(contrast(pair.$1, pair.$2), greaterThanOrEqualTo(4.5));
+      });
+    }
+  });
+
   group('trang Thông tin', () {
     testWidgets('có đủ quyền riêng tư, lưu ý, liên hệ', (tester) async {
       await _pumpApp(tester);
-      await _tapButton(tester, 'Thông tin');
+      await _openAbout(tester);
 
       expect(find.text('Quyền riêng tư'), findsOneWidget);
       expect(find.textContaining('không gửi đi đâu'), findsOneWidget);
@@ -268,7 +313,7 @@ void main() {
 
     testWidgets('tiếng Anh', (tester) async {
       await _pumpApp(tester, language: AppLanguage.en);
-      await _tapButton(tester, 'About');
+      await _openAbout(tester);
 
       expect(find.text('Privacy'), findsOneWidget);
       expect(find.textContaining('never sent anywhere'), findsOneWidget);
@@ -276,7 +321,7 @@ void main() {
 
     testWidgets('mở được danh sách giấy phép', (tester) async {
       await _pumpApp(tester);
-      await _tapButton(tester, 'Thông tin');
+      await _openAbout(tester);
       final licenses = find.widgetWithText(
         CupertinoButton,
         'Giấy phép mã nguồn mở',

@@ -1,5 +1,7 @@
 # Thiết kế app Tọa Độ
 
+Giao diện theo `design-mobile/screens/`. Tài liệu này mô tả hành vi; màu, cỡ chữ và bố cục nằm ở thiết kế đó.
+
 App Flutter native cho Android và iOS. Đo vị trí bằng GPS của máy, chạy offline, không có server.
 
 ## Màn hình chính

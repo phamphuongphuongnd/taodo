@@ -10,11 +10,11 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 
 | Lớp | Yêu cầu | Trạng thái | Bằng chứng hoặc việc còn lại |
 |---|---|---|---|
-| 1 | Kiểm thử có quy trình | Đạt | 205 test tự động, `flutter analyze` sạch; `quy-trinh-phat-hanh.md` |
-| 1 | Tài liệu yêu cầu và thiết kế | Đạt | `docs/superpowers/specs/2026-10-31-toado-design.md` |
+| 1 | Kiểm thử có quy trình | Đạt | 309 test tự động, `flutter analyze` sạch; `quy-trinh-phat-hanh.md` |
+| 1 | Tài liệu yêu cầu và thiết kế | Đạt | `docs/superpowers/specs/2026-10-31-toado-design.md`, thiết kế giao diện ở `design-mobile/` |
 | 2 | Kênh tiếp nhận lỗ hổng | Một phần | `SECURITY.md`. Bạn cần theo dõi trang issues |
-| 2 | SBOM và kiểm kê giấy phép | Đạt | `sbom.spdx.json`, SPDX 2.3, 78 gói; `mobile/tool/generate_sbom.dart` |
-| 2 | Giấy phép nguồn mở trong app | Đạt | Trang Thông tin, đã mở trên Galaxy A13 |
+| 2 | SBOM và kiểm kê giấy phép | Đạt | `sbom.spdx.json`, SPDX 2.3, 78 gói và font Manrope (OFL-1.1); `mobile/tool/generate_sbom.dart` |
+| 2 | Giấy phép nguồn mở trong app | Đạt | Trang Thông tin, đã mở trên Galaxy A13, có cả Manrope |
 | 2 | Lưu trữ tối thiểu | Đạt | Chỉ lưu ngôn ngữ; `allowBackup=false` trong bản release |
 | 2 | Không có đường truyền mạng | Đạt | Bản release không có quyền Internet (`aapt`) |
 | 2 | Bản phát hành không dùng khóa debug | **Bạn làm** | `build.gradle.kts` đã sẵn sàng; bạn tạo keystore theo `quy-trinh-phat-hanh.md` |
@@ -53,6 +53,7 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 ## Rủi ro đã biết
 
 - **Kết quả cung nhạy với sai số GPS:** lệch 1 giây tọa độ có thể đổi cặp số; trang Thông tin nêu tọa độ có sai số.
+- **Icon app:** Android 12 trở lên đặt icon hiện tại lên nền trắng, nên ở màn hình mở app và ngoài launcher thấy ô đen trong khung trắng. Cần icon thích ứng trước khi phát hành.
 - **Định vị trên máy có Google Play Services:** trên Galaxy A13, nhà cung cấp `fused` do Play Services phục vụ. Hành vi trên máy không có dịch vụ này chưa được test.
 - **Thời hạn 60 giây mất tín hiệu** là lựa chọn của nhóm phát triển, đã test tự động nhưng chưa test bằng cách chặn tín hiệu thật.
 - **Bản tiếng Anh** do Claude dịch, chưa có người bản ngữ rà soát.

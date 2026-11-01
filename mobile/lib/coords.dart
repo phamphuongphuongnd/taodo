@@ -23,6 +23,60 @@ String? formatManualCoords({
       '${_dmsText(lonTotal, east ? 'E' : 'W')}';
 }
 
+enum ManualField { latDeg, latMin, latSec, lonDeg, lonMin, lonSec }
+
+/// Các ô nhập tay bị sai, rỗng khi [formatManualCoords] nhận được.
+Set<ManualField> invalidManualFields({
+  required int latDeg,
+  required int latMin,
+  required int latSec,
+  required int lonDeg,
+  required int lonMin,
+  required int lonSec,
+}) {
+  Iterable<ManualField> check(
+    int degrees,
+    int minutes,
+    int seconds,
+    int maxDegrees,
+    ManualField degreeField,
+    ManualField minuteField,
+    ManualField secondField,
+  ) sync* {
+    final badMinutes = minutes < 0 || minutes > 59;
+    final badSeconds = seconds < 0 || seconds > 59;
+    if (badMinutes) yield minuteField;
+    if (badSeconds) yield secondField;
+    final total = degrees * 3600 + minutes * 60 + seconds;
+    if (degrees < 0 ||
+        degrees > maxDegrees ||
+        (!badMinutes && !badSeconds && total > maxDegrees * 3600)) {
+      yield degreeField;
+    }
+  }
+
+  return {
+    ...check(
+      latDeg,
+      latMin,
+      latSec,
+      90,
+      ManualField.latDeg,
+      ManualField.latMin,
+      ManualField.latSec,
+    ),
+    ...check(
+      lonDeg,
+      lonMin,
+      lonSec,
+      180,
+      ManualField.lonDeg,
+      ManualField.lonMin,
+      ManualField.lonSec,
+    ),
+  };
+}
+
 int? _manualTotalSeconds(
   int degrees,
   int minutes,

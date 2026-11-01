@@ -5,7 +5,7 @@
   "name": "toado-1.0.0",
   "documentNamespace": "https://github.com/phamphuongphuongnd/taodo/sbom/1.0.0",
   "creationInfo": {
-    "created": "2026-11-01T07:55:46Z",
+    "created": "2026-11-01T10:25:37Z",
     "creators": [
       "Tool: toado-generate_sbom"
     ]
@@ -1100,6 +1100,16 @@
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
       "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "Manrope",
+      "SPDXID": "SPDXRef-Package-Manrope",
+      "versionInfo": "google-fonts-2026-11-01",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "OFL-1.1",
+      "licenseDeclared": "OFL-1.1",
+      "copyrightText": "NOASSERTION"
     }
   ],
   "relationships": [
@@ -1497,6 +1507,11 @@
       "spdxElementId": "SPDXRef-Package-toado",
       "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-yaml"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-Manrope"
     }
   ]
 }

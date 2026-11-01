@@ -20,6 +20,7 @@ class AppStrings {
     required this.latitude,
     required this.longitude,
     required this.invalidCoords,
+    required this.invalidField,
     required this.waitingForGps,
     required this.permissionDisclosure,
     required this.allowLocation,
@@ -41,6 +42,13 @@ class AppStrings {
     required this.contactTitle,
     required this.contactBody,
     required this.licenses,
+    required this.detailsTitle,
+    required this.warningBadge,
+    required this.gpsMeasuring,
+    required this.liveOffline,
+    required this.latitudeLabel,
+    required this.longitudeLabel,
+    required this.changeLanguage,
     required this.spokenLatitude,
     required this.spokenLongitude,
     required this.degrees,
@@ -68,6 +76,7 @@ class AppStrings {
     invalidCoords:
         'Tọa độ không hợp lệ. Phút và giây phải dưới 60, vĩ độ tối đa 90°, '
         'kinh độ tối đa 180°.',
+    invalidField: 'sai',
     waitingForGps: 'Đang chờ tín hiệu GPS…',
     permissionDisclosure:
         'Tọa Độ dùng vị trí chính xác của điện thoại để hiện kinh độ và vĩ độ. '
@@ -78,7 +87,7 @@ class AppStrings {
     locationOff: 'Định vị đang tắt',
     openSettings: 'Mở Cài đặt',
     back: 'Quay lại',
-    conclusionTitle: 'Kết luận',
+    conclusionTitle: 'KẾT LUẬN',
     noMatches: 'Tọa độ này không có số nào trong bảng',
     noData: 'Chưa có dữ liệu',
     noConclusion: 'Chưa có dữ liệu để kết luận',
@@ -103,6 +112,13 @@ class AppStrings {
         'Báo lỗi hoặc góp ý tại trang dưới đây. Lỗi bảo mật xin chỉ ghi vắn tắt '
         'và không đăng chi tiết công khai.',
     licenses: 'Giấy phép mã nguồn mở',
+    detailsTitle: 'CHI TIẾT THEO CẶP SỐ',
+    warningBadge: 'CẢNH BÁO',
+    gpsMeasuring: 'GPS ĐANG ĐO',
+    liveOffline: 'Cập nhật liên tục · Chạy offline',
+    latitudeLabel: 'VĨ ĐỘ',
+    longitudeLabel: 'KINH ĐỘ',
+    changeLanguage: 'Đổi ngôn ngữ sang English',
     spokenLatitude: 'Vĩ độ',
     spokenLongitude: 'kinh độ',
     degrees: 'độ',
@@ -125,6 +141,7 @@ class AppStrings {
     invalidCoords:
         'Invalid coordinates. Minutes and seconds must be under 60, latitude '
         'at most 90°, longitude at most 180°.',
+    invalidField: 'invalid',
     waitingForGps: 'Waiting for GPS signal…',
     permissionDisclosure:
         'Toa Do uses your phone\'s precise location to show your longitude and '
@@ -136,7 +153,7 @@ class AppStrings {
     locationOff: 'Location services are off',
     openSettings: 'Open Settings',
     back: 'Back',
-    conclusionTitle: 'Conclusion',
+    conclusionTitle: 'CONCLUSION',
     noMatches: 'These coordinates have no numbers in the table',
     noData: 'No data yet',
     noConclusion: 'Not enough data for a conclusion',
@@ -161,6 +178,13 @@ class AppStrings {
         'Report bugs or send feedback on the page below. For security issues, '
         'please keep the report brief and do not post details publicly.',
     licenses: 'Open source licenses',
+    detailsTitle: 'DETAILS BY NUMBER PAIR',
+    warningBadge: 'WARNING',
+    gpsMeasuring: 'GPS ACTIVE',
+    liveOffline: 'Live updates · Works offline',
+    latitudeLabel: 'LATITUDE',
+    longitudeLabel: 'LONGITUDE',
+    changeLanguage: 'Change language to Vietnamese',
     spokenLatitude: 'Latitude',
     spokenLongitude: 'longitude',
     degrees: 'degrees',
@@ -182,6 +206,7 @@ class AppStrings {
   final String latitude;
   final String longitude;
   final String invalidCoords;
+  final String invalidField;
   final String waitingForGps;
   final String permissionDisclosure;
   final String allowLocation;
@@ -203,6 +228,13 @@ class AppStrings {
   final String contactTitle;
   final String contactBody;
   final String licenses;
+  final String detailsTitle;
+  final String warningBadge;
+  final String gpsMeasuring;
+  final String liveOffline;
+  final String latitudeLabel;
+  final String longitudeLabel;
+  final String changeLanguage;
   final String spokenLatitude;
   final String spokenLongitude;
   final String degrees;
@@ -234,6 +266,12 @@ class AppStrings {
     };
     return '${int.parse(part[1]!)} $degrees ${int.parse(part[2]!)} $minutes '
         '${int.parse(part[3]!)} $seconds $hemisphere';
+  }
+
+  /// Số dòng trong danh sách chi tiết.
+  String rowCount(int count) {
+    if (_isVi) return '$count dòng';
+    return count == 1 ? '1 row' : '$count rows';
   }
 
   /// Ghép `a, b và c` hoặc `a, b and c`.
