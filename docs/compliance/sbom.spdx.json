@@ -1,0 +1,1502 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "toado-1.0.0",
+  "documentNamespace": "https://github.com/phamphuongphuongnd/taodo/sbom/1.0.0",
+  "creationInfo": {
+    "created": "2026-11-01T07:55:46Z",
+    "creators": [
+      "Tool: toado-generate_sbom"
+    ]
+  },
+  "packages": [
+    {
+      "name": "toado",
+      "SPDXID": "SPDXRef-Package-toado",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/phamphuongphuongnd/taodo",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "archive",
+      "SPDXID": "SPDXRef-Package-archive",
+      "versionInfo": "4.5.2",
+      "downloadLocation": "https://pub.dev/packages/archive/versions/4.5.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0d58d1fa1fddf6588251ccf2819f3fb3b6d0452c1b2813ac7413a05592bfbefe"
+        }
+      ]
+    },
+    {
+      "name": "args",
+      "SPDXID": "SPDXRef-Package-args",
+      "versionInfo": "2.7.0",
+      "downloadLocation": "https://pub.dev/packages/args/versions/2.7.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "async",
+      "SPDXID": "SPDXRef-Package-async",
+      "versionInfo": "2.13.1",
+      "downloadLocation": "https://pub.dev/packages/async/versions/2.13.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "boolean_selector",
+      "SPDXID": "SPDXRef-Package-boolean-selector",
+      "versionInfo": "2.1.2",
+      "downloadLocation": "https://pub.dev/packages/boolean_selector/versions/2.1.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "8aab1771e1243a5063b8b0ff68042d67334e3feab9e95b9490f9a6ebf73b42ea"
+        }
+      ]
+    },
+    {
+      "name": "characters",
+      "SPDXID": "SPDXRef-Package-characters",
+      "versionInfo": "1.4.1",
+      "downloadLocation": "https://pub.dev/packages/characters/versions/1.4.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "checked_yaml",
+      "SPDXID": "SPDXRef-Package-checked-yaml",
+      "versionInfo": "2.0.4",
+      "downloadLocation": "https://pub.dev/packages/checked_yaml/versions/2.0.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "959525d3162f249993882720d52b7e0c833978df229be20702b33d48d91de70f"
+        }
+      ]
+    },
+    {
+      "name": "cli_util",
+      "SPDXID": "SPDXRef-Package-cli-util",
+      "versionInfo": "0.4.2",
+      "downloadLocation": "https://pub.dev/packages/cli_util/versions/0.4.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "clock",
+      "SPDXID": "SPDXRef-Package-clock",
+      "versionInfo": "1.1.3",
+      "downloadLocation": "https://pub.dev/packages/clock/versions/1.1.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "collection",
+      "SPDXID": "SPDXRef-Package-collection",
+      "versionInfo": "1.19.1",
+      "downloadLocation": "https://pub.dev/packages/collection/versions/1.19.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
+        }
+      ]
+    },
+    {
+      "name": "crypto",
+      "SPDXID": "SPDXRef-Package-crypto",
+      "versionInfo": "3.0.8",
+      "downloadLocation": "https://pub.dev/packages/crypto/versions/3.0.8",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "cupertino_icons",
+      "SPDXID": "SPDXRef-Package-cupertino-icons",
+      "versionInfo": "1.0.9",
+      "downloadLocation": "https://pub.dev/packages/cupertino_icons/versions/1.0.9",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "41e005c33bd814be4d3096aff55b1908d419fde52ca656c8c47719ec745873cd"
+        }
+      ]
+    },
+    {
+      "name": "dbus",
+      "SPDXID": "SPDXRef-Package-dbus",
+      "versionInfo": "0.7.15",
+      "downloadLocation": "https://pub.dev/packages/dbus/versions/0.7.15",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MPL-2.0",
+      "licenseDeclared": "MPL-2.0",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "fake_async",
+      "SPDXID": "SPDXRef-Package-fake-async",
+      "versionInfo": "1.3.3",
+      "downloadLocation": "https://pub.dev/packages/fake_async/versions/1.3.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
+        }
+      ]
+    },
+    {
+      "name": "ffi",
+      "SPDXID": "SPDXRef-Package-ffi",
+      "versionInfo": "2.2.0",
+      "downloadLocation": "https://pub.dev/packages/ffi/versions/2.2.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6d7fd89431262d8f3125e81b50d3847a091d846eafcd4fdb88dd06f36d705a45"
+        }
+      ]
+    },
+    {
+      "name": "ffi_leak_tracker",
+      "SPDXID": "SPDXRef-Package-ffi-leak-tracker",
+      "versionInfo": "0.1.2",
+      "downloadLocation": "https://pub.dev/packages/ffi_leak_tracker/versions/0.1.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "4093d4ef9ca06ffe2786e73bfb25e22aa92112b9bb4ec941f11e3e6b61489a97"
+        }
+      ]
+    },
+    {
+      "name": "file",
+      "SPDXID": "SPDXRef-Package-file",
+      "versionInfo": "7.0.1",
+      "downloadLocation": "https://pub.dev/packages/file/versions/7.0.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "fixnum",
+      "SPDXID": "SPDXRef-Package-fixnum",
+      "versionInfo": "1.1.1",
+      "downloadLocation": "https://pub.dev/packages/fixnum/versions/1.1.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flutter",
+      "SPDXID": "SPDXRef-Package-flutter",
+      "versionInfo": "0.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flutter_launcher_icons",
+      "SPDXID": "SPDXRef-Package-flutter-launcher-icons",
+      "versionInfo": "0.14.4",
+      "downloadLocation": "https://pub.dev/packages/flutter_launcher_icons/versions/0.14.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "10f13781741a2e3972126fae08393d3c4e01fa4cd7473326b94b72cf594195e7"
+        }
+      ]
+    },
+    {
+      "name": "flutter_lints",
+      "SPDXID": "SPDXRef-Package-flutter-lints",
+      "versionInfo": "6.0.0",
+      "downloadLocation": "https://pub.dev/packages/flutter_lints/versions/6.0.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3105dc8492f6183fb076ccf1f351ac3d60564bff92e20bfc4af9cc1651f4e7e1"
+        }
+      ]
+    },
+    {
+      "name": "flutter_test",
+      "SPDXID": "SPDXRef-Package-flutter-test",
+      "versionInfo": "0.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "flutter_web_plugins",
+      "SPDXID": "SPDXRef-Package-flutter-web-plugins",
+      "versionInfo": "0.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "geoclue",
+      "SPDXID": "SPDXRef-Package-geoclue",
+      "versionInfo": "0.1.1",
+      "downloadLocation": "https://pub.dev/packages/geoclue/versions/0.1.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MPL-2.0",
+      "licenseDeclared": "MPL-2.0",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "geolocator",
+      "SPDXID": "SPDXRef-Package-geolocator",
+      "versionInfo": "14.1.2",
+      "downloadLocation": "https://pub.dev/packages/geolocator/versions/14.1.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2b3bc0f7320d5a5fa02f8209ffcf1aaa7c2cabb7b2bedbc0cfeb5ff2778b8b09"
+        }
+      ]
+    },
+    {
+      "name": "geolocator_android",
+      "SPDXID": "SPDXRef-Package-geolocator-android",
+      "versionInfo": "5.2.1",
+      "downloadLocation": "https://pub.dev/packages/geolocator_android/versions/5.2.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "geolocator_apple",
+      "SPDXID": "SPDXRef-Package-geolocator-apple",
+      "versionInfo": "2.4.3",
+      "downloadLocation": "https://pub.dev/packages/geolocator_apple/versions/2.4.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "geolocator_linux",
+      "SPDXID": "SPDXRef-Package-geolocator-linux",
+      "versionInfo": "0.2.6",
+      "downloadLocation": "https://pub.dev/packages/geolocator_linux/versions/0.2.6",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3da7420f11c3496511a5bd3c18fd67b88e5659f12e46b7ce00a788f6996e850a"
+        }
+      ]
+    },
+    {
+      "name": "geolocator_platform_interface",
+      "SPDXID": "SPDXRef-Package-geolocator-platform-interface",
+      "versionInfo": "4.4.1",
+      "downloadLocation": "https://pub.dev/packages/geolocator_platform_interface/versions/4.4.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "geolocator_web",
+      "SPDXID": "SPDXRef-Package-geolocator-web",
+      "versionInfo": "4.1.4",
+      "downloadLocation": "https://pub.dev/packages/geolocator_web/versions/4.1.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "19e485a0f8d6a88abcf9c53cba3a4105e14b7435ed8ac1c108c067b938fe8429"
+        }
+      ]
+    },
+    {
+      "name": "geolocator_windows",
+      "SPDXID": "SPDXRef-Package-geolocator-windows",
+      "versionInfo": "0.2.5",
+      "downloadLocation": "https://pub.dev/packages/geolocator_windows/versions/0.2.5",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "175435404d20278ffd220de83c2ca293b73db95eafbdc8131fe8609be1421eb6"
+        }
+      ]
+    },
+    {
+      "name": "gsettings",
+      "SPDXID": "SPDXRef-Package-gsettings",
+      "versionInfo": "0.2.8",
+      "downloadLocation": "https://pub.dev/packages/gsettings/versions/0.2.8",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MPL-2.0",
+      "licenseDeclared": "MPL-2.0",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1b0ce661f5436d2db1e51f3c4295a49849f03d304003a7ba177d01e3a858249c"
+        }
+      ]
+    },
+    {
+      "name": "http",
+      "SPDXID": "SPDXRef-Package-http",
+      "versionInfo": "1.6.0",
+      "downloadLocation": "https://pub.dev/packages/http/versions/1.6.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
+        }
+      ]
+    },
+    {
+      "name": "http_parser",
+      "SPDXID": "SPDXRef-Package-http-parser",
+      "versionInfo": "4.1.2",
+      "downloadLocation": "https://pub.dev/packages/http_parser/versions/4.1.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "178d74305e7866013777bab2c3d8726205dc5a4dd935297175b19a23a2e66571"
+        }
+      ]
+    },
+    {
+      "name": "image",
+      "SPDXID": "SPDXRef-Package-image",
+      "versionInfo": "4.12.0",
+      "downloadLocation": "https://pub.dev/packages/image/versions/4.12.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "89ed75b2f8231fe676808c5564f9590d728024ded7ac782a7ed8474f1c95b72a"
+        }
+      ]
+    },
+    {
+      "name": "jni",
+      "SPDXID": "SPDXRef-Package-jni",
+      "versionInfo": "1.1.1",
+      "downloadLocation": "https://pub.dev/packages/jni/versions/1.1.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "jni_util",
+      "SPDXID": "SPDXRef-Package-jni-util",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://pub.dev/packages/jni_util/versions/1.0.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1ba86da04a5f2bf18fde2edb235587e70c5b0fc5bd4ba955f46b00942c3fc35f"
+        }
+      ]
+    },
+    {
+      "name": "json_annotation",
+      "SPDXID": "SPDXRef-Package-json-annotation",
+      "versionInfo": "4.12.0",
+      "downloadLocation": "https://pub.dev/packages/json_annotation/versions/4.12.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2a743920d81b7910627f68ee2c9ac1fc0bfee32b9fc3403587d7c6791ca12f80"
+        }
+      ]
+    },
+    {
+      "name": "leak_tracker",
+      "SPDXID": "SPDXRef-Package-leak-tracker",
+      "versionInfo": "11.0.2",
+      "downloadLocation": "https://pub.dev/packages/leak_tracker/versions/11.0.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "33e2e26bdd85a0112ec15400c8cbffea70d0f9c3407491f672a2fad47915e2de"
+        }
+      ]
+    },
+    {
+      "name": "leak_tracker_flutter_testing",
+      "SPDXID": "SPDXRef-Package-leak-tracker-flutter-testing",
+      "versionInfo": "3.0.10",
+      "downloadLocation": "https://pub.dev/packages/leak_tracker_flutter_testing/versions/3.0.10",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1dbc140bb5a23c75ea9c4811222756104fbcd1a27173f0c34ca01e16bea473c1"
+        }
+      ]
+    },
+    {
+      "name": "leak_tracker_testing",
+      "SPDXID": "SPDXRef-Package-leak-tracker-testing",
+      "versionInfo": "3.0.2",
+      "downloadLocation": "https://pub.dev/packages/leak_tracker_testing/versions/3.0.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "8d5a2d49f4a66b49744b23b018848400d23e54caf9463f4eb20df3eb8acb2eb1"
+        }
+      ]
+    },
+    {
+      "name": "lints",
+      "SPDXID": "SPDXRef-Package-lints",
+      "versionInfo": "6.1.0",
+      "downloadLocation": "https://pub.dev/packages/lints/versions/6.1.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "12f842a479589fea194fe5c5a3095abc7be0c1f2ddfa9a0e76aed1dbd26a87df"
+        }
+      ]
+    },
+    {
+      "name": "matcher",
+      "SPDXID": "SPDXRef-Package-matcher",
+      "versionInfo": "0.12.20",
+      "downloadLocation": "https://pub.dev/packages/matcher/versions/0.12.20",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "31bd099b47c10cd1aeb55146a2d46ce0277630ecef3f7dae54ad7873f36696cd"
+        }
+      ]
+    },
+    {
+      "name": "material_color_utilities",
+      "SPDXID": "SPDXRef-Package-material-color-utilities",
+      "versionInfo": "0.13.0",
+      "downloadLocation": "https://pub.dev/packages/material_color_utilities/versions/0.13.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9c337007e82b1889149c82ed242ed1cb24a66044e30979c44912381e9be4c48b"
+        }
+      ]
+    },
+    {
+      "name": "meta",
+      "SPDXID": "SPDXRef-Package-meta",
+      "versionInfo": "1.18.3",
+      "downloadLocation": "https://pub.dev/packages/meta/versions/1.18.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "package_config",
+      "SPDXID": "SPDXRef-Package-package-config",
+      "versionInfo": "3.0.0",
+      "downloadLocation": "https://pub.dev/packages/package_config/versions/3.0.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "package_info_plus",
+      "SPDXID": "SPDXRef-Package-package-info-plus",
+      "versionInfo": "10.2.2",
+      "downloadLocation": "https://pub.dev/packages/package_info_plus/versions/10.2.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "73ef2cd5c11a7548f9b7f6fc2a4f6113de2e64aa2a70de63feede95548822908"
+        }
+      ]
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "SPDXID": "SPDXRef-Package-package-info-plus-platform-interface",
+      "versionInfo": "4.1.0",
+      "downloadLocation": "https://pub.dev/packages/package_info_plus_platform_interface/versions/4.1.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "path",
+      "SPDXID": "SPDXRef-Package-path",
+      "versionInfo": "1.9.1",
+      "downloadLocation": "https://pub.dev/packages/path/versions/1.9.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
+        }
+      ]
+    },
+    {
+      "name": "path_provider_linux",
+      "SPDXID": "SPDXRef-Package-path-provider-linux",
+      "versionInfo": "2.2.2",
+      "downloadLocation": "https://pub.dev/packages/path_provider_linux/versions/2.2.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "58c2005f147315b11e9b4a7bc889cd5203e250cba8e3f012dae259b4972b5c16"
+        }
+      ]
+    },
+    {
+      "name": "path_provider_platform_interface",
+      "SPDXID": "SPDXRef-Package-path-provider-platform-interface",
+      "versionInfo": "2.1.3",
+      "downloadLocation": "https://pub.dev/packages/path_provider_platform_interface/versions/2.1.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "484838772624c3a4b94f1e44a3e19897fee738f2d5c4ce448443b0417f7c9dda"
+        }
+      ]
+    },
+    {
+      "name": "path_provider_windows",
+      "SPDXID": "SPDXRef-Package-path-provider-windows",
+      "versionInfo": "2.3.0",
+      "downloadLocation": "https://pub.dev/packages/path_provider_windows/versions/2.3.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "petitparser",
+      "SPDXID": "SPDXRef-Package-petitparser",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://pub.dev/packages/petitparser/versions/7.0.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "91bd59303e9f769f108f8df05e371341b15d59e995e6806aefab827b58336675"
+        }
+      ]
+    },
+    {
+      "name": "platform",
+      "SPDXID": "SPDXRef-Package-platform",
+      "versionInfo": "3.2.0",
+      "downloadLocation": "https://pub.dev/packages/platform/versions/3.2.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "plugin_platform_interface",
+      "SPDXID": "SPDXRef-Package-plugin-platform-interface",
+      "versionInfo": "2.1.8",
+      "downloadLocation": "https://pub.dev/packages/plugin_platform_interface/versions/2.1.8",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
+        }
+      ]
+    },
+    {
+      "name": "posix",
+      "SPDXID": "SPDXRef-Package-posix",
+      "versionInfo": "6.5.4",
+      "downloadLocation": "https://pub.dev/packages/posix/versions/6.5.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "613646d076944f3acc125830af935b48d4b8a57a388691547bbfd25b434f4d63"
+        }
+      ]
+    },
+    {
+      "name": "shared_preferences",
+      "SPDXID": "SPDXRef-Package-shared-preferences",
+      "versionInfo": "2.5.6",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences/versions/2.5.6",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1e85e0dccf5b4a016077fea7dfbb4a7cb39c759ac1596fcf60c06deadb7da91f"
+        }
+      ]
+    },
+    {
+      "name": "shared_preferences_android",
+      "SPDXID": "SPDXRef-Package-shared-preferences-android",
+      "versionInfo": "2.5.4",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences_android/versions/2.5.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "33b38b07d9ac7d16aff0426c61418752fd3e7a8c7dc8be786c875d6ce673b002"
+        }
+      ]
+    },
+    {
+      "name": "shared_preferences_foundation",
+      "SPDXID": "SPDXRef-Package-shared-preferences-foundation",
+      "versionInfo": "2.5.7",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences_foundation/versions/2.5.7",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2ec3934efa51e46117f23031cc141b8fc878e8525b94ec1ea4f7f586cf1b47ea"
+        }
+      ]
+    },
+    {
+      "name": "shared_preferences_linux",
+      "SPDXID": "SPDXRef-Package-shared-preferences-linux",
+      "versionInfo": "2.4.1",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences_linux/versions/2.4.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "580abfd40f415611503cae30adf626e6656dfb2f0cee8f465ece7b6defb40f2f"
+        }
+      ]
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "SPDXID": "SPDXRef-Package-shared-preferences-platform-interface",
+      "versionInfo": "2.4.2",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences_platform_interface/versions/2.4.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "649dc798a33931919ea356c4305c2d1f81619ea6e92244070b520187b5140ef9"
+        }
+      ]
+    },
+    {
+      "name": "shared_preferences_web",
+      "SPDXID": "SPDXRef-Package-shared-preferences-web",
+      "versionInfo": "2.4.3",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences_web/versions/2.4.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "shared_preferences_windows",
+      "SPDXID": "SPDXRef-Package-shared-preferences-windows",
+      "versionInfo": "2.4.1",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences_windows/versions/2.4.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "94ef0f72b2d71bc3e700e025db3710911bd51a71cefb65cc609dd0d9a982e3c1"
+        }
+      ]
+    },
+    {
+      "name": "sky_engine",
+      "SPDXID": "SPDXRef-Package-sky-engine",
+      "versionInfo": "0.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "source_span",
+      "SPDXID": "SPDXRef-Package-source-span",
+      "versionInfo": "1.10.2",
+      "downloadLocation": "https://pub.dev/packages/source_span/versions/1.10.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "56a02f1f4cd1a2d96303c0144c93bd6d909eea6bee6bf5a0e0b685edbd4c47ab"
+        }
+      ]
+    },
+    {
+      "name": "stack_trace",
+      "SPDXID": "SPDXRef-Package-stack-trace",
+      "versionInfo": "1.12.2",
+      "downloadLocation": "https://pub.dev/packages/stack_trace/versions/1.12.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "277654b3034d17ac6f9f1cb5595db011b1d5d41e8806866db28e0abaa101c490"
+        }
+      ]
+    },
+    {
+      "name": "stream_channel",
+      "SPDXID": "SPDXRef-Package-stream-channel",
+      "versionInfo": "2.1.4",
+      "downloadLocation": "https://pub.dev/packages/stream_channel/versions/2.1.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "969e04c80b8bcdf826f8f16579c7b14d780458bd97f56d107d3950fdbeef059d"
+        }
+      ]
+    },
+    {
+      "name": "string_scanner",
+      "SPDXID": "SPDXRef-Package-string-scanner",
+      "versionInfo": "1.4.1",
+      "downloadLocation": "https://pub.dev/packages/string_scanner/versions/1.4.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "921cd31725b72fe181906c6a94d987c78e3b98c2e205b397ea399d4054872b43"
+        }
+      ]
+    },
+    {
+      "name": "term_glyph",
+      "SPDXID": "SPDXRef-Package-term-glyph",
+      "versionInfo": "1.2.2",
+      "downloadLocation": "https://pub.dev/packages/term_glyph/versions/1.2.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7f554798625ea768a7518313e58f83891c7f5024f88e46e7182a4558850a4b8e"
+        }
+      ]
+    },
+    {
+      "name": "test_api",
+      "SPDXID": "SPDXRef-Package-test-api",
+      "versionInfo": "0.7.12",
+      "downloadLocation": "https://pub.dev/packages/test_api/versions/0.7.12",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2a122cbe059f8b610d3a5415f42e255b6c17b1f21eee1d960f31080237fb4f11"
+        }
+      ]
+    },
+    {
+      "name": "typed_data",
+      "SPDXID": "SPDXRef-Package-typed-data",
+      "versionInfo": "1.4.0",
+      "downloadLocation": "https://pub.dev/packages/typed_data/versions/1.4.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "uuid",
+      "SPDXID": "SPDXRef-Package-uuid",
+      "versionInfo": "4.6.0",
+      "downloadLocation": "https://pub.dev/packages/uuid/versions/4.6.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9b129329f58692f6e6578329498a8fe9fbe98f090beb764ffbb8ee2eadd01dcd"
+        }
+      ]
+    },
+    {
+      "name": "vector_math",
+      "SPDXID": "SPDXRef-Package-vector-math",
+      "versionInfo": "2.4.0",
+      "downloadLocation": "https://pub.dev/packages/vector_math/versions/2.4.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1d774bbdf6b72a0b12122fc1560c9c2d2a67db5a4a4cc2bd8a5c990ab20e3188"
+        }
+      ]
+    },
+    {
+      "name": "vm_service",
+      "SPDXID": "SPDXRef-Package-vm-service",
+      "versionInfo": "15.4.0",
+      "downloadLocation": "https://pub.dev/packages/vm_service/versions/15.4.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "89b11d62e1040ee681af3b4f1c97a803ecbf010c6e8b9c5896ee5b08c3bf7b78"
+        }
+      ]
+    },
+    {
+      "name": "web",
+      "SPDXID": "SPDXRef-Package-web",
+      "versionInfo": "1.1.2",
+      "downloadLocation": "https://pub.dev/packages/web/versions/1.1.2",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "win32",
+      "SPDXID": "SPDXRef-Package-win32",
+      "versionInfo": "6.4.0",
+      "downloadLocation": "https://pub.dev/packages/win32/versions/6.4.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "name": "xdg_directories",
+      "SPDXID": "SPDXRef-Package-xdg-directories",
+      "versionInfo": "1.1.0",
+      "downloadLocation": "https://pub.dev/packages/xdg_directories/versions/1.1.0",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7a3f37b05d989967cdddcbb571f1ea834867ae2faa29725fd085180e0883aa15"
+        }
+      ]
+    },
+    {
+      "name": "xml",
+      "SPDXID": "SPDXRef-Package-xml",
+      "versionInfo": "7.0.1",
+      "downloadLocation": "https://pub.dev/packages/xml/versions/7.0.1",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "67f0aff7be013d107995e9b75bf4e7f2c3ef2dfdb2c8e68024bba0a7fd5756a4"
+        }
+      ]
+    },
+    {
+      "name": "yaml",
+      "SPDXID": "SPDXRef-Package-yaml",
+      "versionInfo": "3.1.4",
+      "downloadLocation": "https://pub.dev/packages/yaml/versions/3.1.4",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-toado"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-archive"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-args"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-async"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-boolean-selector"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-characters"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-checked-yaml"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-cli-util"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-clock"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-collection"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-crypto"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-cupertino-icons"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-dbus"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-fake-async"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-ffi"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-ffi-leak-tracker"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-fixnum"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-flutter"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-flutter-launcher-icons"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-flutter-lints"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-flutter-test"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-flutter-web-plugins"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geoclue"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator-android"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator-apple"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator-linux"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator-platform-interface"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator-web"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-geolocator-windows"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-gsettings"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-http"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-http-parser"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-image"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-jni"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-jni-util"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-json-annotation"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-leak-tracker"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-leak-tracker-flutter-testing"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-leak-tracker-testing"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-lints"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-matcher"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-material-color-utilities"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-meta"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-package-config"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-package-info-plus"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-package-info-plus-platform-interface"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-path"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-path-provider-linux"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-path-provider-platform-interface"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-path-provider-windows"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-petitparser"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-platform"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-plugin-platform-interface"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-posix"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences-android"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences-foundation"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences-linux"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences-platform-interface"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences-web"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-shared-preferences-windows"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-sky-engine"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-source-span"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-stack-trace"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-stream-channel"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-string-scanner"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-term-glyph"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-test-api"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-typed-data"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-uuid"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-vector-math"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-vm-service"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-web"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-win32"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-xdg-directories"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-xml"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-yaml"
+    }
+  ]
+}

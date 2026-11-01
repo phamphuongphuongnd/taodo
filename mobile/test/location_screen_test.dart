@@ -27,6 +27,7 @@ class _FakeLocationService implements LocationService {
   final _controller = StreamController<LocationState>.broadcast(sync: true);
   int refreshCount = 0;
   int pauseCount = 0;
+  int requestPermissionCount = 0;
   int openAppSettingsCount = 0;
   int openLocationSettingsCount = 0;
   int disposeCount = 0;
@@ -41,6 +42,9 @@ class _FakeLocationService implements LocationService {
 
   @override
   Future<void> pause() async => pauseCount++;
+
+  @override
+  Future<void> requestPermission() async => requestPermissionCount++;
 
   @override
   Future<void> openAppSettings() async => openAppSettingsCount++;
@@ -203,6 +207,9 @@ void main() {
         denied: 'Chưa cấp quyền vị trí',
         off: 'Định vị đang tắt',
         settings: 'Mở Cài đặt',
+        allow: 'Cho phép',
+        manual: 'Nhập tay',
+        disclosure: 'không gửi đi đâu',
       ),
       AppLanguage.en: (
         locale: Locale('en'),
@@ -211,6 +218,9 @@ void main() {
         denied: 'Location permission not granted',
         off: 'Location services are off',
         settings: 'Open Settings',
+        allow: 'Allow',
+        manual: 'Enter manually',
+        disclosure: 'never sent anywhere',
       ),
     };
 
@@ -224,6 +234,24 @@ void main() {
           expect(find.text(t.waiting), findsOneWidget);
           expect(find.text(t.settings), findsNothing);
           expect(_onPressed(tester, t.view), isNull);
+          expect(tester.takeException(), isNull);
+        });
+
+        testWidgets('$label: giải thích trước khi xin quyền', (tester) async {
+          final service = await _pumpApp(
+            tester,
+            deviceLocale: t.locale,
+            size: size,
+          );
+          await _emit(tester, service, const LocationPermissionNeeded());
+
+          expect(find.textContaining(t.disclosure), findsOneWidget);
+          expect(_onPressed(tester, t.view), isNull);
+          expect(_onPressed(tester, t.manual), isNotNull);
+          expect(service.requestPermissionCount, 0);
+
+          await tester.tap(_button(t.allow));
+          expect(service.requestPermissionCount, 1);
           expect(tester.takeException(), isNull);
         });
 
@@ -316,7 +344,7 @@ void main() {
       final service = await _pumpApp(tester);
       await _emit(tester, service, _hanoi);
 
-      expect(find.byType(CupertinoButton), findsNWidgets(3));
+      expect(find.byType(CupertinoButton), findsNWidgets(4));
     });
   });
 
@@ -535,11 +563,36 @@ void main() {
       expect(platform.positionListeners, 0);
     });
 
-    test('bị từ chối thì báo trạng thái và chỉ hỏi một lần', () async {
+    test('chưa có quyền thì báo, không tự bật hộp thoại hệ thống', () async {
       platform.permission = LocationPermission.denied;
-      platform.requestResult = LocationPermission.denied;
 
       await service.refresh();
+      await service.refresh();
+      await _settleEvents();
+
+      expect(states.last, isA<LocationPermissionNeeded>());
+      expect(platform.requestCount, 0);
+      expect(platform.positionListeners, 0);
+    });
+
+    test('bấm cho phép mới hỏi, được cấp thì bắt đầu đo', () async {
+      platform.permission = LocationPermission.denied;
+      await service.refresh();
+
+      await service.requestPermission();
+      await _settleEvents();
+
+      expect(platform.requestCount, 1);
+      expect(states.last, isA<LocationWaiting>());
+      expect(platform.positionListeners, 1);
+    });
+
+    test('bị từ chối thì báo trạng thái và không hỏi lại', () async {
+      platform.permission = LocationPermission.denied;
+      platform.requestResult = LocationPermission.denied;
+      await service.refresh();
+
+      await service.requestPermission();
       await service.refresh();
       await _settleEvents();
 
@@ -564,7 +617,7 @@ void main() {
         platform.permission = LocationPermission.denied;
         final gate = platform.requestGate = Completer<void>();
 
-        final first = service.refresh();
+        final first = service.requestPermission();
         final second = service.refresh();
         await _settleEvents();
         expect(platform.requestCount, 1);
@@ -580,7 +633,7 @@ void main() {
     test('cấp quyền trong Cài đặt rồi quay lại thì bắt đầu đo', () async {
       platform.permission = LocationPermission.denied;
       platform.requestResult = LocationPermission.denied;
-      await service.refresh();
+      await service.requestPermission();
 
       platform.permission = LocationPermission.whileInUse;
       await service.refresh();
@@ -634,6 +687,69 @@ void main() {
       platform.positions!.add(_position(3, 4));
       await _settleEvents();
       expect(states.last, isA<LocationAvailable>());
+    });
+
+    group('mất tín hiệu', () {
+      late GeolocatorLocationService shortTimeout;
+      late List<LocationState> shortStates;
+
+      setUp(() {
+        shortTimeout = GeolocatorLocationService(
+          signalTimeout: const Duration(milliseconds: 40),
+        );
+        shortStates = [];
+        shortTimeout.states.listen(shortStates.add);
+      });
+
+      tearDown(() => shortTimeout.dispose());
+
+      test('lâu không có số mới thì về chờ, có số lại thì hiện', () async {
+        await shortTimeout.refresh();
+        platform.positions!.add(_position(1, 2));
+        await _settleEvents();
+        expect(shortStates.last, isA<LocationAvailable>());
+
+        await Future<void>.delayed(const Duration(milliseconds: 80));
+        expect(shortStates.last, isA<LocationWaiting>());
+
+        platform.positions!.add(_position(3, 4));
+        await _settleEvents();
+        expect(shortStates.last, isA<LocationAvailable>());
+      });
+
+      test('số mới liên tục thì không về chờ', () async {
+        await shortTimeout.refresh();
+        for (var i = 0; i < 4; i++) {
+          platform.positions!.add(_position(1, 2));
+          await Future<void>.delayed(const Duration(milliseconds: 15));
+        }
+
+        expect(shortStates.whereType<LocationAvailable>(), hasLength(4));
+        expect(shortStates.last, isA<LocationAvailable>());
+      });
+
+      test('pause thì huỷ hẹn giờ', () async {
+        await shortTimeout.refresh();
+        platform.positions!.add(_position(1, 2));
+        await _settleEvents();
+
+        await shortTimeout.pause();
+        await Future<void>.delayed(const Duration(milliseconds: 80));
+
+        expect(shortStates.last, isA<LocationAvailable>());
+      });
+
+      test('quay lại mà không có số mới thì vẫn về chờ', () async {
+        await shortTimeout.refresh();
+        platform.positions!.add(_position(1, 2));
+        await _settleEvents();
+        await shortTimeout.pause();
+
+        await shortTimeout.refresh();
+        await Future<void>.delayed(const Duration(milliseconds: 80));
+
+        expect(shortStates.last, isA<LocationWaiting>());
+      });
     });
 
     test('nền tảng lỗi thì không sập', () async {

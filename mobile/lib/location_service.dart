@@ -12,6 +12,11 @@ final class LocationWaiting extends LocationState {
   const LocationWaiting();
 }
 
+/// Chưa hỏi quyền trong phiên này: giải thích trước rồi mới xin quyền.
+final class LocationPermissionNeeded extends LocationState {
+  const LocationPermissionNeeded();
+}
+
 final class LocationPermissionDenied extends LocationState {
   const LocationPermissionDenied();
 }
@@ -37,6 +42,10 @@ abstract class LocationService {
   /// Ngừng đo khi app rời màn hình. [refresh] sẽ đo lại.
   Future<void> pause();
 
+  /// Bật hộp thoại xin quyền của hệ thống. Chỉ gọi khi người dùng đã đồng ý ở
+  /// màn hình giải thích.
+  Future<void> requestPermission();
+
   Future<void> openAppSettings();
   Future<void> openLocationSettings();
   Future<void> dispose();
@@ -44,9 +53,18 @@ abstract class LocationService {
 
 /// Đo bằng GPS của máy qua `geolocator`, không gọi mạng.
 class GeolocatorLocationService implements LocationService {
+  GeolocatorLocationService({
+    this.signalTimeout = const Duration(seconds: 60),
+  });
+
+  /// Lâu hơn mức này không có số mới thì coi như mất tín hiệu, để không hiện số
+  /// cũ như thể vừa đo.
+  final Duration signalTimeout;
+
   final _controller = StreamController<LocationState>.broadcast();
   StreamSubscription<Position>? _position;
   StreamSubscription<ServiceStatus>? _serviceStatus;
+  Timer? _signalTimer;
   LocationState _state = const LocationWaiting();
   bool _permissionRequested = false;
   bool _disposed = false;
@@ -66,6 +84,13 @@ class GeolocatorLocationService implements LocationService {
     await _stopPosition();
     await _serviceStatus?.cancel();
     _serviceStatus = null;
+  });
+
+  @override
+  Future<void> requestPermission() => _enqueue(() async {
+    _permissionRequested = true;
+    await Geolocator.requestPermission();
+    if (!_disposed) await _refreshNow();
   });
 
   @override
@@ -89,6 +114,7 @@ class GeolocatorLocationService implements LocationService {
   @override
   Future<void> dispose() async {
     _disposed = true;
+    _signalTimer?.cancel();
     await _position?.cancel();
     await _serviceStatus?.cancel();
     await _controller.close();
@@ -119,14 +145,16 @@ class GeolocatorLocationService implements LocationService {
       return;
     }
 
-    var permission = await Geolocator.checkPermission();
+    final permission = await Geolocator.checkPermission();
+    if (_disposed) return;
+
     // Chỉ hỏi một lần, nếu không người dùng từ chối xong app quay lại sẽ bị hỏi
     // tiếp ngay.
     if (permission == LocationPermission.denied && !_permissionRequested) {
-      _permissionRequested = true;
-      permission = await Geolocator.requestPermission();
+      await _stopPosition();
+      _emit(const LocationPermissionNeeded());
+      return;
     }
-    if (_disposed) return;
 
     if (permission != LocationPermission.whileInUse &&
         permission != LocationPermission.always) {
@@ -140,10 +168,17 @@ class GeolocatorLocationService implements LocationService {
     _position = Geolocator.getPositionStream(
       locationSettings: _locationSettings(),
     ).listen(_onPosition, onError: _onPositionError, onDone: _onPositionDone);
+    if (_state is LocationAvailable) _restartSignalTimer();
   }
 
   void _onPosition(Position position) {
     _emit(LocationAvailable(position.latitude, position.longitude));
+    _restartSignalTimer();
+  }
+
+  void _restartSignalTimer() {
+    _signalTimer?.cancel();
+    _signalTimer = Timer(signalTimeout, () => _emit(const LocationWaiting()));
   }
 
   void _onPositionError(Object error) {
@@ -158,10 +193,12 @@ class GeolocatorLocationService implements LocationService {
 
   void _onPositionDone() {
     _position = null;
+    _signalTimer?.cancel();
     _emit(const LocationWaiting());
   }
 
   Future<void> _stopPosition() async {
+    _signalTimer?.cancel();
     await _position?.cancel();
     _position = null;
   }

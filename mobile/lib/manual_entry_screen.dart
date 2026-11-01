@@ -101,7 +101,9 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
               seconds: _latSec,
               onChanged: _clearError,
               positiveLabel: 'N',
+              positiveSpoken: strings.north,
               negativeLabel: 'S',
+              negativeSpoken: strings.south,
               isPositive: _north,
               onHemisphereChanged: (value) => setState(() {
                 _north = value;
@@ -116,7 +118,9 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
               seconds: _lonSec,
               onChanged: _clearError,
               positiveLabel: 'E',
+              positiveSpoken: strings.east,
               negativeLabel: 'W',
+              negativeSpoken: strings.west,
               isPositive: _east,
               onHemisphereChanged: (value) => setState(() {
                 _east = value;
@@ -125,12 +129,15 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
             ),
             if (_invalid) ...[
               const SizedBox(height: 20),
-              Text(
-                strings.invalidCoords,
-                style: const TextStyle(
-                  color: _warningText,
-                  fontSize: 15,
-                  height: 1.35,
+              Semantics(
+                liveRegion: true,
+                child: Text(
+                  strings.invalidCoords,
+                  style: const TextStyle(
+                    color: _warningText,
+                    fontSize: 15,
+                    height: 1.35,
+                  ),
                 ),
               ),
             ],
@@ -163,7 +170,9 @@ class _CoordinateFields extends StatelessWidget {
     required this.seconds,
     required this.onChanged,
     required this.positiveLabel,
+    required this.positiveSpoken,
     required this.negativeLabel,
+    required this.negativeSpoken,
     required this.isPositive,
     required this.onHemisphereChanged,
   });
@@ -174,12 +183,15 @@ class _CoordinateFields extends StatelessWidget {
   final TextEditingController seconds;
   final VoidCallback onChanged;
   final String positiveLabel;
+  final String positiveSpoken;
   final String negativeLabel;
+  final String negativeSpoken;
   final bool isPositive;
   final ValueChanged<bool> onHemisphereChanged;
 
   @override
   Widget build(BuildContext context) {
+    final strings = LanguageScope.of(context).strings;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -197,8 +209,8 @@ class _CoordinateFields extends StatelessWidget {
                 if (value != null) onHemisphereChanged(value);
               },
               children: {
-                true: Text(positiveLabel),
-                false: Text(negativeLabel),
+                true: Text(positiveLabel, semanticsLabel: positiveSpoken),
+                false: Text(negativeLabel, semanticsLabel: negativeSpoken),
               },
             ),
           ],
@@ -211,6 +223,7 @@ class _CoordinateFields extends StatelessWidget {
                 controller: degrees,
                 maxLength: 3,
                 unit: '°',
+                spokenLabel: '$label, ${strings.degrees}',
                 onChanged: onChanged,
               ),
             ),
@@ -220,6 +233,7 @@ class _CoordinateFields extends StatelessWidget {
                 controller: minutes,
                 maxLength: 2,
                 unit: "'",
+                spokenLabel: '$label, ${strings.minutes}',
                 onChanged: onChanged,
               ),
             ),
@@ -229,6 +243,7 @@ class _CoordinateFields extends StatelessWidget {
                 controller: seconds,
                 maxLength: 2,
                 unit: '"',
+                spokenLabel: '$label, ${strings.seconds}',
                 onChanged: onChanged,
               ),
             ),
@@ -244,17 +259,19 @@ class _NumberField extends StatelessWidget {
     required this.controller,
     required this.maxLength,
     required this.unit,
+    required this.spokenLabel,
     required this.onChanged,
   });
 
   final TextEditingController controller;
   final int maxLength;
   final String unit;
+  final String spokenLabel;
   final VoidCallback onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTextField(
+    final field = CupertinoTextField(
       controller: controller,
       keyboardType: TextInputType.number,
       textAlign: TextAlign.center,
@@ -284,5 +301,6 @@ class _NumberField extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
     );
+    return Semantics(label: spokenLabel, child: field);
   }
 }

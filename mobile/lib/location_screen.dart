@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
+import 'about_screen.dart';
 import 'coords.dart';
 import 'language_store.dart';
 import 'location_service.dart';
@@ -67,6 +68,14 @@ class _LocationScreenState extends State<LocationScreen>
     );
   }
 
+  void _openAbout() {
+    unawaited(
+      Navigator.of(
+        context,
+      ).push(CupertinoPageRoute<void>(builder: (_) => const AboutScreen())),
+    );
+  }
+
   void _openManualEntry() {
     unawaited(
       Navigator.of(context).push(
@@ -93,9 +102,17 @@ class _LocationScreenState extends State<LocationScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: _LanguageButton(scope: scope),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: _TopButton(
+                    label: strings.about,
+                    onPressed: _openAbout,
+                  ),
+                ),
+                Flexible(child: _LanguageButton(scope: scope)),
+              ],
             ),
             Expanded(
               child: Center(
@@ -160,15 +177,32 @@ class _LanguageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = scope.strings;
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      minimumSize: const Size.square(44),
+    return _TopButton(
+      label: strings.otherLanguageName,
       onPressed: () => scope.onChanged(switch (strings.language) {
         AppLanguage.vi => AppLanguage.en,
         AppLanguage.en => AppLanguage.vi,
       }),
+    );
+  }
+}
+
+class _TopButton extends StatelessWidget {
+  const _TopButton({required this.label, required this.onPressed});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      minimumSize: const Size.square(44),
+      onPressed: onPressed,
       child: Text(
-        strings.otherLanguageName,
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: const TextStyle(color: _secondaryText, fontSize: 14),
       ),
     );
@@ -182,17 +216,22 @@ class _CoordsText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Text(
-        text,
-        maxLines: 1,
-        softWrap: false,
-        style: const TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 44,
-          fontWeight: FontWeight.w600,
-          fontFeatures: [FontFeature.tabularFigures()],
+    // Không dùng live region: số cập nhật mỗi giây sẽ bị đọc liên tục.
+    return Semantics(
+      label: LanguageScope.of(context).strings.spokenCoords(text),
+      excludeSemantics: true,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          text,
+          maxLines: 1,
+          softWrap: false,
+          style: const TextStyle(
+            color: CupertinoColors.white,
+            fontSize: 44,
+            fontWeight: FontWeight.w600,
+            fontFeatures: [FontFeature.tabularFigures()],
+          ),
         ),
       ),
     );
@@ -212,16 +251,23 @@ class _StatusMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (message, openSettings) = switch (state) {
+    final (message, action, onAction) = switch (state) {
+      LocationPermissionNeeded() => (
+        strings.permissionDisclosure,
+        strings.allowLocation,
+        service.requestPermission,
+      ),
       LocationPermissionDenied() => (
         strings.permissionDenied,
+        strings.openSettings,
         service.openAppSettings,
       ),
       LocationServiceDisabled() => (
         strings.locationOff,
+        strings.openSettings,
         service.openLocationSettings,
       ),
-      _ => (strings.waitingForGps, null),
+      _ => (strings.waitingForGps, '', null),
     };
 
     return Column(
@@ -232,11 +278,11 @@ class _StatusMessage extends StatelessWidget {
           textAlign: TextAlign.center,
           style: const TextStyle(color: _secondaryText, fontSize: 17),
         ),
-        if (openSettings != null)
+        if (onAction != null)
           CupertinoButton(
-            onPressed: openSettings,
+            onPressed: onAction,
             child: Text(
-              strings.openSettings,
+              action,
               style: const TextStyle(
                 color: CupertinoColors.white,
                 fontSize: 17,

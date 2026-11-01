@@ -34,17 +34,21 @@ class ResultScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
           children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                coordsText,
-                maxLines: 1,
-                softWrap: false,
-                style: const TextStyle(
-                  color: CupertinoColors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  fontFeatures: [FontFeature.tabularFigures()],
+            Semantics(
+              label: strings.spokenCoords(coordsText),
+              excludeSemantics: true,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  coordsText,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: const TextStyle(
+                    color: CupertinoColors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
                 ),
               ),
             ),

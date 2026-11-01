@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show DefaultMaterialLocalizations;
 import 'package:flutter/services.dart';
 
 import 'language_store.dart';
@@ -93,6 +94,12 @@ class _ToaDoAppState extends State<ToaDoApp> {
         // Locale này chỉ dành cho nhãn có sẵn của Cupertino, vốn chỉ có tiếng
         // Anh. Chữ của app đi qua LanguageScope.
         locale: const Locale('en'),
+        // Trang giấy phép là widget Material nên cần thêm bộ nhãn Material.
+        localizationsDelegates: const [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
         theme: const CupertinoThemeData(
           brightness: Brightness.dark,
           primaryColor: CupertinoColors.white,
