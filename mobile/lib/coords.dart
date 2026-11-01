@@ -45,7 +45,9 @@ String _dmsText(int totalSeconds, String hemisphere) {
   final degrees = totalSeconds ~/ 3600;
   final minutes = (totalSeconds % 3600) ~/ 60;
   final seconds = totalSeconds % 60;
-  return '$degrees°${_twoDigits(minutes)}\'${_twoDigits(seconds)}"$hemisphere';
+  final text =
+      '${_twoDigits(degrees)}°${_twoDigits(minutes)}\'${_twoDigits(seconds)}"';
+  return '$text$hemisphere';
 }
 
 String _twoDigits(int value) => value.toString().padLeft(2, '0');

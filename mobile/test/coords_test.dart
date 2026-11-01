@@ -10,8 +10,15 @@ void main() {
       );
     });
 
-    test('phút và giây bù số 0, độ không bù', () {
-      expect(formatDmsCoords(1.034167, 5.085), '1°02\'03"N 5°05\'06"E');
+    test('độ, phút và giây đều bù đủ 2 chữ số', () {
+      expect(formatDmsCoords(1.034167, 5.085), '01°02\'03"N 05°05\'06"E');
+    });
+
+    test('vĩ độ 1 chữ số thêm 0 phía trước', () {
+      expect(
+        formatDmsCoords(8.77, 105.803333),
+        '08°46\'12"N 105°48\'12"E',
+      );
     });
 
     test('đủ 4 bán cầu, âm dùng giá trị tuyệt đối', () {
@@ -34,7 +41,7 @@ void main() {
     });
 
     test('0,0 là N và E', () {
-      expect(formatDmsCoords(0, 0), '0°00\'00"N 0°00\'00"E');
+      expect(formatDmsCoords(0, 0), '00°00\'00"N 00°00\'00"E');
     });
 
     test('biên ±90 và ±180', () {
@@ -43,7 +50,7 @@ void main() {
     });
 
     test('giây làm tròn lên 60 nhớ sang phút', () {
-      expect(formatDmsCoords(10.016665, 0), '10°01\'00"N 0°00\'00"E');
+      expect(formatDmsCoords(10.016665, 0), '10°01\'00"N 00°00\'00"E');
     });
 
     test('phút lên 60 nhớ sang độ', () {
@@ -52,7 +59,7 @@ void main() {
     });
 
     test('giây làm tròn thành số nguyên', () {
-      expect(formatDmsCoords(0.000139, 0.000138), '0°00\'01"N 0°00\'00"E');
+      expect(formatDmsCoords(0.000139, 0.000138), '00°00\'01"N 00°00\'00"E');
     });
   });
 
@@ -96,12 +103,12 @@ void main() {
     test('chọn S và W', () {
       expect(
         manual(latDeg: 1, north: false, lonDeg: 2, east: false),
-        '1°00\'00"S 2°00\'00"W',
+        '01°00\'00"S 02°00\'00"W',
       );
     });
 
     test('toàn 0 là hợp lệ', () {
-      expect(manual(), '0°00\'00"N 0°00\'00"E');
+      expect(manual(), '00°00\'00"N 00°00\'00"E');
     });
 
     test('biên 90° và 180° hợp lệ', () {

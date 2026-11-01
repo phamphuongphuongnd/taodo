@@ -138,7 +138,7 @@ void main() {
       await _openManualEntry(tester, 'Nhập tay');
       await _tapView(tester, 'Xem');
 
-      expect(find.text('0°00\'00"N 0°00\'00"E'), findsOneWidget);
+      expect(find.text('00°00\'00"N 00°00\'00"E'), findsOneWidget);
     });
 
     testWidgets('chọn S và W', (tester) async {

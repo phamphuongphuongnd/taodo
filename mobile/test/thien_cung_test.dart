@@ -55,6 +55,18 @@ void main() {
       ]);
     });
 
+    test('vĩ độ 1 chữ số đã bù 0 vẫn tách đủ', () {
+      expect(splitPairs('08°46\'12"N 105°48\'12"E'), [
+        '12',
+        '48',
+        '05',
+        '21',
+        '61',
+        '84',
+        '00',
+      ]);
+    });
+
     test('số chữ số chẵn thì không thêm 0', () {
       expect(splitPairs('12°34\'56"N'), ['56', '34', '12']);
     });
