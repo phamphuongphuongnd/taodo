@@ -6,7 +6,7 @@ App Flutter native cho Android và iOS. Đo vị trí bằng GPS của máy, ch�
 
 - Nền đen, chữ trắng, dùng `CupertinoApp`, thiết kế chuẩn 390×844, tự co theo màn hình.
 - Hiện tọa độ dạng `21°01'43"N 105°48'12"E`, cập nhật liên tục.
-- Độ, phút và giây đều đủ ít nhất 2 chữ số, ví dụ `08°46'12"N`; giây làm tròn thành số nguyên.
+- Độ, phút và giây đều đủ ít nhất 2 chữ số, ví dụ `08°46'12"N`; giây cắt bỏ phần lẻ, không làm tròn lên.
 - Nút "Xem" chỉ bấm được khi đã có tọa độ. Góc màn hình có nút chọn ngôn ngữ.
 - Khi chưa có tọa độ: đang chờ tín hiệu GPS, chưa cấp quyền, hoặc định vị đang tắt (hai trạng thái sau có nút mở Cài đặt).
 

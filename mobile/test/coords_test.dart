@@ -4,8 +4,21 @@ import 'package:toado/coords.dart';
 void main() {
   group('formatDmsCoords', () {
     test('đúng ví dụ chuẩn', () {
+      expect(formatDmsCoords(21.02862, 105.80334), '21°01\'43"N 105°48\'12"E');
+    });
+
+    test('cắt bỏ phần lẻ của giây, không làm tròn lên', () {
+      // 20.302431 là 18'08.75", 106.377830 là 22'40.19".
       expect(
-        formatDmsCoords(21.028611, 105.803333),
+        formatDmsCoords(20.302431, 106.377830),
+        '20°18\'08"N 106°22\'40"E',
+      );
+    });
+
+    test('số đúng tròn giây không bị hụt 1 giây do sai số tính toán', () {
+      expect(formatDmsCoords(8.77, 0.1), '08°46\'12"N 00°06\'00"E');
+      expect(
+        formatDmsCoords(21 + 1 / 60 + 43 / 3600, 105 + 48 / 60 + 12 / 3600),
         '21°01\'43"N 105°48\'12"E',
       );
     });
@@ -15,27 +28,15 @@ void main() {
     });
 
     test('vĩ độ 1 chữ số thêm 0 phía trước', () {
-      expect(
-        formatDmsCoords(8.77, 105.803333),
-        '08°46\'12"N 105°48\'12"E',
-      );
+      expect(formatDmsCoords(8.77, 105.80334), '08°46\'12"N 105°48\'12"E');
     });
 
     test('đủ 4 bán cầu, âm dùng giá trị tuyệt đối', () {
+      expect(formatDmsCoords(21.02862, 105.80334), '21°01\'43"N 105°48\'12"E');
+      expect(formatDmsCoords(21.02862, -105.80334), '21°01\'43"N 105°48\'12"W');
+      expect(formatDmsCoords(-21.02862, 105.80334), '21°01\'43"S 105°48\'12"E');
       expect(
-        formatDmsCoords(21.028611, 105.803333),
-        '21°01\'43"N 105°48\'12"E',
-      );
-      expect(
-        formatDmsCoords(21.028611, -105.803333),
-        '21°01\'43"N 105°48\'12"W',
-      );
-      expect(
-        formatDmsCoords(-21.028611, 105.803333),
-        '21°01\'43"S 105°48\'12"E',
-      );
-      expect(
-        formatDmsCoords(-21.028611, -105.803333),
+        formatDmsCoords(-21.02862, -105.80334),
         '21°01\'43"S 105°48\'12"W',
       );
     });
@@ -49,17 +50,17 @@ void main() {
       expect(formatDmsCoords(-90, -180), '90°00\'00"S 180°00\'00"W');
     });
 
-    test('giây làm tròn lên 60 nhớ sang phút', () {
-      expect(formatDmsCoords(10.016665, 0), '10°01\'00"N 00°00\'00"E');
+    test('gần tròn phút vẫn giữ nguyên phút, không nhớ lên', () {
+      expect(formatDmsCoords(10.016665, 0), '10°00\'59"N 00°00\'00"E');
     });
 
-    test('phút lên 60 nhớ sang độ', () {
-      expect(formatDmsCoords(20.99999, 10.999999), '21°00\'00"N 11°00\'00"E');
-      expect(formatDmsCoords(-20.99999, -10.999999), '21°00\'00"S 11°00\'00"W');
+    test('gần tròn độ vẫn giữ nguyên độ, không nhớ lên', () {
+      expect(formatDmsCoords(20.99999, 10.999999), '20°59\'59"N 10°59\'59"E');
+      expect(formatDmsCoords(-20.99999, -10.999999), '20°59\'59"S 10°59\'59"W');
     });
 
-    test('giây làm tròn thành số nguyên', () {
-      expect(formatDmsCoords(0.000139, 0.000138), '00°00\'01"N 00°00\'00"E');
+    test('dưới 1 giây thì ra 00', () {
+      expect(formatDmsCoords(0.000139, 0.000138), '00°00\'00"N 00°00\'00"E');
     });
   });
 

@@ -12,15 +12,15 @@ import 'package:toado/strings.dart';
 import 'package:toado/thien_cung.dart';
 
 /// Hà Nội: `21°01'43"N 105°48'12"E`.
-const _hanoi = LocationAvailable(21.0286, 105.8033);
+const _hanoi = LocationAvailable(21.02862, 105.80334);
 const _hanoiText = '21°01\'43"N 105°48\'12"E';
 
 /// Nơi khác, tách ra 10, 50, 40, 30, 20, 10: không số nào có trong bảng.
-const _empty = LocationAvailable(10.341667, 40.836111);
+const _empty = LocationAvailable(10.34167, 40.83612);
 const _emptyText = '10°20\'30"N 40°50\'10"E';
 
 /// Chuỗi dài nhất có thể.
-const _longest = LocationAvailable(-79.999722, -179.999722);
+const _longest = LocationAvailable(-79.99973, -179.99973);
 const _longestText = '79°59\'59"S 179°59\'59"W';
 
 class _FakeLocationService implements LocationService {

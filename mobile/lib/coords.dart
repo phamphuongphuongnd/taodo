@@ -35,9 +35,10 @@ int? _manualTotalSeconds(
   return total <= maxDegrees * 3600 ? total : null;
 }
 
-/// Làm tròn tổng số giây trước rồi mới chia, để giây và phút tự nhớ lên.
+/// Cắt bỏ phần lẻ của giây. Cộng thêm một lượng rất nhỏ để số đúng tròn giây
+/// không bị hụt 1 giây do sai số của phép tính số thực.
 String _formatDms(double value, String positive, String negative) {
-  final totalSeconds = (value.abs() * 3600).round();
+  final totalSeconds = (value.abs() * 3600 + 1e-6).floor();
   return _dmsText(totalSeconds, value >= 0 ? positive : negative);
 }
 
