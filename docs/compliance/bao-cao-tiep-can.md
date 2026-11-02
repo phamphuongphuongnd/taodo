@@ -13,7 +13,7 @@ Phiên bản 1.0.0, cập nhật 01/11/2026 sau khi đổi giao diện theo `des
 | Không dùng màu làm tín hiệu duy nhất | Đọc code, xem máy thật | Đạt: cảnh báo có chữ "CẢNH BÁO" và tam giác; ô sai có hộp lỗi; dòng thiếu dữ liệu có chữ |
 | Tương phản chữ tối thiểu 4.5:1 | Test tự động trên 14 cặp màu | Đạt, xem bảng dưới |
 | Vùng bấm tối thiểu | Widget test | Đạt: các nút phụ và nút bán cầu 44, nút chính 56–60 |
-| Chữ phóng to 200% không vỡ giao diện | Widget test ở 390×844, 360×800, 320×568, Việt và Anh | Đạt |
+| Chữ phóng to 200% không vỡ giao diện | Widget test ở 390×844, 360×800, 320×568, Việt và Anh | Đạt, trừ số trong 6 ô nhập: chỉ lớn tới mức vừa ô để luôn thấy đủ 3 chữ số, không lên đủ 200% |
 | Giảm chuyển động | Widget test | Đạt: tắt toàn bộ hoạt ảnh lặp khi máy bật tùy chọn này |
 | Tọa độ không bị đọc liên tục | Đọc code | Đạt: cố ý không dùng live region cho số cập nhật mỗi giây |
 | Chữ số không giật khi cập nhật | Kiểm font, widget test | Đạt: bật `tnum` của Manrope |

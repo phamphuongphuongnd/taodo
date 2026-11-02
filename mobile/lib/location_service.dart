@@ -55,16 +55,21 @@ abstract class LocationService {
 class GeolocatorLocationService implements LocationService {
   GeolocatorLocationService({
     this.signalTimeout = const Duration(seconds: 60),
+    this.retryDelay = const Duration(seconds: 5),
   });
 
   /// Lâu hơn mức này không có số mới thì coi như mất tín hiệu, để không hiện số
   /// cũ như thể vừa đo.
   final Duration signalTimeout;
 
+  /// Luồng vị trí lỗi hoặc đóng mà sau chừng này chưa có số mới thì mở lại.
+  final Duration retryDelay;
+
   final _controller = StreamController<LocationState>.broadcast();
   StreamSubscription<Position>? _position;
   StreamSubscription<ServiceStatus>? _serviceStatus;
   Timer? _signalTimer;
+  Timer? _retryTimer;
   LocationState _state = const LocationWaiting();
   bool _permissionRequested = false;
   bool _disposed = false;
@@ -80,16 +85,24 @@ class GeolocatorLocationService implements LocationService {
   Future<void> refresh() => _enqueue(_refreshNow);
 
   @override
-  Future<void> pause() => _enqueue(() async {
-    await _stopPosition();
-    await _serviceStatus?.cancel();
-    _serviceStatus = null;
-  });
+  Future<void> pause() {
+    _retryTimer?.cancel();
+    return _enqueue(() async {
+      await _stopPosition();
+      await _serviceStatus?.cancel();
+      _serviceStatus = null;
+      // Khi quay lại, người dùng có thể đã đi nơi khác nên phải chờ số mới.
+      if (_state is LocationAvailable) _emit(const LocationWaiting());
+    });
+  }
 
   @override
   Future<void> requestPermission() => _enqueue(() async {
-    _permissionRequested = true;
-    await Geolocator.requestPermission();
+    // Bấm đúp nút Cho phép cũng chỉ hỏi một lần.
+    if (!_permissionRequested) {
+      _permissionRequested = true;
+      await Geolocator.requestPermission();
+    }
     if (!_disposed) await _refreshNow();
   });
 
@@ -115,6 +128,7 @@ class GeolocatorLocationService implements LocationService {
   Future<void> dispose() async {
     _disposed = true;
     _signalTimer?.cancel();
+    _retryTimer?.cancel();
     await _position?.cancel();
     await _serviceStatus?.cancel();
     await _controller.close();
@@ -164,14 +178,14 @@ class GeolocatorLocationService implements LocationService {
     }
 
     if (_position != null) return;
-    if (_state is! LocationAvailable) _emit(const LocationWaiting());
+    _emit(const LocationWaiting());
     _position = Geolocator.getPositionStream(
       locationSettings: _locationSettings(),
     ).listen(_onPosition, onError: _onPositionError, onDone: _onPositionDone);
-    if (_state is LocationAvailable) _restartSignalTimer();
   }
 
   void _onPosition(Position position) {
+    _retryTimer?.cancel();
     _emit(LocationAvailable(position.latitude, position.longitude));
     _restartSignalTimer();
   }
@@ -188,13 +202,31 @@ class GeolocatorLocationService implements LocationService {
       _ => const LocationWaiting(),
     };
     _emit(state);
-    if (state is! LocationWaiting) unawaited(_enqueue(_stopPosition));
+    if (state is LocationWaiting) {
+      _scheduleRetry();
+    } else {
+      unawaited(_enqueue(_stopPosition));
+    }
   }
 
   void _onPositionDone() {
     _position = null;
     _signalTimer?.cancel();
     _emit(const LocationWaiting());
+    _scheduleRetry();
+  }
+
+  /// Lỗi đến liên tục cũng không đẩy lùi lần mở lại đã hẹn.
+  void _scheduleRetry() {
+    if (_retryTimer?.isActive ?? false) return;
+    _retryTimer = Timer(retryDelay, () {
+      unawaited(
+        _enqueue(() async {
+          await _stopPosition();
+          await _refreshNow();
+        }),
+      );
+    });
   }
 
   Future<void> _stopPosition() async {

@@ -293,6 +293,37 @@ void main() {
       }
     }
 
+    for (final size in const [
+      Size(390, 844),
+      Size(360, 800),
+      Size(320, 568),
+    ]) {
+      for (final scale in const [1.0, 2.0]) {
+        testWidgets('$size chữ x$scale: thấy đủ 3 chữ số', (tester) async {
+          await pumpToaDoApp(tester, size: size, textScale: scale);
+          await _openManual(tester);
+          await tester.enterText(find.byType(CupertinoTextField).at(3), '105');
+          await tester.pump();
+
+          final field = tester.state<EditableTextState>(
+            find.byType(EditableText).at(3),
+          );
+          expect(field.renderEditable.maxScrollExtent, 0);
+        });
+      }
+    }
+
+    testWidgets('cả 6 ô có cùng cỡ chữ', (tester) async {
+      await pumpToaDoApp(tester, size: const Size(320, 568));
+      await _openManual(tester);
+
+      final sizes = tester
+          .widgetList<EditableText>(find.byType(EditableText))
+          .map((field) => field.style.fontSize)
+          .toSet();
+      expect(sizes, hasLength(1));
+    });
+
     testWidgets('bàn phím mở trên màn nhỏ vẫn cuộn được', (tester) async {
       await pumpToaDoApp(tester, size: const Size(320, 568));
       await _openManual(tester);

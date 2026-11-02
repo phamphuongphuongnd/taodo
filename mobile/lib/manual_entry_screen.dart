@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -426,6 +427,15 @@ class _NumberField extends StatefulWidget {
 }
 
 class _NumberFieldState extends State<_NumberField> {
+  static const _digitSize = 30.0;
+
+  /// Lớn hơn nữa thì chiều cao chữ vượt ô cao 76.
+  static const _maxDigitSize = 44.0;
+  static const _padding = EdgeInsets.only(left: 6, right: 22);
+
+  /// Chỗ cho con trỏ và viền ô.
+  static const _caretRoom = 8.0;
+
   final _focusNode = FocusNode();
 
   @override
@@ -443,17 +453,35 @@ class _NumberFieldState extends State<_NumberField> {
 
   void _onFocusChanged() => setState(() {});
 
-  @override
-  Widget build(BuildContext context) {
+  /// Cỡ chữ theo cài đặt của máy nhưng luôn đủ chỗ cho 3 chữ số, vì ô nhập tràn
+  /// thì tự cuộn và che mất số. Ba ô dùng chung một cỡ cho đều nhau.
+  double _fittedDigitSize(BuildContext context, double fieldWidth) {
+    final wanted = math.min(
+      MediaQuery.textScalerOf(context).scale(_digitSize),
+      _maxDigitSize,
+    );
+    final digits = TextPainter(
+      text: TextSpan(
+        text: '000',
+        style: appText(size: _digitSize, weight: 700, tabular: true),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final widthAtDigitSize = digits.width;
+    digits.dispose();
+    final room = fieldWidth - _padding.horizontal - _caretRoom;
+    return math.min(wanted, _digitSize * room / widthAtDigitSize);
+  }
+
+  Widget _buildField(double digitSize) {
     final hasError = widget.hasError;
     final borderColor = hasError
         ? AppColors.warningBorder
         : _focusNode.hasFocus
         ? AppColors.accent
         : const Color(0x00000000);
-    final accent = hasError ? AppColors.warning : AppColors.muted;
 
-    final field = CupertinoTextField(
+    return CupertinoTextField(
       controller: widget.controller,
       focusNode: _focusNode,
       keyboardType: TextInputType.number,
@@ -467,51 +495,63 @@ class _NumberFieldState extends State<_NumberField> {
       onChanged: (_) => widget.onChanged(),
       placeholder: '0',
       placeholderStyle: appText(
-        size: 30,
+        size: digitSize,
         weight: 700,
         color: AppColors.fieldHint,
         tabular: true,
       ),
       style: appText(
-        size: 30,
+        size: digitSize,
         weight: 700,
         color: hasError ? AppColors.warning : AppColors.text,
         tabular: true,
       ),
-      padding: const EdgeInsets.only(left: 6, right: 22),
+      padding: _padding,
       decoration: BoxDecoration(
         color: hasError ? AppColors.warningSurface : AppColors.field,
         border: Border.all(color: borderColor, width: 1.5),
         borderRadius: const BorderRadius.all(Radius.circular(18)),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasError = widget.hasError;
+    final accent = hasError ? AppColors.warning : AppColors.muted;
 
     return Column(
       children: [
         SizedBox(
           height: 76,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Semantics(
-                  label: hasError
-                      ? '${widget.spokenLabel}, ${widget.invalidLabel}'
-                      : widget.spokenLabel,
-                  child: field,
-                ),
-              ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: ExcludeSemantics(
-                  child: Text(
-                    widget.unit,
-                    textScaler: TextScaler.noScaling,
-                    style: appText(size: 16, weight: 400, color: accent),
+          child: LayoutBuilder(
+            builder: (context, box) => Stack(
+              children: [
+                Positioned.fill(
+                  child: Semantics(
+                    label: hasError
+                        ? '${widget.spokenLabel}, ${widget.invalidLabel}'
+                        : widget.spokenLabel,
+                    child: MediaQuery.withNoTextScaling(
+                      child: _buildField(
+                        _fittedDigitSize(context, box.maxWidth),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: ExcludeSemantics(
+                    child: Text(
+                      widget.unit,
+                      textScaler: TextScaler.noScaling,
+                      style: appText(size: 16, weight: 400, color: accent),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 6),

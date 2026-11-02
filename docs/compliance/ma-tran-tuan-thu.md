@@ -10,7 +10,7 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 
 | Lớp | Yêu cầu | Trạng thái | Bằng chứng hoặc việc còn lại |
 |---|---|---|---|
-| 1 | Kiểm thử có quy trình | Đạt | 309 test tự động, `flutter analyze` sạch; `quy-trinh-phat-hanh.md` |
+| 1 | Kiểm thử có quy trình | Đạt | 323 test tự động, `flutter analyze` sạch; `quy-trinh-phat-hanh.md` |
 | 1 | Tài liệu yêu cầu và thiết kế | Đạt | `docs/superpowers/specs/2026-10-31-toado-design.md`, thiết kế giao diện ở `design-mobile/` |
 | 2 | Kênh tiếp nhận lỗ hổng | Một phần | `SECURITY.md`. Bạn cần theo dõi trang issues |
 | 2 | SBOM và kiểm kê giấy phép | Đạt | `sbom.spdx.json`, SPDX 2.3, 78 gói và font Manrope (OFL-1.1); `mobile/tool/generate_sbom.dart` |

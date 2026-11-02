@@ -750,9 +750,11 @@ void main() {
         await _settleEvents();
 
         await shortTimeout.pause();
+        await _settleEvents();
+        final count = shortStates.length;
         await Future<void>.delayed(const Duration(milliseconds: 80));
 
-        expect(shortStates.last, isA<LocationAvailable>());
+        expect(shortStates, hasLength(count));
       });
 
       test('quay lại mà không có số mới thì vẫn về chờ', () async {
@@ -766,6 +768,113 @@ void main() {
 
         expect(shortStates.last, isA<LocationWaiting>());
       });
+    });
+
+    group('mở lại luồng vị trí', () {
+      late GeolocatorLocationService retrying;
+      late List<LocationState> retryStates;
+
+      setUp(() {
+        retrying = GeolocatorLocationService(
+          retryDelay: const Duration(milliseconds: 20),
+        );
+        retryStates = [];
+        retrying.states.listen(retryStates.add);
+      });
+
+      tearDown(() => retrying.dispose());
+
+      Future<void> waitForRetry() =>
+          Future<void>.delayed(const Duration(milliseconds: 60));
+
+      test('lỗi mà không có số mới thì mở lại và đo được', () async {
+        await retrying.refresh();
+        final dead = platform.positions!;
+
+        dead.addError(const PositionUpdateException('x'));
+        await waitForRetry();
+
+        expect(platform.positionStreamsCreated, 2);
+        expect(platform.positionListeners, 1);
+        platform.positions!.add(_position(3, 4));
+        await _settleEvents();
+        expect(retryStates.last, isA<LocationAvailable>());
+      });
+
+      test('luồng tự đóng thì mở lại', () async {
+        await retrying.refresh();
+
+        await platform.positions!.close();
+        await waitForRetry();
+
+        expect(platform.positionStreamsCreated, 2);
+        expect(platform.positionListeners, 1);
+      });
+
+      test('lỗi xong có số mới thì không mở lại', () async {
+        await retrying.refresh();
+
+        platform.positions!.addError(const PositionUpdateException('x'));
+        platform.positions!.add(_position(3, 4));
+        await waitForRetry();
+
+        expect(platform.positionStreamsCreated, 1);
+      });
+
+      test('lỗi dồn dập vẫn mở lại đúng hẹn', () async {
+        await retrying.refresh();
+        final dead = platform.positions!;
+
+        for (var i = 0; i < 6; i++) {
+          dead.addError(const PositionUpdateException('x'));
+          await Future<void>.delayed(const Duration(milliseconds: 10));
+        }
+        await waitForRetry();
+
+        expect(platform.positionStreamsCreated, greaterThan(1));
+      });
+
+      test('app ra nền thì không tự mở lại', () async {
+        await retrying.refresh();
+        platform.positions!.addError(const PositionUpdateException('x'));
+
+        await retrying.pause();
+        await waitForRetry();
+
+        expect(platform.positionStreamsCreated, 1);
+        expect(platform.positionListeners, 0);
+      });
+    });
+
+    test('quay lại app không hiện số đo trước đó', () async {
+      await service.refresh();
+      platform.positions!.add(_position(1, 2));
+      await _settleEvents();
+      expect(states.last, isA<LocationAvailable>());
+
+      await service.pause();
+      await service.refresh();
+      await _settleEvents();
+
+      expect(states.last, isA<LocationWaiting>());
+
+      platform.positions!.add(_position(3, 4));
+      await _settleEvents();
+      expect((states.last as LocationAvailable).latitude, 3);
+    });
+
+    test('bấm đúp Cho phép chỉ hỏi một lần', () async {
+      platform.permission = LocationPermission.denied;
+      platform.requestResult = LocationPermission.denied;
+
+      await Future.wait([
+        service.requestPermission(),
+        service.requestPermission(),
+      ]);
+      await _settleEvents();
+
+      expect(platform.requestCount, 1);
+      expect(states.last, isA<LocationPermissionDenied>());
     });
 
     test('nền tảng lỗi thì không sập', () async {
