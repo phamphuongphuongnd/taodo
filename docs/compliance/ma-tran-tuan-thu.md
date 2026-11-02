@@ -53,7 +53,6 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 ## Rủi ro đã biết
 
 - **Kết quả cung nhạy với sai số GPS:** lệch 1 giây tọa độ có thể đổi cặp số; trang Thông tin nêu tọa độ có sai số.
-- **Icon app:** Android 12 trở lên đặt icon hiện tại lên nền trắng, nên ở màn hình mở app và ngoài launcher thấy ô đen trong khung trắng. Cần icon thích ứng trước khi phát hành.
 - **Định vị trên máy có Google Play Services:** trên Galaxy A13, nhà cung cấp `fused` do Play Services phục vụ. Hành vi trên máy không có dịch vụ này chưa được test.
 - **Thời hạn 60 giây mất tín hiệu** là lựa chọn của nhóm phát triển, đã test tự động nhưng chưa test bằng cách chặn tín hiệu thật.
 - **Bản tiếng Anh** do Claude dịch, chưa có người bản ngữ rà soát.
