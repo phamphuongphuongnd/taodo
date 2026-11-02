@@ -420,8 +420,20 @@ void main() {
       LanguageScope.of(context).onChanged(AppLanguage.en);
       await tester.pump();
 
-      expect(find.text(lookupPair('14').single.palaceEn), findsOneWidget);
+      final wealth = find.text(lookupPair('14').single.palaceEn);
+      await tester.scrollUntilVisible(
+        wealth,
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(wealth, findsOneWidget);
       expect(find.text('Chăm Chỉ'), findsNothing);
+      await tester.fling(
+        find.byType(Scrollable).last,
+        const Offset(0, 1500),
+        2000,
+      );
+      await tester.pumpAndSettle();
       expect(_coords(_hanoiText), findsOneWidget);
 
       await _goBack(tester);

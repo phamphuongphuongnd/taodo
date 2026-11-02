@@ -79,7 +79,15 @@ void main() {
 
     // Lật D1: Đ ⇒ chỉ có dòng chưa có dữ liệu thì không có kết luận.
     test('6-7 chỉ dòng chưa có dữ liệu ⇒ không có kết luận', () {
-      final r = conclude(['12', '14']);
+      const emptyRow = ThienCungGroup(
+        palaceOrder: 7,
+        palaceVi: 'Cung Trống',
+        palaceEn: 'Empty',
+        numbers: ['12', '14'],
+        meaningVi: '',
+        meaningEn: '',
+      );
+      final r = buildConclusion(matchPairs(['12', '14'], table: const [emptyRow]));
       expect(r.top, isEmpty);
       expect(r.warnings, isEmpty);
       expect(r.isEmpty, isTrue);

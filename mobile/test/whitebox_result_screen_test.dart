@@ -11,6 +11,7 @@ import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/theme.dart';
 import 'package:toado/thien_cung.dart';
+import 'package:toado/thien_cung_data.dart';
 import 'package:toado/widgets.dart';
 
 /// 12, 48, 05, 31, 14, 10, 02: khớp 12 (chưa có dữ liệu), 31 (Thiên Tài, Đại tài), 14 (chưa có dữ liệu).
@@ -25,7 +26,7 @@ const _onlyNoData = '10°20\'30"N 40°50\'14"E';
 /// 00 và 11 đều thuộc Bảo Vệ (có dữ liệu, không nhóm, không cảnh báo).
 const _twoProtection = '10°20\'30"N 40°11\'00"E';
 
-/// 89 (Tai Họa, cảnh báo, không nhóm) đứng trước 00 (Bảo Vệ), rồi 96, 21, 12 (Chăm Chỉ).
+/// 89 (Tai Họa, cảnh báo, không nhóm) đứng trước 00 (Bảo Vệ), rồi 96, 21, 12 (Chăm Chỉ, 3 dòng có dữ liệu ⇒ cung nổi bật).
 const _taiHoaFirst = '10°12\'21"N 96°00\'89"E';
 
 /// 27 (3 dòng), 61 (2 dòng cảnh báo: Đào Hoa nhóm Tai họa, Tai Họa), 91 (Quan Lộc, Đại quan, dòng cuối).
@@ -36,6 +37,7 @@ Future<void> _pumpResult(
   String coordsText, {
   AppLanguage language = AppLanguage.vi,
   Size size = const Size(390, 2400),
+  List<ThienCungGroup> table = thienCungTable,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -51,12 +53,31 @@ Future<void> _pumpResult(
   unawaited(
     navigator.push(
       CupertinoPageRoute<void>(
-        builder: (_) => ResultScreen(coordsText: coordsText),
+        builder: (_) => ResultScreen(coordsText: coordsText, table: table),
       ),
     ),
   );
   await tester.pumpAndSettle();
 }
+
+/// Bảng thật nhưng các dòng có tên nhóm (hoặc tên cung nếu không nhóm) thuộc [names] bị xóa ý nghĩa (meaningVi/meaningEn = ''),
+/// để đi nhánh "dòng chưa có dữ liệu" (từ khi 6 nhóm đã được điền dữ liệu, bảng thật không còn dòng trống).
+List<ThienCungGroup> _tableWithoutMeaning(Set<String> names) => [
+  for (final g in thienCungTable)
+    names.contains(g.groupVi ?? g.palaceVi)
+        ? ThienCungGroup(
+            palaceOrder: g.palaceOrder,
+            palaceVi: g.palaceVi,
+            palaceEn: g.palaceEn,
+            groupVi: g.groupVi,
+            groupEn: g.groupEn,
+            numbers: g.numbers,
+            meaningVi: '',
+            meaningEn: '',
+            isWarning: g.isWarning,
+          )
+        : g,
+];
 
 Future<void> _pumpPairBox(
   WidgetTester tester, {
@@ -168,7 +189,7 @@ void main() {
   testWidgets('6-2 mẫu 3 dòng: 12 / 31 / 14 theo thứ tự, kết luận không lưu ý', (
     tester,
   ) async {
-    await _pumpResult(tester, _example);
+    await _pumpResult(tester, _example, table: _tableWithoutMeaning({'Chăm Chỉ', 'Tích Lũy Tài Sản'}));
 
     expect(find.byType(ListView), findsOneWidget);
     expect(_pairBoxes(), findsNWidgets(3));
@@ -230,7 +251,7 @@ void main() {
   testWidgets('6-3 chỉ có dòng chưa có dữ liệu ⇒ "Chưa có dữ liệu để kết luận"', (
     tester,
   ) async {
-    await _pumpResult(tester, _onlyNoData);
+    await _pumpResult(tester, _onlyNoData, table: _tableWithoutMeaning({'Tích Lũy Tài Sản'}));
 
     expect(_pairBoxes(), findsOneWidget);
     expect(find.text('KẾT LUẬN'), findsOneWidget);
@@ -287,7 +308,7 @@ void main() {
     expect(find.text('CẢNH BÁO'), findsOneWidget);
     expect(find.text('Lưu ý: vị trí này có Tai Họa.'), findsOneWidget);
     expect(
-      find.text('Vị trí này nổi bật về Bảo Vệ và Tai Họa, mỗi cung 1 lần.'),
+      find.text('Vị trí này nổi bật về Chăm Chỉ, 3 lần.'),
       findsOneWidget,
     );
     expect(_pairColor(tester, 0), AppColors.warning);
@@ -321,7 +342,7 @@ void main() {
   testWidgets('6-6 nhiều dòng cùng lúc: nhóm cảnh báo cam, nhóm thường xám, dòng chưa dữ liệu có nhóm', (
     tester,
   ) async {
-    await _pumpResult(tester, _multiWarning);
+    await _pumpResult(tester, _multiWarning, table: _tableWithoutMeaning({'Số trời'}));
 
     expect(_pairBoxes(), findsNWidgets(6));
     expect([for (var i = 0; i < 6; i++) _pairBoxAt(tester, i).pair], [

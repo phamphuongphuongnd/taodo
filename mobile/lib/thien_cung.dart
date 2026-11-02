@@ -42,15 +42,22 @@ List<String> splitPairs(String coordsText) {
 }
 
 /// Mọi dòng trong bảng có chứa [pair], theo thứ tự trong bảng.
-List<ThienCungGroup> lookupPair(String pair) {
-  return thienCungTable.where((row) => row.numbers.contains(pair)).toList();
+List<ThienCungGroup> lookupPair(
+  String pair, {
+  List<ThienCungGroup> table = thienCungTable,
+}) {
+  return table.where((row) => row.numbers.contains(pair)).toList();
 }
 
 /// Các kết quả khớp theo thứ tự của [pairs]; cặp không có trong bảng bị bỏ.
-List<PairMatch> matchPairs(List<String> pairs) {
+/// [table] chỉ để test dựng bảng có dòng chưa có dữ liệu.
+List<PairMatch> matchPairs(
+  List<String> pairs, {
+  List<ThienCungGroup> table = thienCungTable,
+}) {
   return [
     for (final pair in pairs)
-      for (final row in lookupPair(pair)) PairMatch(pair, row),
+      for (final row in lookupPair(pair, table: table)) PairMatch(pair, row),
   ];
 }
 

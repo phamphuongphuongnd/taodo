@@ -6,6 +6,7 @@ import 'package:toado/language_store.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/thien_cung.dart';
+import 'package:toado/thien_cung_data.dart';
 import 'package:toado/widgets.dart';
 
 /// Tách ra 12, 48, 05, 31, 14, 10, 02; chỉ 12, 31, 14 có trong bảng.
@@ -26,6 +27,18 @@ const _multiPalaceCoords = '10°20\'30"N 40°50\'27"E';
 /// Có số 14, thuộc một cung chưa có dữ liệu.
 const _noDataCoords = '10°20\'30"N 40°50\'14"E';
 
+/// Bảng giả: số 14 thuộc một cung chưa có dữ liệu (bảng thật đã đủ ý nghĩa).
+const _noDataTable = [
+  ThienCungGroup(
+    palaceOrder: 4,
+    palaceVi: 'Tích Lũy Tài Sản',
+    palaceEn: 'Wealth Accumulation',
+    numbers: ['14'],
+    meaningVi: '',
+    meaningEn: '',
+  ),
+];
+
 Finder _pair(String pair) => find.byWidgetPredicate(
   (widget) => widget is PairBox && widget.pair == pair,
 );
@@ -39,6 +52,7 @@ Future<void> _pumpResult(
   String coordsText, {
   AppLanguage language = AppLanguage.vi,
   Size size = const Size(390, 844),
+  List<ThienCungGroup> table = thienCungTable,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -55,7 +69,7 @@ Future<void> _pumpResult(
   unawaited(
     navigator.push(
       CupertinoPageRoute<void>(
-        builder: (_) => ResultScreen(coordsText: coordsText),
+        builder: (_) => ResultScreen(coordsText: coordsText, table: table),
       ),
     ),
   );
@@ -74,17 +88,19 @@ void main() {
   testWidgets('hiện tọa độ, cặp số, cung, nhóm và ý nghĩa theo thứ tự', (
     tester,
   ) async {
-    await _pumpResult(tester, _exampleCoords);
+    await _pumpResult(tester, _exampleCoords, size: const Size(390, 2000));
 
     expect(_coords(_exampleCoords), findsOneWidget);
     expect(_pair('12'), findsOneWidget);
     expect(_pair('31'), findsOneWidget);
     expect(_pair('14'), findsOneWidget);
     expect(find.text('Chăm Chỉ'), findsOneWidget);
-    expect(find.text('Chưa có dữ liệu'), findsNWidgets(2));
+    expect(find.text('Chưa có dữ liệu'), findsNothing);
     expect(find.text('Thiên Tài (Đại tài)'), findsOneWidget);
     expect(find.text('Tích Lũy Tài Sản'), findsOneWidget);
-    expect(find.text(lookupPair('31').single.meaningVi), findsOneWidget);
+    for (final pair in ['12', '31', '14']) {
+      expect(find.text(lookupPair(pair).single.meaningVi), findsOneWidget);
+    }
 
     final y12 = tester.getTopLeft(_pair('12')).dy;
     final y31 = tester.getTopLeft(_pair('31')).dy;
@@ -118,7 +134,8 @@ void main() {
     await _pumpResult(tester, _exampleCoords);
 
     final sentence = find.text(
-      'Vị trí này nổi bật về Thiên Tài (Đại tài), 1 lần.',
+      'Vị trí này nổi bật về Thiên Tài (Đại tài), Tích Lũy Tài Sản và '
+      'Chăm Chỉ, mỗi cung 1 lần.',
     );
     await _scrollTo(tester, sentence);
 
@@ -135,13 +152,15 @@ void main() {
 
     final talent = lookupPair('31').single;
     final diligence = lookupPair('12').single;
+    final wealth = lookupPair('14').single;
     final talentLabel = '${talent.palaceEn} (${talent.groupEn})';
     expect(find.text(talentLabel), findsOneWidget);
     expect(find.text(diligence.palaceEn), findsOneWidget);
     expect(find.text(talent.meaningEn), findsOneWidget);
 
     final sentence = find.text(
-      'This location stands out for $talentLabel, 1 time.',
+      'This location stands out for $talentLabel, ${wealth.palaceEn} and '
+      '${diligence.palaceEn}, 1 time each.',
     );
     await _scrollTo(tester, sentence);
     expect(find.text('CONCLUSION'), findsOneWidget);
@@ -149,7 +168,7 @@ void main() {
 
   group('chỉ có cung chưa có dữ liệu', () {
     testWidgets('vẫn hiện cặp số và báo chưa thể kết luận', (tester) async {
-      await _pumpResult(tester, _noDataCoords);
+      await _pumpResult(tester, _noDataCoords, table: _noDataTable);
 
       expect(_pair('14'), findsOneWidget);
       expect(find.text('Tích Lũy Tài Sản'), findsOneWidget);
@@ -159,7 +178,12 @@ void main() {
     });
 
     testWidgets('tiếng Anh', (tester) async {
-      await _pumpResult(tester, _noDataCoords, language: AppLanguage.en);
+      await _pumpResult(
+        tester,
+        _noDataCoords,
+        language: AppLanguage.en,
+        table: _noDataTable,
+      );
 
       expect(find.text('No data yet'), findsOneWidget);
       expect(find.text('Not enough data for a conclusion'), findsOneWidget);
@@ -199,7 +223,7 @@ void main() {
       await _scrollTo(tester, warning);
 
       expect(
-        find.text('Vị trí này nổi bật về Bảo Vệ và Tai Họa, mỗi cung 1 lần.'),
+        find.text('Vị trí này nổi bật về Chăm Chỉ, 3 lần.'),
         findsOneWidget,
       );
       expect(warning, findsOneWidget);

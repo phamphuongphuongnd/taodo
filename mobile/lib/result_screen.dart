@@ -5,21 +5,29 @@ import 'package:flutter/cupertino.dart';
 import 'language_store.dart';
 import 'strings.dart';
 import 'thien_cung.dart';
+import 'thien_cung_data.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
 /// Kết quả của một chuỗi tọa độ cố định, không nghe GPS.
 class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key, required this.coordsText});
+  const ResultScreen({
+    super.key,
+    required this.coordsText,
+    this.table = thienCungTable,
+  });
 
   /// Chuỗi tọa độ tại lúc bấm "Xem".
   final String coordsText;
+
+  /// Chỉ test đổi: dựng bảng có dòng chưa có dữ liệu.
+  final List<ThienCungGroup> table;
 
   @override
   Widget build(BuildContext context) {
     final strings = LanguageScope.of(context).strings;
     final metrics = AppMetrics.of(context);
-    final matches = matchPairs(splitPairs(coordsText));
+    final matches = matchPairs(splitPairs(coordsText), table: table);
     final conclusion = buildConclusion(matches);
 
     return CupertinoPageScaffold(

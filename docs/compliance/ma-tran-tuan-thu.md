@@ -32,7 +32,7 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 | 5 | Data safety, xếp hạng nội dung, đối tượng | **Bạn làm** | Câu trả lời soạn sẵn ở `khai-bao-play-console.md` |
 | 5 | Chạy thử kín 12 người trong 14 ngày | **Bạn làm** | Bắt buộc với tài khoản cá nhân mới |
 | 5 | Xác minh nhà phát triển | **Bạn làm** | Thực hiện trong Play Console |
-| 5 | App hoàn thiện, không có phần dở dang | **Bạn làm** | 6 nhóm còn "Chưa có dữ liệu" có thể bị đánh giá là chưa hoàn thiện |
+| 5 | App hoàn thiện, không có phần dở dang | Một phần | 6 nhóm từng để trống đã được điền ngày 02/11/2026. Nội dung do Claude soạn nháp, bạn đã duyệt và sửa hai nhóm Thần Linh Trời Định và Linh Ứng. Còn cần xác nhận quyền nội dung |
 | 6 | Trừng phạt | Đạt theo phạm vi | Đợt đầu chỉ chọn Việt Nam trong Play Console |
 | 6 | Bản địa hóa | Đạt | Việt và Anh; định dạng tọa độ không đổi theo ngôn ngữ |
 | 6 | Quyền với nội dung | **Bạn làm** | Xác nhận quyền dùng Bảng số Thiên Cung và tên hiển thị; cân nhắc đăng ký nhãn hiệu |

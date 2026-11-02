@@ -87,15 +87,22 @@ void main() {
       expect(thienCungTable, hasLength(20));
     });
 
-    test('đúng các dòng chưa có dữ liệu', () {
-      expect(labels(thienCungTable.where((row) => !row.hasMeaning)), [
-        'Thần Linh Trời Định / Đất của trời',
-        'Thần Linh Trời Định / Số trời',
-        'Tích Lũy Tài Sản',
-        'Linh Ứng',
-        'Chăm Chỉ',
-        'Đạo Đức',
-      ]);
+    test('mọi dòng bảng thật đều đã có ý nghĩa, 6 nhóm đã điền đúng số và cung', () {
+      expect(thienCungTable.where((row) => !row.hasMeaning), isEmpty);
+      const filled = <String, (int, List<String>)>{
+        'Thần Linh Trời Định / Đất của trời': (3, ['17', '71']),
+        'Thần Linh Trời Định / Số trời': (3, ['72', '27']),
+        'Tích Lũy Tài Sản': (4, ['74', '47', '14', '41']),
+        'Linh Ứng': (5, ['18', '81', '24', '42', '63', '36']),
+        'Chăm Chỉ': (7, ['12', '21', '69', '96']),
+        'Đạo Đức': (9, ['28', '82', '39', '93']),
+      };
+      for (final entry in filled.entries) {
+        final row = thienCungTable.singleWhere((r) => label(r) == entry.key);
+        expect(row.palaceOrder, entry.value.$1, reason: entry.key);
+        expect(row.numbers, entry.value.$2, reason: entry.key);
+        expect(row.hasMeaning, isTrue, reason: entry.key);
+      }
     });
 
     test('dòng có dữ liệu thì có đủ bản tiếng Anh', () {
@@ -218,19 +225,52 @@ void main() {
     Conclusion conclude(List<String> pairs) =>
         buildConclusion(matchPairs(pairs));
 
-    test('ví dụ chuẩn: bỏ qua Chăm Chỉ và Tích Lũy chưa có dữ liệu', () {
+    test('ví dụ chuẩn: tính cả Chăm Chỉ và Tích Lũy, mỗi cung 1 lần', () {
       final result = conclude(['12', '48', '05', '31', '14', '10', '02']);
-      expect(result.top.map((t) => t.palace.palaceVi).toList(), ['Thiên Tài']);
-      expect(result.top.map((t) => t.count).toList(), [1]);
+      expect(result.top.map((t) => t.palace.palaceVi).toList(), [
+        'Thiên Tài',
+        'Tích Lũy Tài Sản',
+        'Chăm Chỉ',
+      ]);
+      expect(result.top.map((t) => t.count).toList(), [1, 1, 1]);
       expect(labels(result.top.first.groups), ['Thiên Tài / Đại tài']);
       expect(result.warnings, isEmpty);
       expect(result.isEmpty, isFalse);
     });
 
     test('chỉ có dòng chưa có dữ liệu thì không có kết luận', () {
-      final result = conclude(['12', '14', '28']);
+      const emptyRow = ThienCungGroup(
+        palaceOrder: 3,
+        palaceVi: 'Cung Trống',
+        palaceEn: 'Empty',
+        numbers: ['12', '14', '28'],
+        meaningVi: '',
+        meaningEn: '',
+      );
+      expect(emptyRow.hasMeaning, isFalse);
+      final result = buildConclusion(
+        matchPairs(['12', '14', '28'], table: const [emptyRow]),
+      );
       expect(result.isEmpty, isTrue);
       expect(result.warnings, isEmpty);
+    });
+
+    test('dòng chưa có dữ liệu bị bỏ, dòng có dữ liệu vẫn được đếm', () {
+      const emptyRow = ThienCungGroup(
+        palaceOrder: 3,
+        palaceVi: 'Cung Trống',
+        palaceEn: 'Empty',
+        numbers: ['12'],
+        meaningVi: '',
+        meaningEn: '',
+      );
+      final matches = [
+        ...matchPairs(['12'], table: const [emptyRow]),
+        ...matchPairs(['31']),
+      ];
+      final result = buildConclusion(matches);
+      expect(result.top.map((t) => t.palace.palaceVi).toList(), ['Thiên Tài']);
+      expect(result.top.single.count, 1);
     });
 
     test('nhiều cung bằng nhau theo thứ tự bảng', () {
@@ -290,8 +330,9 @@ void main() {
       expect(result.top.map((t) => t.palace.palaceVi).toList(), [
         'Thiên Tài',
         'Thông Minh',
+        'Thần Linh Trời Định',
       ]);
-      expect(result.top.map((t) => t.count).toList(), [1, 1]);
+      expect(result.top.map((t) => t.count).toList(), [1, 1, 1]);
     });
 
     test('một số thuộc cung thường và cung cảnh báo', () {

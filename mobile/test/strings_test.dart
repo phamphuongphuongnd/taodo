@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toado/language_store.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/thien_cung.dart';
+import 'package:toado/thien_cung_data.dart';
 
 const _exampleCoords = '21°01\'43"N 105°48\'12"E';
 
@@ -37,10 +38,11 @@ void main() {
   });
 
   group('câu Kết luận', () {
-    test('ví dụ chuẩn chỉ tính cung có dữ liệu', () {
+    test('ví dụ chuẩn tính các cung có dữ liệu, bằng nhau thì nêu hết', () {
       expect(
         vi.conclusionSentence(_conclusionOf(_exampleCoords)),
-        'Vị trí này nổi bật về Thiên Tài (Đại tài), 1 lần.',
+        'Vị trí này nổi bật về Thiên Tài (Đại tài), Tích Lũy Tài Sản và '
+        'Chăm Chỉ, mỗi cung 1 lần.',
       );
     });
 
@@ -77,9 +79,19 @@ void main() {
     });
 
     test('dòng chưa có dữ liệu hiện chữ báo thiếu', () {
+      const emptyRow = ThienCungGroup(
+        palaceOrder: 7,
+        palaceVi: 'Cung Trống',
+        palaceEn: 'Empty',
+        numbers: ['12'],
+        meaningVi: '',
+        meaningEn: '',
+      );
+      expect(vi.meaning(emptyRow), 'Chưa có dữ liệu');
+      expect(en.meaning(emptyRow), 'No data yet');
       final diligence = lookupPair('12').single;
-      expect(vi.meaning(diligence), 'Chưa có dữ liệu');
-      expect(en.meaning(diligence), 'No data yet');
+      expect(vi.meaning(diligence), diligence.meaningVi);
+      expect(en.meaning(diligence), diligence.meaningEn);
     });
 
     test('một cung gặp nhiều nhóm thì nêu đủ nhóm theo thứ tự bảng', () {
