@@ -134,7 +134,7 @@ void main() {
 
   group('trang nhập tay', () {
     testWidgets('nhập đúng mở trang kết quả với tọa độ chuẩn', (tester) async {
-      await _pumpApp(tester);
+      await _pumpApp(tester, size: const Size(390, 2000));
       await _openManualEntry(tester, 'Nhập tay');
       await _fill(tester, ['21', '1', '43', '105', '48', '12']);
       await _tapView(tester, 'Xem');

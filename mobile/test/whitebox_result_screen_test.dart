@@ -201,7 +201,10 @@ void main() {
     expect(find.text('3 dòng'), findsOneWidget);
     expect(find.text('KẾT LUẬN'), findsOneWidget);
     expect(
-      find.text('Vị trí này nổi bật về Thiên Tài (Đại tài), 1 lần.'),
+      find.text(
+        'Vị trí này nổi bật về Thiên Tài (Đại tài), '
+        'thiên về tiền tài và cơ hội làm giàu.',
+      ),
       findsOneWidget,
     );
     expect(find.textContaining('Lưu ý'), findsNothing);
@@ -276,7 +279,10 @@ void main() {
       '11',
     ]);
     expect(
-      find.text('Vị trí này nổi bật về Bảo Vệ, 2 lần.'),
+      find.text(
+        'Vị trí này nổi bật về Bảo Vệ, 2 lần, '
+        'thiên về giữ gìn thành quả và sự bình ổn.',
+      ),
       findsOneWidget,
     );
     expect(find.text('CẢNH BÁO'), findsNothing);
@@ -308,7 +314,12 @@ void main() {
     expect(find.text('CẢNH BÁO'), findsOneWidget);
     expect(find.text('Lưu ý: vị trí này có Tai Họa.'), findsOneWidget);
     expect(
-      find.text('Vị trí này nổi bật về Chăm Chỉ, 3 lần.'),
+      find.text(
+        'Vị trí này hội tụ 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, '
+        'thiên về sự cần cù và kiên trì. Bên cạnh đó, '
+        'Bảo Vệ thiên về giữ gìn thành quả và sự bình ổn; '
+        'Tai Họa thiên về vận hạn cần cẩn trọng.',
+      ),
       findsOneWidget,
     );
     expect(_pairColor(tester, 0), AppColors.warning);
@@ -359,7 +370,9 @@ void main() {
       find.text('Lưu ý: vị trí này có Đào Hoa (Tai họa) và Tai Họa.'),
       findsOneWidget,
     );
-    expect(find.textContaining('mỗi cung 1 lần'), findsOneWidget);
+    // Số trời chưa có dữ liệu nên bị loại: còn 5 cung, mỗi cung 1 lần ⇒ không ghi số lần.
+    expect(find.textContaining('hội tụ 5 cung ngang nhau'), findsOneWidget);
+    expect(find.textContaining('mỗi cung'), findsNothing);
 
     // Dòng 3 (Số trời): chưa có dữ liệu, có nhóm, không cảnh báo ⇒ nhóm màu nhãn, nét đứt.
     expect(_pairBoxAt(tester, 2).hasData, isFalse);
@@ -521,11 +534,28 @@ void main() {
   testWidgets('6-15 tiếng Anh: câu kết luận và lưu ý theo ngôn ngữ đang chọn', (
     tester,
   ) async {
-    await _pumpResult(tester, _multiWarning, language: AppLanguage.en);
+    // Màn cao để ListView dựng đủ cả hai dòng cảnh báo dù Kết luận tiếng Anh dài.
+    await _pumpResult(
+      tester,
+      _multiWarning,
+      language: AppLanguage.en,
+      size: const Size(390, 4000),
+    );
 
     expect(find.text('CONCLUSION'), findsOneWidget);
     expect(find.text('WARNING'), findsNWidgets(2));
-    expect(find.textContaining('This location stands out for'), findsOneWidget);
+    expect(
+      find.text(
+        'This location brings together 6 equally strong palaces: '
+        'Fortune (Minor Fortune) tied to wealth and opportunities to prosper; '
+        'Career (High Office) tied to status and career path; '
+        'Intelligence (High IQ) tied to intellect and the ability to learn; '
+        'Divine Destiny (Heavenly Fate) tied to blessings ordained by heaven; '
+        'Romance (Misfortune) tied to relationships and affection; '
+        'Misfortune tied to misfortunes that call for caution.',
+      ),
+      findsOneWidget,
+    );
     expect(
       find.text('Note: this location includes Romance (Misfortune) and Misfortune.'),
       findsOneWidget,

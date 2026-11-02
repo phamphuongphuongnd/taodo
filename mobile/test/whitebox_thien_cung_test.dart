@@ -94,22 +94,22 @@ void main() {
     });
 
     // Lật D2: S (cung đã gặp) cùng D3 S, D4 Đ.
-    test('6-8 mỗi cung gặp 2 lần ⇒ đếm cộng dồn, bằng nhau nêu cả hai', () {
-      final r = conclude(['13', '13', '19', '19']);
+    test('6-8 mỗi cung gặp 2 cặp khác nhau ⇒ đếm cộng dồn, bằng nhau nêu cả hai', () {
+      final r = conclude(['13', '31', '19', '91']);
       expect(palaces(r), ['Thiên Tài', 'Quan Lộc']);
       expect(r.top.map((t) => t.count).toList(), [2, 2]);
     });
 
     // Lật D3: Đ (a > b) ⇒ cung nhiều nhất đứng trước; cung ít hơn bị loại (D4 S).
     test('6-9 cung nhiều nhất gặp trước ⇒ chỉ nêu cung đó', () {
-      final r = conclude(['13', '13', '19']);
+      final r = conclude(['13', '31', '19']);
       expect(palaces(r), ['Thiên Tài']);
       expect(r.top.single.count, 2);
     });
 
     // Lật D4: S với D3 S (cung ít hơn gặp trước).
     test('6-10 cung ít hơn gặp trước ⇒ vẫn chỉ nêu cung nhiều nhất', () {
-      final r = conclude(['19', '13', '13']);
+      final r = conclude(['19', '13', '31']);
       expect(palaces(r), ['Thiên Tài']);
       expect(r.top.single.count, 2);
     });

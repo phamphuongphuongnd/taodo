@@ -62,7 +62,8 @@ const List<ThienCungGroup> thienCungTable = [
     groupVi: 'Tiểu tài',
     groupEn: 'Minor Fortune',
     numbers: ['27', '72', '49', '94'],
-    meaningVi: 'Các nguồn lộc nhỏ, lộc vặt, hoặc nguồn thu nhập đều đặn, bình ổn.',
+    meaningVi:
+        'Các nguồn lộc nhỏ, lộc vặt, hoặc nguồn thu nhập đều đặn, bình ổn.',
     meaningEn: 'Small sources of luck, minor windfalls, or a regular and stable income.',
   ),
   ThienCungGroup(
@@ -169,7 +170,8 @@ const List<ThienCungGroup> thienCungTable = [
     palaceEn: 'Spiritual Response',
     numbers: ['18', '81', '24', '42', '63', '36'],
     meaningVi: 'Vùng đất dành cho việc thờ cúng, muốn phát đạt thì phải thờ cúng nhiều.',
-    meaningEn: 'Land meant for worship: to prosper, one must worship abundantly.',
+    meaningEn:
+        'Land meant for worship: to prosper, one must worship abundantly.',
   ),
   ThienCungGroup(
     palaceOrder: 6,

@@ -249,9 +249,9 @@ class AppStrings {
 
   /// Câu đọc tọa độ cho trình đọc màn hình. Chuỗi không đúng dạng thì giữ nguyên.
   String spokenCoords(String coordsText) {
-    final parts = RegExp(
-      r'''(\d+)°(\d+)'(\d+)"([NSEW])''',
-    ).allMatches(coordsText).toList();
+    final parts = RegExp(r'''(\d+)°(\d+)'(\d+)"([NSEW])''')
+        .allMatches(coordsText)
+        .toList();
     if (parts.length != 2) return coordsText;
     return '$spokenLatitude ${_spokenPart(parts[0])}, '
         '$spokenLongitude ${_spokenPart(parts[1])}';
@@ -267,6 +267,9 @@ class AppStrings {
     return '${int.parse(part[1]!)} $degrees ${int.parse(part[2]!)} $minutes '
         '${int.parse(part[3]!)} $seconds $hemisphere';
   }
+
+  /// Đọc thành lời cho nhãn `×N` cạnh một dòng có cặp số lặp lại.
+  String timesSpoken(int count) => _isVi ? '$count lần' : '$count times';
 
   /// Số dòng trong danh sách chi tiết.
   String rowCount(int count) {
@@ -304,17 +307,105 @@ class AppStrings {
   /// Câu chính của Kết luận. Các cung trong `top` có cùng số lần.
   String conclusionSentence(Conclusion conclusion) {
     final top = conclusion.top;
-    final palaces = joinList(top.map(_tallyLabel).toList());
+    final topOrders = {for (final tally in top) tally.palace.palaceOrder};
+    final others = [
+      for (final tally in conclusion.all)
+        if (!topOrders.contains(tally.palace.palaceOrder)) tally,
+    ];
     final count = top.first.count;
     final each = top.length > 1;
-    if (_isVi) {
-      final times = each ? 'mỗi cung $count lần' : '$count lần';
-      return 'Vị trí này nổi bật về $palaces, $times.';
+    final total = conclusion.all.length;
+    final topLabels = joinList(top.map(_tallyLabel).toList());
+    // Số lần chỉ ghi khi lớn hơn 1, vì một cặp số đã được gộp thành một lần.
+    final eachNote = count > 1 ? _eachTimes(count) : '';
+
+    if (others.isEmpty) {
+      if (!each) {
+        return _isVi
+            ? 'Vị trí này nổi bật về $topLabels${_topNote(count)}, '
+                  '$_leansTo ${_aspect(top.first)}.'
+            : 'This location stands out for $topLabels${_topNote(count)}, '
+                  '$_leansTo ${_aspect(top.first)}.';
+      }
+      return _isVi
+          ? 'Vị trí này hội tụ $total cung ngang nhau$eachNote: '
+                '${_describe(top)}.'
+          : 'This location brings together $total equally strong '
+                'palaces$eachNote: ${_describe(top)}.';
     }
-    final unit = count == 1 ? 'time' : 'times';
-    final times = each ? '$count $unit each' : '$count $unit';
-    return 'This location stands out for $palaces, $times.';
+
+    final lead = each
+        ? (_isVi
+              ? 'Nổi bật nhất là $topLabels$eachNote: ${_describe(top)}.'
+              : 'The strongest are $topLabels$eachNote: ${_describe(top)}.')
+        : (_isVi
+              ? 'Nổi bật nhất là $topLabels${_topNote(count)}, '
+                    '$_leansTo ${_aspect(top.first)}.'
+              : 'The strongest is $topLabels${_topNote(count)}, '
+                    '$_leansTo ${_aspect(top.first)}.');
+    return _isVi
+        ? 'Vị trí này hội tụ $total cung. $lead Bên cạnh đó, '
+              '${_describe(others, withTimes: true)}.'
+        : 'This location brings together $total palaces. $lead Besides that, '
+              '${_describe(others, withTimes: true)}.';
   }
+
+  String get _leansTo => _isVi ? 'thiên về' : 'tied to';
+
+  /// `A thiên về a; B thiên về b; C thiên về c`. Nối bằng dấu chấm phẩy vì tên
+  /// cung và ý diễn giải đều có thể chứa chữ "và".
+  String _describe(List<PalaceTally> tallies, {bool withTimes = false}) {
+    return [
+      for (final tally in tallies)
+        '${_tallyLabel(tally)}'
+            '${withTimes ? _timesNote(tally.count) : ''} '
+            '$_leansTo ${_aspect(tally)}',
+    ].join('; ');
+  }
+
+  /// Số lần của cung nổi bật duy nhất, đứng trước `, thiên về ...`.
+  String _topNote(int count) =>
+      count <= 1 ? '' : (_isVi ? ', $count lần' : ', $count times');
+
+  String _timesNote(int count) =>
+      count <= 1 ? '' : (_isVi ? ', $count lần,' : ', $count times,');
+
+  String _eachTimes(int count) =>
+      _isVi ? ', mỗi cung $count lần' : ', $count times each';
+
+  /// Ý ngắn về nghĩa của một cung, dùng để diễn giải trong Kết luận.
+  String _aspect(PalaceTally tally) {
+    final order = tally.palace.palaceOrder;
+    return _isVi ? _aspectsVi[order] : _aspectsEn[order];
+  }
+
+  static const _aspectsVi = [
+    'tiền tài và cơ hội làm giàu', // 0 Thiên Tài
+    'công danh và đường sự nghiệp', // 1 Quan Lộc
+    'trí tuệ và khả năng học hỏi', // 2 Thông Minh
+    'phúc phận do trời định', // 3 Thần Linh Trời Định
+    'tích góp của cải bền lâu', // 4 Tích Lũy Tài Sản
+    'tâm linh và việc thờ cúng', // 5 Linh Ứng
+    'nhân duyên và tình cảm', // 6 Đào Hoa
+    'sự cần cù và kiên trì', // 7 Chăm Chỉ
+    'giữ gìn thành quả và sự bình ổn', // 8 Bảo Vệ
+    'đạo lý và phúc đức', // 9 Đạo Đức
+    'vận hạn cần cẩn trọng', // 10 Tai Họa
+  ];
+
+  static const _aspectsEn = [
+    'wealth and opportunities to prosper', // 0 Fortune
+    'status and career path', // 1 Career
+    'intellect and the ability to learn', // 2 Intelligence
+    'blessings ordained by heaven', // 3 Divine Destiny
+    'lasting accumulation of assets', // 4 Wealth Accumulation
+    'spirituality and worship', // 5 Spiritual Response
+    'relationships and affection', // 6 Romance
+    'diligence and perseverance', // 7 Diligence
+    'safeguarding achievements and stability', // 8 Protection
+    'principle and merit', // 9 Virtue
+    'misfortunes that call for caution', // 10 Misfortune
+  ];
 
   /// Câu lưu ý, nêu tên từng dòng trong `warnings`.
   String warningSentence(Conclusion conclusion) {

@@ -71,7 +71,9 @@ class ResultScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
-                              Expanded(child: SectionLabel(strings.detailsTitle)),
+                              Expanded(
+                                child: SectionLabel(strings.detailsTitle),
+                              ),
                               const SizedBox(width: 12),
                               Text(
                                 strings.rowCount(matches.length),
@@ -337,6 +339,20 @@ class _MatchRow extends StatelessWidget {
                                 color: row.isWarning
                                     ? AppColors.warning
                                     : AppColors.label,
+                                height: 1.3,
+                              ),
+                            ),
+                          if (match.times > 1)
+                            TextSpan(
+                              text: '  ×${match.times}',
+                              semanticsLabel:
+                                  ', ${strings.timesSpoken(match.times)}',
+                              style: appText(
+                                size: 15,
+                                weight: 800,
+                                color: row.isWarning
+                                    ? AppColors.warning
+                                    : AppColors.accent,
                                 height: 1.3,
                               ),
                             ),

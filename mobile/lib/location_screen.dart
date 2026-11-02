@@ -70,9 +70,8 @@ class _LocationScreenState extends State<LocationScreen>
 
   void _openAbout() {
     unawaited(
-      Navigator.of(
-        context,
-      ).push(CupertinoPageRoute<void>(builder: (_) => const AboutScreen())),
+      Navigator.of(context)
+          .push(CupertinoPageRoute<void>(builder: (_) => const AboutScreen())),
     );
   }
 
@@ -102,9 +101,7 @@ class _LocationScreenState extends State<LocationScreen>
       backgroundColor: AppColors.screen,
       child: Stack(
         children: [
-          Positioned.fill(
-            child: _Rings(pulsing: state is LocationWaiting),
-          ),
+          Positioned.fill(child: _Rings(pulsing: state is LocationWaiting)),
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -178,11 +175,7 @@ class _TopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            CupertinoIcons.compass,
-            size: 24,
-            color: AppColors.text,
-          ),
+          const Icon(CupertinoIcons.compass, size: 24, color: AppColors.text),
           const SizedBox(width: 10),
           Expanded(
             child: Text(

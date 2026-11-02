@@ -211,6 +211,12 @@ void main() {
       ]);
     });
 
+    test('cặp trùng chỉ ra một lần, ở lần gặp đầu tiên', () {
+      final matches = matchPairs(['14', '31', '14', '31', '00', '00', '00']);
+      expect(matches.map((m) => m.pair).toList(), ['14', '31', '00']);
+      expect(splitPairs('000000'), ['00', '00', '00']);
+    });
+
     test('thứ tự theo pairs chứ không theo bảng', () {
       final matches = matchPairs(['14', '31']);
       expect(matches.map((m) => m.pair).toList(), ['14', '31']);
@@ -302,10 +308,29 @@ void main() {
       },
     );
 
-    test('cặp lặp lại vẫn đếm từng PairMatch', () {
+    test('cặp lặp lại chỉ một dòng nhưng count cộng đủ số lần', () {
       final tally = conclude(['38', '38']).top.single;
       expect(tally.count, 2);
       expect(labels(tally.groups), ['Đào Hoa / May mắn']);
+      expect(conclude(['38', '38', '38']).top.single.count, 3);
+    });
+
+    test('matchPairs ghi số lần của từng cặp, thứ tự theo lần gặp đầu', () {
+      final matches = matchPairs(['14', '31', '14', '00', '00', '00', '00']);
+      expect(matches.map((m) => m.pair).toList(), ['14', '31', '00']);
+      expect(matches.map((m) => m.times).toList(), [2, 1, 4]);
+    });
+
+    test('all nêu đủ mọi cung gặp, theo thứ tự bảng, đúng count', () {
+      final result = conclude(['19', '13', '31', '12']);
+      expect(result.all.map((t) => t.palace.palaceVi).toList(), [
+        'Thiên Tài',
+        'Quan Lộc',
+        'Chăm Chỉ',
+      ]);
+      expect(result.all.map((t) => t.count).toList(), [2, 1, 1]);
+      expect(result.top.map((t) => t.palace.palaceVi).toList(), ['Thiên Tài']);
+      expect(conclude(['48']).all, isEmpty);
     });
 
     test('cảnh báo vẫn báo dù cung đó không nằm trong top', () {

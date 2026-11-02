@@ -120,7 +120,13 @@ void main() {
   });
 
   testWidgets('tiếng Anh dùng nhãn WARNING', (tester) async {
-    await _pumpResult(tester, _warningCoords, language: AppLanguage.en);
+    // Kết luận tiếng Anh dài hơn, nên cần màn cao để ListView dựng đủ cả hai dòng cảnh báo.
+    await _pumpResult(
+      tester,
+      _warningCoords,
+      language: AppLanguage.en,
+      size: const Size(390, 4000),
+    );
 
     expect(find.text('WARNING'), findsNWidgets(2));
   });

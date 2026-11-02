@@ -2,10 +2,14 @@ import 'thien_cung_data.dart';
 
 /// Một cặp số khớp với một dòng trong bảng.
 class PairMatch {
-  const PairMatch(this.pair, this.group);
+  const PairMatch(this.pair, this.group, {this.times = 1});
 
   final String pair;
   final ThienCungGroup group;
+
+  /// Số lần cặp này xuất hiện trong tọa độ. Cặp trùng chỉ hiện một dòng nhưng
+  /// vẫn tính đủ số lần vào Kết luận.
+  final int times;
 }
 
 /// Số lần một cung xuất hiện trong kết quả.
@@ -20,10 +24,17 @@ class PalaceTally {
 }
 
 class Conclusion {
-  const Conclusion({required this.top, required this.warnings});
+  const Conclusion({
+    required this.top,
+    required this.warnings,
+    this.all = const [],
+  });
 
   /// Các cung xuất hiện nhiều nhất, theo thứ tự trong bảng.
   final List<PalaceTally> top;
+
+  /// Mọi cung gặp được, theo thứ tự trong bảng, kèm số lần.
+  final List<PalaceTally> all;
 
   /// Các dòng `isWarning` đã gặp, không trùng, theo thứ tự trong bảng.
   final List<ThienCungGroup> warnings;
@@ -50,14 +61,20 @@ List<ThienCungGroup> lookupPair(
 }
 
 /// Các kết quả khớp theo thứ tự của [pairs]; cặp không có trong bảng bị bỏ.
+/// Cặp trùng nhau chỉ có một dòng, ở lần gặp đầu tiên, kèm số lần xuất hiện.
 /// [table] chỉ để test dựng bảng có dòng chưa có dữ liệu.
 List<PairMatch> matchPairs(
   List<String> pairs, {
   List<ThienCungGroup> table = thienCungTable,
 }) {
+  final times = <String, int>{};
+  for (final pair in pairs) {
+    times[pair] = (times[pair] ?? 0) + 1;
+  }
   return [
-    for (final pair in pairs)
-      for (final row in lookupPair(pair, table: table)) PairMatch(pair, row),
+    for (final MapEntry(key: pair, value: count) in times.entries)
+      for (final row in lookupPair(pair, table: table))
+        PairMatch(pair, row, times: count),
   ];
 }
 
@@ -71,7 +88,7 @@ Conclusion buildConclusion(List<PairMatch> allMatches) {
   final counts = <int, int>{};
   for (final match in matches) {
     final order = match.group.palaceOrder;
-    counts[order] = (counts[order] ?? 0) + 1;
+    counts[order] = (counts[order] ?? 0) + match.times;
   }
   final highest = counts.values.reduce((a, b) => a > b ? a : b);
 
@@ -82,16 +99,15 @@ Conclusion buildConclusion(List<PairMatch> allMatches) {
       if (counts[row.palaceOrder] == highest) row.palaceOrder,
   };
 
+  PalaceTally tally(int order) => PalaceTally(
+    groups: metInTableOrder.where((row) => row.palaceOrder == order).toList(),
+    count: counts[order]!,
+  );
+  final allOrders = {for (final row in metInTableOrder) row.palaceOrder};
+
   return Conclusion(
-    top: [
-      for (final order in topOrders)
-        PalaceTally(
-          groups: metInTableOrder
-              .where((row) => row.palaceOrder == order)
-              .toList(),
-          count: highest,
-        ),
-    ],
+    top: [for (final order in topOrders) tally(order)],
+    all: [for (final order in allOrders) tally(order)],
     warnings: metInTableOrder.where((row) => row.isWarning).toList(),
   );
 }

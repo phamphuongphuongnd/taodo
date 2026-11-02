@@ -85,6 +85,33 @@ Future<void> _scrollTo(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
+  testWidgets('cặp lặp lại chỉ một dòng, kèm ×N cạnh tên cung', (tester) async {
+    // Các cặp tách ra: 00, 13, 12, 00, 00, 00. Cặp 00 xuất hiện 4 lần.
+    await _pumpResult(
+      tester,
+      '00°00\'00"N 12°13\'00"E',
+      size: const Size(390, 2000),
+    );
+
+    expect(_pair('00'), findsOneWidget);
+    // Nhãn ×4 đọc thành "4 lần" cho trình đọc màn hình, chữ hiện ra là ×4.
+    Finder shown(String text) => find.byWidgetPredicate(
+      (widget) =>
+          widget is RichText &&
+          widget.text.toPlainText(includeSemanticsLabels: false).contains(text),
+    );
+    expect(shown('×4'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is RichText && widget.text.toPlainText() == 'Bảo Vệ, 4 lần',
+      ),
+      findsOneWidget,
+    );
+    expect(shown('×1'), findsNothing);
+    expect(find.text('3 dòng'), findsOneWidget);
+  });
+
   testWidgets('hiện tọa độ, cặp số, cung, nhóm và ý nghĩa theo thứ tự', (
     tester,
   ) async {
@@ -118,11 +145,7 @@ void main() {
   });
 
   testWidgets('một số thuộc nhiều cung thì hiện đủ', (tester) async {
-    await _pumpResult(
-      tester,
-      _multiPalaceCoords,
-      size: const Size(390, 2000),
-    );
+    await _pumpResult(tester, _multiPalaceCoords, size: const Size(390, 2000));
 
     expect(_pair('27'), findsNWidgets(3));
     expect(find.text('Thiên Tài (Tiểu tài)'), findsOneWidget);
@@ -131,11 +154,13 @@ void main() {
   });
 
   testWidgets('phần Kết luận nằm trên danh sách chi tiết', (tester) async {
-    await _pumpResult(tester, _exampleCoords);
+    await _pumpResult(tester, _exampleCoords, size: const Size(390, 2000));
 
     final sentence = find.text(
-      'Vị trí này nổi bật về Thiên Tài (Đại tài), Tích Lũy Tài Sản và '
-      'Chăm Chỉ, mỗi cung 1 lần.',
+      'Vị trí này hội tụ 3 cung ngang nhau: '
+      'Thiên Tài (Đại tài) thiên về tiền tài và cơ hội làm giàu; '
+      'Tích Lũy Tài Sản thiên về tích góp của cải bền lâu; '
+      'Chăm Chỉ thiên về sự cần cù và kiên trì.',
     );
     await _scrollTo(tester, sentence);
 
@@ -148,7 +173,12 @@ void main() {
   });
 
   testWidgets('tiếng Anh dùng trường En', (tester) async {
-    await _pumpResult(tester, _exampleCoords, language: AppLanguage.en);
+    await _pumpResult(
+      tester,
+      _exampleCoords,
+      language: AppLanguage.en,
+      size: const Size(390, 2000),
+    );
 
     final talent = lookupPair('31').single;
     final diligence = lookupPair('12').single;
@@ -159,8 +189,10 @@ void main() {
     expect(find.text(talent.meaningEn), findsOneWidget);
 
     final sentence = find.text(
-      'This location stands out for $talentLabel, ${wealth.palaceEn} and '
-      '${diligence.palaceEn}, 1 time each.',
+      'This location brings together 3 equally strong palaces: '
+      '$talentLabel tied to wealth and opportunities to prosper; '
+      '${wealth.palaceEn} tied to lasting accumulation of assets; '
+      '${diligence.palaceEn} tied to diligence and perseverance.',
     );
     await _scrollTo(tester, sentence);
     expect(find.text('CONCLUSION'), findsOneWidget);
@@ -223,7 +255,12 @@ void main() {
       await _scrollTo(tester, warning);
 
       expect(
-        find.text('Vị trí này nổi bật về Chăm Chỉ, 3 lần.'),
+        find.text(
+          'Vị trí này hội tụ 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, '
+          'thiên về sự cần cù và kiên trì. Bên cạnh đó, '
+          'Bảo Vệ thiên về giữ gìn thành quả và sự bình ổn; '
+          'Tai Họa thiên về vận hạn cần cẩn trọng.',
+        ),
         findsOneWidget,
       );
       expect(warning, findsOneWidget);

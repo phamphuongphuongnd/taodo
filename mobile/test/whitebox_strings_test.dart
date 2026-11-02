@@ -83,8 +83,11 @@ const _romanceWarn = ThienCungGroup(
   isWarning: true,
 );
 
-Conclusion _conclusion(List<PalaceTally> top, [List<ThienCungGroup> warnings = const []]) =>
-    Conclusion(top: top, warnings: warnings);
+Conclusion _conclusion(
+  List<PalaceTally> top, [
+  List<ThienCungGroup> warnings = const [],
+  List<PalaceTally>? all,
+]) => Conclusion(top: top, warnings: warnings, all: all ?? top);
 
 void main() {
   final vi = AppStrings.of(AppLanguage.vi);
@@ -241,7 +244,8 @@ void main() {
       ]);
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này nổi bật về Thiên Tài (Trung tài và Tiểu tài), 2 lần.',
+        'Vị trí này nổi bật về Thiên Tài (Trung tài và Tiểu tài), 2 lần, '
+        'thiên về tiền tài và cơ hội làm giàu.',
       );
     });
   });
@@ -253,7 +257,8 @@ void main() {
       final c = _conclusion([const PalaceTally(groups: [_talentGreat], count: 3)]);
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này nổi bật về Thiên Tài (Đại tài), 3 lần.',
+        'Vị trí này nổi bật về Thiên Tài (Đại tài), 3 lần, '
+        'thiên về tiền tài và cơ hội làm giàu.',
       );
     });
     test('6-28 vi, nhiều cung bằng nhau (n1 Đ, n2 Đ)', () {
@@ -263,22 +268,26 @@ void main() {
       ]);
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này nổi bật về Thiên Tài (Đại tài) và Quan Lộc (Đại quan), '
-        'mỗi cung 1 lần.',
+        'Vị trí này hội tụ 2 cung ngang nhau: Thiên Tài (Đại tài) thiên về '
+        'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh '
+        'và đường sự nghiệp.',
       );
     });
     test('6-29 en, một cung 3 lần (n1 S, n3 S, n4 S)', () {
       final c = _conclusion([const PalaceTally(groups: [_talentGreat], count: 3)]);
       expect(
         en.conclusionSentence(c),
-        'This location stands out for Talent (Great), 3 times.',
+        'This location stands out for Talent (Great), 3 times, tied to wealth '
+        'and opportunities to prosper.',
       );
     });
     test('6-30 en, một cung 1 lần (n1 S, n3 Đ, n4 S)', () {
       final c = _conclusion([const PalaceTally(groups: [_talentGreat], count: 1)]);
       expect(
         en.conclusionSentence(c),
-        'This location stands out for Talent (Great), 1 time.',
+        // Một cặp đã gộp thành một lần nên không ghi số lần.
+        'This location stands out for Talent (Great), tied to wealth and '
+        'opportunities to prosper.',
       );
     });
     test('6-31 en, nhiều cung bằng nhau 2 lần (n1 S, n3 S, n4 Đ)', () {
@@ -288,8 +297,104 @@ void main() {
       ]);
       expect(
         en.conclusionSentence(c),
-        'This location stands out for Talent (Great) and Career (High Office), '
-        '2 times each.',
+        'This location brings together 2 equally strong palaces, 2 times each: '
+        'Talent (Great) tied to wealth and opportunities to prosper; Career '
+        '(High Office) tied to status and career path.',
+      );
+    });
+    test('6-31a vi, cung nổi bật duy nhất + cung khác 1 lần', () {
+      final c = _conclusion(
+        [const PalaceTally(groups: [_talentGreat], count: 2)],
+        const [],
+        [
+          const PalaceTally(groups: [_talentGreat], count: 2),
+          const PalaceTally(groups: [_career], count: 1),
+          const PalaceTally(groups: [_noGroup], count: 1),
+        ],
+      );
+      expect(
+        vi.conclusionSentence(c),
+        'Vị trí này hội tụ 3 cung. Nổi bật nhất là Thiên Tài (Đại tài), 2 lần, '
+        'thiên về tiền tài và cơ hội làm giàu. Bên cạnh đó, Quan Lộc (Đại quan) '
+        'thiên về công danh và đường sự nghiệp; Tai Họa thiên về vận hạn cần '
+        'cẩn trọng.',
+      );
+    });
+    test('6-31b en, cung nổi bật duy nhất + cung khác 1 lần', () {
+      final c = _conclusion(
+        [const PalaceTally(groups: [_talentGreat], count: 2)],
+        const [],
+        [
+          const PalaceTally(groups: [_talentGreat], count: 2),
+          const PalaceTally(groups: [_career], count: 1),
+          const PalaceTally(groups: [_noGroup], count: 1),
+        ],
+      );
+      expect(
+        en.conclusionSentence(c),
+        'This location brings together 3 palaces. The strongest is Talent '
+        '(Great), 2 times, tied to wealth and opportunities to prosper. '
+        'Besides that, Career (High Office) tied to status and career path; '
+        'Misfortune tied to misfortunes that call for caution.',
+      );
+    });
+    test('6-31c vi, cung khác gặp nhiều lần ghi số lần', () {
+      final c = _conclusion(
+        [const PalaceTally(groups: [_talentGreat], count: 3)],
+        const [],
+        [
+          const PalaceTally(groups: [_talentGreat], count: 3),
+          const PalaceTally(groups: [_career], count: 2),
+        ],
+      );
+      expect(
+        vi.conclusionSentence(c),
+        'Vị trí này hội tụ 2 cung. Nổi bật nhất là Thiên Tài (Đại tài), 3 lần, '
+        'thiên về tiền tài và cơ hội làm giàu. Bên cạnh đó, Quan Lộc (Đại '
+        'quan), 2 lần, thiên về công danh và đường sự nghiệp.',
+      );
+    });
+    test('6-31d vi, nhiều cung nổi bật bằng nhau + cung khác', () {
+      final c = _conclusion(
+        [
+          const PalaceTally(groups: [_talentGreat], count: 2),
+          const PalaceTally(groups: [_career], count: 2),
+        ],
+        const [],
+        [
+          const PalaceTally(groups: [_talentGreat], count: 2),
+          const PalaceTally(groups: [_career], count: 2),
+          const PalaceTally(groups: [_noGroup], count: 1),
+        ],
+      );
+      expect(
+        vi.conclusionSentence(c),
+        'Vị trí này hội tụ 3 cung. Nổi bật nhất là Thiên Tài (Đại tài) và Quan '
+        'Lộc (Đại quan), mỗi cung 2 lần: Thiên Tài (Đại tài) thiên về tiền tài '
+        'và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh và đường '
+        'sự nghiệp. Bên cạnh đó, Tai Họa thiên về vận hạn cần cẩn trọng.',
+      );
+    });
+    test('6-31e en, nhiều cung nổi bật bằng nhau + cung khác', () {
+      final c = _conclusion(
+        [
+          const PalaceTally(groups: [_talentGreat], count: 3),
+          const PalaceTally(groups: [_career], count: 3),
+        ],
+        const [],
+        [
+          const PalaceTally(groups: [_talentGreat], count: 3),
+          const PalaceTally(groups: [_career], count: 3),
+          const PalaceTally(groups: [_noGroup], count: 2),
+        ],
+      );
+      expect(
+        en.conclusionSentence(c),
+        'This location brings together 3 palaces. The strongest are Talent '
+        '(Great) and Career (High Office), 3 times each: Talent (Great) tied to wealth and '
+        'opportunities to prosper; Career (High Office) tied to status and '
+        'career path. Besides that, Misfortune, 2 times, tied to misfortunes '
+        'that call for caution.',
       );
     });
   });
