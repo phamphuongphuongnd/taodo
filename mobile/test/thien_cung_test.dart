@@ -150,11 +150,11 @@ void main() {
       expect(thienCungTable.first.palaceEn, 'Fortune');
     });
 
-    test('Thiên Tài / Đại tài dùng đúng ý nghĩa người dùng đưa', () {
+    test('Thiên Tài / Đại tài dùng đúng ý nghĩa đã biên tập', () {
       expect(
         thienCungTable.first.meaningVi,
-        'Năng lượng đỉnh cao về tiền tài, biểu thị sự hanh thông lớn, dễ nắm '
-        'bắt đại cơ hội.',
+        'Vận tài lộc ở đỉnh cao: tiền bạc hanh thông, cơ hội lớn dễ đến và '
+        'dễ nắm bắt.',
       );
     });
   });

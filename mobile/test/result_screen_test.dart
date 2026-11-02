@@ -157,7 +157,7 @@ void main() {
     await _pumpResult(tester, _exampleCoords, size: const Size(390, 2000));
 
     final sentence = find.text(
-      'Vị trí này hội tụ 3 cung ngang nhau: '
+      'Vị trí này có 3 cung cùng nổi bật: '
       'Thiên Tài (Đại tài) thiên về tiền tài và cơ hội làm giàu; '
       'Tích Lũy Tài Sản thiên về tích góp của cải bền lâu; '
       'Chăm Chỉ thiên về sự cần cù và kiên trì.',
@@ -189,10 +189,10 @@ void main() {
     expect(find.text(talent.meaningEn), findsOneWidget);
 
     final sentence = find.text(
-      'This location brings together 3 equally strong palaces: '
-      '$talentLabel tied to wealth and opportunities to prosper; '
-      '${wealth.palaceEn} tied to lasting accumulation of assets; '
-      '${diligence.palaceEn} tied to diligence and perseverance.',
+      'This location has 3 equally strong themes: '
+      '$talentLabel pointing to wealth and opportunities to prosper; '
+      '${wealth.palaceEn} pointing to lasting accumulation of assets; '
+      '${diligence.palaceEn} pointing to steady effort and perseverance.',
     );
     await _scrollTo(tester, sentence);
     expect(find.text('CONCLUSION'), findsOneWidget);
@@ -256,7 +256,7 @@ void main() {
 
       expect(
         find.text(
-          'Vị trí này hội tụ 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, '
+          'Vị trí này có 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, '
           'thiên về sự cần cù và kiên trì. Bên cạnh đó, '
           'Bảo Vệ thiên về giữ gìn thành quả và sự bình ổn; '
           'Tai Họa thiên về vận hạn cần cẩn trọng.',

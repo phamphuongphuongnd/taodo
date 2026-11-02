@@ -42,7 +42,7 @@ void main() {
     test('ví dụ chuẩn tính các cung có dữ liệu, bằng nhau thì nêu hết', () {
       expect(
         vi.conclusionSentence(_conclusionOf(_exampleCoords)),
-        'Vị trí này hội tụ 3 cung ngang nhau: Thiên Tài (Đại tài) thiên về '
+        'Vị trí này có 3 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về '
         'tiền tài và cơ hội làm giàu; Tích Lũy Tài Sản thiên về tích góp của '
         'cải bền lâu; Chăm Chỉ thiên về sự cần cù và kiên trì.',
       );
@@ -55,17 +55,17 @@ void main() {
       final romance = lookupPair('38').single;
       expect(
         vi.conclusionSentence(conclusion),
-        'Vị trí này hội tụ 3 cung ngang nhau: Thiên Tài (Đại tài) thiên về '
+        'Vị trí này có 3 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về '
         'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh '
         'và đường sự nghiệp; Đào Hoa (May mắn) thiên về nhân duyên và tình cảm.',
       );
       expect(
         en.conclusionSentence(conclusion),
-        'This location brings together 3 equally strong palaces: '
-        '${talent.palaceEn} (${talent.groupEn}) tied to wealth and '
-        'opportunities to prosper; ${career.palaceEn} (${career.groupEn}) tied '
+        'This location has 3 equally strong themes: '
+        '${talent.palaceEn} (${talent.groupEn}) pointing to wealth and '
+        'opportunities to prosper; ${career.palaceEn} (${career.groupEn}) pointing '
         'to status and career path; ${romance.palaceEn} (${romance.groupEn}) '
-        'tied to relationships and affection.',
+        'pointing to relationships and affection.',
       );
     });
 
@@ -80,8 +80,8 @@ void main() {
       );
       expect(
         en.conclusionSentence(conclusion),
-        'This location stands out for ${diligence.palaceEn}, 3 times, tied to '
-        'diligence and perseverance.',
+        'This location stands out for ${diligence.palaceEn}, 3 times, pointing to '
+        'steady effort and perseverance.',
       );
     });
 
@@ -113,7 +113,7 @@ void main() {
       final conclusion = _conclusionOf(_fourPalacesCoords);
       expect(
         vi.conclusionSentence(conclusion),
-        'Vị trí này hội tụ 4 cung. Nổi bật nhất là Bảo Vệ, 4 lần, thiên về '
+        'Vị trí này có 4 cung. Nổi bật nhất là Bảo Vệ, 4 lần, thiên về '
         'giữ gìn thành quả và sự bình ổn. Bên cạnh đó, Thiên Tài (Trung tài và '
         'Tiểu tài), 2 lần, thiên về tiền tài và cơ hội làm giàu; Thông Minh '
         '(IQ cao) thiên về trí tuệ và khả năng học hỏi; Thần Linh Trời Định '
@@ -125,12 +125,12 @@ void main() {
       final conclusion = _conclusionOf(_fourPalacesCoords);
       expect(
         en.conclusionSentence(conclusion),
-        'This location brings together 4 palaces. The strongest is Protection, '
-        '4 times, tied to safeguarding achievements and stability. Besides '
-        'that, Fortune (Moderate Fortune and Minor Fortune), 2 times, tied to '
-        'wealth and opportunities to prosper; Intelligence (High IQ) tied to '
+        'This location has 4 themes. The strongest is Protection, '
+        '4 times, pointing to safeguarding achievements and stability. Alongside '
+        'this, Fortune (Moderate Fortune and Minor Fortune), 2 times, pointing to '
+        'wealth and opportunities to prosper; Intelligence (High IQ) pointing to '
         'intellect and the ability to learn; Divine Destiny (Heavenly Fate) '
-        'tied to blessings ordained by heaven.',
+        'pointing to blessings ordained by heaven.',
       );
     });
 
@@ -138,22 +138,22 @@ void main() {
       final conclusion = _conclusionOf('12 21 96 16');
       expect(
         vi.conclusionSentence(conclusion),
-        'Vị trí này hội tụ 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, thiên về '
-        'sự cần cù và kiên trì. Bên cạnh đó, Đào Hoa (Tai họa) thiên về nhân '
-        'duyên và tình cảm; Tai Họa thiên về vận hạn cần cẩn trọng.',
+        'Vị trí này có 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, thiên về '
+        'sự cần cù và kiên trì. Bên cạnh đó, Đào Hoa (Tai họa) thiên về sóng '
+        'gió tình cảm cần giữ gìn; Tai Họa thiên về vận hạn cần cẩn trọng.',
       );
       expect(
         en.conclusionSentence(conclusion),
-        'This location brings together 3 palaces. The strongest is Diligence, '
-        '3 times, tied to diligence and perseverance. Besides that, Romance '
-        '(Misfortune) tied to relationships and affection; Misfortune tied to '
-        'misfortunes that call for caution.',
+        'This location has 3 themes. The strongest is Diligence, '
+        '3 times, pointing to steady effort and perseverance. Alongside this, Romance '
+        '(Misfortune) pointing to relationship troubles that need care; Misfortune pointing to '
+        'setbacks that call for caution.',
       );
       // Chỉ có hai cung Tai Họa bằng nhau thì không còn cung khác.
       expect(
         vi.conclusionSentence(_conclusionOf('16')),
-        'Vị trí này hội tụ 2 cung ngang nhau: Đào Hoa (Tai họa) thiên về '
-        'nhân duyên và tình cảm; Tai Họa thiên về vận hạn cần cẩn trọng.',
+        'Vị trí này có 2 cung cùng nổi bật: Đào Hoa (Tai họa) thiên về '
+        'sóng gió tình cảm cần giữ gìn; Tai Họa thiên về vận hạn cần cẩn trọng.',
       );
     });
 

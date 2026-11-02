@@ -78,7 +78,7 @@ class AppMetrics {
     resultCoordsSize: 36,
     pairSize: 24,
     pairBox: 56,
-    conclusionSize: 20,
+    conclusionSize: 18,
     primaryHeight: 60,
   );
 
@@ -89,7 +89,7 @@ class AppMetrics {
     resultCoordsSize: 34,
     pairSize: 22,
     pairBox: 52,
-    conclusionSize: 19,
+    conclusionSize: 17,
     primaryHeight: 56,
   );
 

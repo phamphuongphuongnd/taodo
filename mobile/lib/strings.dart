@@ -22,6 +22,11 @@ class AppStrings {
     required this.invalidCoords,
     required this.invalidField,
     required this.waitingForGps,
+    required this.waitingHint,
+    required this.appIntro,
+    required this.resultNotice,
+    required this.tableTitle,
+    required this.tableBody,
     required this.permissionDisclosure,
     required this.allowLocation,
     required this.permissionDenied,
@@ -78,6 +83,19 @@ class AppStrings {
         'kinh độ tối đa 180°.',
     invalidField: 'sai',
     waitingForGps: 'Đang chờ tín hiệu GPS…',
+    waitingHint:
+        'Hãy ra nơi thoáng, tránh mái che. Bật Wi-Fi có thể giúp nhanh hơn.',
+    appIntro:
+        'Bấm Xem để biết ý nghĩa vị trí này theo các cặp số trong tọa độ và '
+        'Bảng số Thiên Cung.',
+    resultNotice:
+        'Tọa độ GPS dao động vài giây nên kết quả có thể khác giữa các lần đo. '
+        'Nội dung chỉ mang tính tham khảo.',
+    tableTitle: 'Bảng số Thiên Cung',
+    tableBody:
+        'Mỗi cặp hai chữ số trong bảng ứng với một cung và một ý nghĩa. App tách '
+        'các chữ số của tọa độ thành từng cặp, tính từ phải sang trái, rồi tra '
+        'trong bảng và tổng hợp thành phần Kết luận.',
     permissionDisclosure:
         'Tọa Độ dùng vị trí chính xác của điện thoại để hiện kinh độ và vĩ độ. '
         'Vị trí chỉ được dùng khi app đang mở, chỉ xử lý trên điện thoại và '
@@ -143,6 +161,21 @@ class AppStrings {
         'at most 90°, longitude at most 180°.',
     invalidField: 'invalid',
     waitingForGps: 'Waiting for GPS signal…',
+    waitingHint:
+        'Move to an open area away from roofs. Turning on Wi-Fi may speed '
+        'this up.',
+    appIntro:
+        'Tap View to see what this location means, based on the number pairs '
+        'in its coordinates and the Thien Cung table.',
+    resultNotice:
+        'GPS coordinates drift by a few seconds, so results can differ between '
+        'readings. This content is for reference only.',
+    tableTitle: 'The Thien Cung table',
+    tableBody:
+        'Each two-digit pair in the table belongs to a theme with its own '
+        'meaning. The app splits the digits of your coordinates into pairs, '
+        'starting from the right, looks each one up and sums them up in the '
+        'Conclusion.',
     permissionDisclosure:
         'Toa Do uses your phone\'s precise location to show your longitude and '
         'latitude. It is used only while the app is open, processed only on '
@@ -208,6 +241,11 @@ class AppStrings {
   final String invalidCoords;
   final String invalidField;
   final String waitingForGps;
+  final String waitingHint;
+  final String appIntro;
+  final String resultNotice;
+  final String tableTitle;
+  final String tableBody;
   final String permissionDisclosure;
   final String allowLocation;
   final String permissionDenied;
@@ -328,10 +366,10 @@ class AppStrings {
                   '$_leansTo ${_aspect(top.first)}.';
       }
       return _isVi
-          ? 'Vị trí này hội tụ $total cung ngang nhau$eachNote: '
+          ? 'Vị trí này có $total cung cùng nổi bật$eachNote: '
                 '${_describe(top)}.'
-          : 'This location brings together $total equally strong '
-                'palaces$eachNote: ${_describe(top)}.';
+          : 'This location has $total equally strong themes$eachNote: '
+                '${_describe(top)}.';
     }
 
     final lead = each
@@ -344,13 +382,13 @@ class AppStrings {
               : 'The strongest is $topLabels${_topNote(count)}, '
                     '$_leansTo ${_aspect(top.first)}.');
     return _isVi
-        ? 'Vị trí này hội tụ $total cung. $lead Bên cạnh đó, '
+        ? 'Vị trí này có $total cung. $lead Bên cạnh đó, '
               '${_describe(others, withTimes: true)}.'
-        : 'This location brings together $total palaces. $lead Besides that, '
+        : 'This location has $total themes. $lead Alongside this, '
               '${_describe(others, withTimes: true)}.';
   }
 
-  String get _leansTo => _isVi ? 'thiên về' : 'tied to';
+  String get _leansTo => _isVi ? 'thiên về' : 'pointing to';
 
   /// `A thiên về a; B thiên về b; C thiên về c`. Nối bằng dấu chấm phẩy vì tên
   /// cung và ý diễn giải đều có thể chứa chữ "và".
@@ -376,8 +414,19 @@ class AppStrings {
   /// Ý ngắn về nghĩa của một cung, dùng để diễn giải trong Kết luận.
   String _aspect(PalaceTally tally) {
     final order = tally.palace.palaceOrder;
-    return _isVi ? _aspectsVi[order] : _aspectsEn[order];
+    final aspect = _isVi ? _aspectsVi[order] : _aspectsEn[order];
+    // Nhóm Tai họa của Đào Hoa là cảnh báo nên không dùng ý chung của cung.
+    if (order != _romanceOrder || !tally.groups.any((row) => row.isWarning)) {
+      return aspect;
+    }
+    final warning = _isVi
+        ? 'sóng gió tình cảm cần giữ gìn'
+        : 'relationship troubles that need care';
+    if (tally.groups.length == 1) return warning;
+    return _isVi ? '$aspect, nhưng có $warning' : '$aspect, but also $warning';
   }
+
+  static const _romanceOrder = 6;
 
   static const _aspectsVi = [
     'tiền tài và cơ hội làm giàu', // 0 Thiên Tài
@@ -401,10 +450,10 @@ class AppStrings {
     'lasting accumulation of assets', // 4 Wealth Accumulation
     'spirituality and worship', // 5 Spiritual Response
     'relationships and affection', // 6 Romance
-    'diligence and perseverance', // 7 Diligence
+    'steady effort and perseverance', // 7 Diligence
     'safeguarding achievements and stability', // 8 Protection
     'principle and merit', // 9 Virtue
-    'misfortunes that call for caution', // 10 Misfortune
+    'setbacks that call for caution', // 10 Misfortune
   ];
 
   /// Câu lưu ý, nêu tên từng dòng trong `warnings`.

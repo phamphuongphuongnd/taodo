@@ -21,6 +21,7 @@ class _CountingService implements LocationService {
   final controller = StreamController<LocationState>.broadcast(sync: true);
   int refreshCount = 0;
   int pauseCount = 0;
+  int suspendCount = 0;
   int requestPermissionCount = 0;
   int openAppSettingsCount = 0;
   int openLocationSettingsCount = 0;
@@ -35,6 +36,9 @@ class _CountingService implements LocationService {
 
   @override
   Future<void> pause() async => pauseCount++;
+
+  @override
+  Future<void> suspend() async => suspendCount++;
 
   @override
   Future<void> requestPermission() async => requestPermissionCount++;

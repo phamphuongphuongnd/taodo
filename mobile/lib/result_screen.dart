@@ -64,7 +64,20 @@ class ResultScreen extends StatelessWidget {
                           conclusion: conclusion,
                           strings: strings,
                         ),
-                        const SizedBox(height: 28),
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text(
+                            strings.resultNotice,
+                            style: appText(
+                              size: 13,
+                              weight: 400,
+                              color: AppColors.muted,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Row(
@@ -206,9 +219,9 @@ class _ConclusionCard extends StatelessWidget {
                 : strings.conclusionSentence(conclusion),
             style: appText(
               size: AppMetrics.of(context).conclusionSize,
-              weight: 700,
-              letterSpacing: -0.2,
-              height: 1.4,
+              weight: 500,
+              letterSpacing: -0.1,
+              height: 1.5,
             ),
           ),
           if (conclusion.warnings.isNotEmpty) ...[

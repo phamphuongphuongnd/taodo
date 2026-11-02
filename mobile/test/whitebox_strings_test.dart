@@ -268,7 +268,7 @@ void main() {
       ]);
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này hội tụ 2 cung ngang nhau: Thiên Tài (Đại tài) thiên về '
+        'Vị trí này có 2 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về '
         'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh '
         'và đường sự nghiệp.',
       );
@@ -277,7 +277,7 @@ void main() {
       final c = _conclusion([const PalaceTally(groups: [_talentGreat], count: 3)]);
       expect(
         en.conclusionSentence(c),
-        'This location stands out for Talent (Great), 3 times, tied to wealth '
+        'This location stands out for Talent (Great), 3 times, pointing to wealth '
         'and opportunities to prosper.',
       );
     });
@@ -286,7 +286,7 @@ void main() {
       expect(
         en.conclusionSentence(c),
         // Một cặp đã gộp thành một lần nên không ghi số lần.
-        'This location stands out for Talent (Great), tied to wealth and '
+        'This location stands out for Talent (Great), pointing to wealth and '
         'opportunities to prosper.',
       );
     });
@@ -297,9 +297,9 @@ void main() {
       ]);
       expect(
         en.conclusionSentence(c),
-        'This location brings together 2 equally strong palaces, 2 times each: '
-        'Talent (Great) tied to wealth and opportunities to prosper; Career '
-        '(High Office) tied to status and career path.',
+        'This location has 2 equally strong themes, 2 times each: '
+        'Talent (Great) pointing to wealth and opportunities to prosper; Career '
+        '(High Office) pointing to status and career path.',
       );
     });
     test('6-31a vi, cung nổi bật duy nhất + cung khác 1 lần', () {
@@ -314,7 +314,7 @@ void main() {
       );
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này hội tụ 3 cung. Nổi bật nhất là Thiên Tài (Đại tài), 2 lần, '
+        'Vị trí này có 3 cung. Nổi bật nhất là Thiên Tài (Đại tài), 2 lần, '
         'thiên về tiền tài và cơ hội làm giàu. Bên cạnh đó, Quan Lộc (Đại quan) '
         'thiên về công danh và đường sự nghiệp; Tai Họa thiên về vận hạn cần '
         'cẩn trọng.',
@@ -332,10 +332,10 @@ void main() {
       );
       expect(
         en.conclusionSentence(c),
-        'This location brings together 3 palaces. The strongest is Talent '
-        '(Great), 2 times, tied to wealth and opportunities to prosper. '
-        'Besides that, Career (High Office) tied to status and career path; '
-        'Misfortune tied to misfortunes that call for caution.',
+        'This location has 3 themes. The strongest is Talent '
+        '(Great), 2 times, pointing to wealth and opportunities to prosper. '
+        'Alongside this, Career (High Office) pointing to status and career path; '
+        'Misfortune pointing to setbacks that call for caution.',
       );
     });
     test('6-31c vi, cung khác gặp nhiều lần ghi số lần', () {
@@ -349,7 +349,7 @@ void main() {
       );
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này hội tụ 2 cung. Nổi bật nhất là Thiên Tài (Đại tài), 3 lần, '
+        'Vị trí này có 2 cung. Nổi bật nhất là Thiên Tài (Đại tài), 3 lần, '
         'thiên về tiền tài và cơ hội làm giàu. Bên cạnh đó, Quan Lộc (Đại '
         'quan), 2 lần, thiên về công danh và đường sự nghiệp.',
       );
@@ -369,7 +369,7 @@ void main() {
       );
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này hội tụ 3 cung. Nổi bật nhất là Thiên Tài (Đại tài) và Quan '
+        'Vị trí này có 3 cung. Nổi bật nhất là Thiên Tài (Đại tài) và Quan '
         'Lộc (Đại quan), mỗi cung 2 lần: Thiên Tài (Đại tài) thiên về tiền tài '
         'và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh và đường '
         'sự nghiệp. Bên cạnh đó, Tai Họa thiên về vận hạn cần cẩn trọng.',
@@ -390,10 +390,10 @@ void main() {
       );
       expect(
         en.conclusionSentence(c),
-        'This location brings together 3 palaces. The strongest are Talent '
-        '(Great) and Career (High Office), 3 times each: Talent (Great) tied to wealth and '
-        'opportunities to prosper; Career (High Office) tied to status and '
-        'career path. Besides that, Misfortune, 2 times, tied to misfortunes '
+        'This location has 3 themes. The strongest are Talent '
+        '(Great) and Career (High Office), 3 times each: Talent (Great) pointing to wealth and '
+        'opportunities to prosper; Career (High Office) pointing to status and '
+        'career path. Alongside this, Misfortune, 2 times, pointing to setbacks '
         'that call for caution.',
       );
     });

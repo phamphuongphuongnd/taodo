@@ -42,6 +42,10 @@ abstract class LocationService {
   /// Ngừng đo khi app rời màn hình. [refresh] sẽ đo lại.
   Future<void> pause();
 
+  /// Ngừng đo khi trang khác che màn hình chính nhưng giữ tọa độ đang có, để lúc
+  /// quay về không phải chờ lại. [refresh] sẽ đo tiếp.
+  Future<void> suspend();
+
   /// Bật hộp thoại xin quyền của hệ thống. Chỉ gọi khi người dùng đã đồng ý ở
   /// màn hình giải thích.
   Future<void> requestPermission();
@@ -85,14 +89,21 @@ class GeolocatorLocationService implements LocationService {
   Future<void> refresh() => _enqueue(_refreshNow);
 
   @override
-  Future<void> pause() {
+  Future<void> pause() => _stop(keepLast: false);
+
+  @override
+  Future<void> suspend() => _stop(keepLast: true);
+
+  Future<void> _stop({required bool keepLast}) {
     _retryTimer?.cancel();
     return _enqueue(() async {
       await _stopPosition();
       await _serviceStatus?.cancel();
       _serviceStatus = null;
-      // Khi quay lại, người dùng có thể đã đi nơi khác nên phải chờ số mới.
-      if (_state is LocationAvailable) _emit(const LocationWaiting());
+      // Khi quay lại app, người dùng có thể đã đi nơi khác nên phải chờ số mới.
+      if (!keepLast && _state is LocationAvailable) {
+        _emit(const LocationWaiting());
+      }
     });
   }
 
@@ -178,7 +189,12 @@ class GeolocatorLocationService implements LocationService {
     }
 
     if (_position != null) return;
-    _emit(const LocationWaiting());
+    // Số giữ lại từ [suspend] vẫn hết hạn nếu không có số mới.
+    if (_state is LocationAvailable) {
+      _restartSignalTimer();
+    } else {
+      _emit(const LocationWaiting());
+    }
     _position = Geolocator.getPositionStream(
       locationSettings: _locationSettings(),
     ).listen(_onPosition, onError: _onPositionError, onDone: _onPositionDone);

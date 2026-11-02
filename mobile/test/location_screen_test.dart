@@ -30,6 +30,7 @@ class _FakeLocationService implements LocationService {
   final _controller = StreamController<LocationState>.broadcast(sync: true);
   int refreshCount = 0;
   int pauseCount = 0;
+  int suspendCount = 0;
   int requestPermissionCount = 0;
   int openAppSettingsCount = 0;
   int openLocationSettingsCount = 0;
@@ -45,6 +46,9 @@ class _FakeLocationService implements LocationService {
 
   @override
   Future<void> pause() async => pauseCount++;
+
+  @override
+  Future<void> suspend() async => suspendCount++;
 
   @override
   Future<void> requestPermission() async => requestPermissionCount++;
@@ -563,24 +567,24 @@ void main() {
     }
 
     for (final page in pages) {
-      testWidgets('${page.name}: mở thì pause, quay lại thì refresh', (
+      testWidgets('${page.name}: mở thì suspend, quay lại thì refresh', (
         tester,
       ) async {
         final service = await pumpHome(tester);
-        expect(service.pauseCount, 0);
+        expect(service.suspendCount, 0);
         expect(service.refreshCount, 1);
 
         await tester.tap(page.opener());
         await tester.pumpAndSettle();
 
         expect(find.byType(page.screen), findsOneWidget);
-        expect(service.pauseCount, 1);
+        expect(service.suspendCount, 1);
         expect(service.refreshCount, 1);
 
         await _goBack(tester);
 
         expect(find.byType(page.screen), findsNothing);
-        expect(service.pauseCount, 1);
+        expect(service.suspendCount, 1);
         expect(service.refreshCount, 2);
       });
 
@@ -592,7 +596,7 @@ void main() {
         await tester.pumpAndSettle();
 
         toBackground(tester);
-        expect(service.pauseCount, greaterThan(1));
+        expect(service.pauseCount, greaterThan(0));
         expect(service.refreshCount, 1);
 
         toForeground(tester);
@@ -873,6 +877,33 @@ void main() {
         platform.positions!.add(_position(1, 2));
         await _settleEvents();
         await shortTimeout.pause();
+
+        await shortTimeout.refresh();
+        await Future<void>.delayed(const Duration(milliseconds: 80));
+
+        expect(shortStates.last, isA<LocationWaiting>());
+      });
+
+      test('suspend giữ số, quay về không hiện chờ', () async {
+        await shortTimeout.refresh();
+        platform.positions!.add(_position(1, 2));
+        await _settleEvents();
+
+        await shortTimeout.suspend();
+        await _settleEvents();
+        final count = shortStates.length;
+        await shortTimeout.refresh();
+        await _settleEvents();
+
+        expect(shortStates, hasLength(count));
+        expect(shortStates.last, isA<LocationAvailable>());
+      });
+
+      test('suspend rồi quay về mà không có số mới thì hết hạn', () async {
+        await shortTimeout.refresh();
+        platform.positions!.add(_position(1, 2));
+        await _settleEvents();
+        await shortTimeout.suspend();
 
         await shortTimeout.refresh();
         await Future<void>.delayed(const Duration(milliseconds: 80));

@@ -28,6 +28,9 @@ class _Service implements LocationService {
   Future<void> pause() async {}
 
   @override
+  Future<void> suspend() async {}
+
+  @override
   Future<void> requestPermission() async {}
 
   @override

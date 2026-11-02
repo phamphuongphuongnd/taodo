@@ -59,11 +59,12 @@ class _LocationScreenState extends State<LocationScreen>
     }
   }
 
-  /// Mở trang che màn chính; GPS nghỉ tới khi quay lại để đỡ tốn pin.
+  /// Mở trang che màn chính; GPS nghỉ tới khi quay lại để đỡ tốn pin, tọa độ vẫn
+  /// giữ để lúc về không phải chờ.
   Future<void> _openCovering(WidgetBuilder builder) async {
     final navigator = Navigator.of(context);
     _covered = true;
-    unawaited(widget.locationService.pause());
+    unawaited(widget.locationService.suspend());
     await navigator.push(CupertinoPageRoute<void>(builder: builder));
     _covered = false;
     if (mounted) unawaited(widget.locationService.refresh());
@@ -115,13 +116,31 @@ class _LocationScreenState extends State<LocationScreen>
                       padding: EdgeInsets.symmetric(
                         horizontal: metrics.homeMargin,
                       ),
-                      child: coordsText != null
-                          ? _Measuring(coordsText, strings: strings)
-                          : _Status(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (coordsText != null)
+                            _Measuring(coordsText, strings: strings)
+                          else
+                            _Status(
                               state: state,
                               strings: strings,
                               service: widget.locationService,
                             ),
+                          const SizedBox(height: 24),
+                          Text(
+                            strings.appIntro,
+                            textAlign: TextAlign.center,
+                            style: appText(
+                              size: 13,
+                              weight: 400,
+                              color: AppColors.muted,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -473,7 +492,18 @@ class _Waiting extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         const ExcludeSemantics(child: RepaintBoundary(child: _BlinkingDots())),
-        const SizedBox(height: 32),
+        const SizedBox(height: 12),
+        Text(
+          strings.waitingHint,
+          textAlign: TextAlign.center,
+          style: appText(
+            size: 14,
+            weight: 400,
+            color: AppColors.meaning,
+            height: 1.5,
+          ),
+        ),
+        const SizedBox(height: 28),
         ExcludeSemantics(
           child: FittedBox(
             fit: BoxFit.scaleDown,

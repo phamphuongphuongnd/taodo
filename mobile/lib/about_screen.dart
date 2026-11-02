@@ -88,6 +88,10 @@ class AboutScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     _Section(
+                      title: strings.tableTitle,
+                      body: strings.tableBody,
+                    ),
+                    _Section(
                       title: strings.privacyTitle,
                       body: '${strings.privacyBody}\n\n$privacyPolicyUrl',
                     ),
