@@ -150,9 +150,10 @@ void main() {
     testWidgets('ô trống tính là 0', (tester) async {
       await _pumpApp(tester);
       await _openManualEntry(tester, 'Nhập tay');
+      await _fill(tester, ['21']);
       await _tapView(tester, 'Xem');
 
-      expect(_coords('00°00\'00"N 00°00\'00"E'), findsOneWidget);
+      expect(_coords('21°00\'00"N 00°00\'00"E'), findsOneWidget);
     });
 
     testWidgets('chọn S và W', (tester) async {

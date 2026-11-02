@@ -28,7 +28,7 @@ Các trang con quay lại bằng nút "Quay lại" hoặc cử chỉ quay lại 
 
 | Chức năng | Cách hoạt động |
 | --- | --- |
-| Đo GPS liên tục | Tọa độ cập nhật khoảng 1 giây một lần (Android) khi màn hình chính đang hiện, không gọi mạng |
+| Đo GPS liên tục | App nhận số đo khoảng 1 giây một lần (Android) khi màn hình chính đang hiện, không gọi mạng. Số hiện ra đã qua `CoordsSmoother`: lấy trung bình 8 lần đo gần nhất, giữ nguyên số khi trung bình lệch không quá 12 m so với số đang hiện; một lần đo lệch hơn 100 m thì bỏ các lần đo cũ và nhận ngay số mới. Số đứng yên khi không di chuyển và vẫn đi theo khi di chuyển thật. Giới hạn: chỉ giữ số ổn định trên từng máy, hai máy khác nhau vẫn có thể ra số khác |
 | Hiện tọa độ dạng độ-phút-giây | Dạng `21°01'43"N 105°48'12"E`, tách hai dòng vĩ độ và kinh độ; độ, phút, giây đủ ít nhất 2 chữ số; giây cắt bỏ phần lẻ, không làm tròn |
 | Xin quyền vị trí | Màn hình giải thích và nút "Cho phép" hiện trước, rồi mới bật hộp thoại của hệ thống; mỗi lần mở app hỏi tối đa một lần |
 | Báo trạng thái chưa có tọa độ | 4 trường hợp: đang chờ GPS (kèm gợi ý ra nơi thoáng, bật Wi-Fi), cần xin quyền, đã từ chối quyền, định vị đang tắt |
@@ -36,7 +36,7 @@ Các trang con quay lại bằng nút "Quay lại" hoặc cử chỉ quay lại 
 | Mở Cài đặt | Có nút khi đã từ chối quyền (mở cài đặt app) hoặc định vị tắt (mở cài đặt vị trí) |
 | Tự đo lại | Khi quay lại app, kể cả từ Cài đặt; khi từ trang con về màn hình chính; khi bật/tắt định vị từ thanh thông báo |
 | Mất tín hiệu | 60 giây không có số mới thì về trạng thái chờ, không giữ số cũ như thể vừa đo; luồng vị trí lỗi thì tự mở lại sau 5 giây |
-| Tiết kiệm pin | Ngừng đo khi app xuống nền và khi Nhập tọa độ, Kết quả hoặc Thông tin che màn hình chính; không đo nền. Trang con che thì giữ tọa độ đang có (`suspend()`), về là đo tiếp không phải chờ; số giữ lại vẫn hết hạn sau 60 giây nếu không có số mới. Ra nền rồi quay lại app thì xóa số và chờ số mới |
+| Tiết kiệm pin | Ngừng đo khi app xuống nền và khi Nhập tọa độ, Kết quả hoặc Thông tin che màn hình chính; không đo nền. Trang con che thì giữ tọa độ đang có (`suspend()`), về là đo tiếp không phải chờ: màn hình chính hiện nhãn `gpsLastKnown`, không có chấm nhấp nháy, và số giữ lại hết hạn sau 15 giây (`staleTimeout`) nếu không có số mới. Ra nền rồi quay lại app thì xóa số và chờ số mới |
 
 ### Nhập tay
 
@@ -45,9 +45,9 @@ Các trang con quay lại bằng nút "Quay lại" hoặc cử chỉ quay lại 
 | Nhập độ, phút, giây | 6 ô số: 3 ô cho vĩ độ, 3 ô cho kinh độ; luôn vào được, kể cả khi chưa có GPS hoặc không cấp quyền |
 | Chọn bán cầu | Công tắc N/S cho vĩ độ, E/W cho kinh độ; mặc định N và E |
 | Giới hạn khi gõ | Chỉ nhận chữ số; ô độ tối đa 3 chữ số, ô phút và giây tối đa 2 chữ số |
-| Ô trống | Tính là 0; để trống cả 6 ô vẫn xem được |
+| Ô trống | Một ô trống tính là 0; để trống cả 6 ô thì báo `emptyCoords`, không sang Kết quả; gõ số 0 là đã nhập nên vẫn xem được |
 | Kiểm tra hợp lệ | Khi bấm "Xem": phút và giây dưới 60, vĩ độ tối đa 90°, kinh độ tối đa 180° (đúng 90° hoặc 180° thì phút và giây phải bằng 0) |
-| Báo lỗi | Ô sai chuyển màu cam và hộp lỗi hiện trên nút "Xem"; tự ẩn khi sửa bất kỳ ô nào hoặc đổi bán cầu |
+| Báo lỗi | Ô sai chuyển màu cam và hộp lỗi hiện trên nút "Xem"; để trống cả 6 ô thì chỉ có hộp lỗi, không ô nào đổi màu; tự ẩn khi sửa bất kỳ ô nào hoặc đổi bán cầu |
 
 ### Kết quả
 
@@ -55,12 +55,14 @@ Các trang con quay lại bằng nút "Quay lại" hoặc cử chỉ quay lại 
 | --- | --- |
 | Giữ cố định tọa độ | Lấy tọa độ tại lúc bấm "Xem", không cập nhật theo GPS nữa |
 | Tách cặp số | Lấy mọi chữ số, tách từ phải sang trái, cặp cuối lẻ thì thêm `0` phía trước |
-| Tra bảng | Mỗi cặp tra trong bảng; một cặp có thể khớp nhiều dòng; cặp không có trong bảng bị ẩn |
+| Tra bảng | Mỗi cặp tra trong bảng; một cặp có thể khớp nhiều dòng; cặp không có trong bảng không ra dòng nào |
+| Dòng cặp số | Dưới tiêu đề chi tiết có dòng `pairsLine` liệt kê mọi cặp tách được, và dòng `skippedLine` nêu các cặp không có trong bảng (mỗi cặp một lần, chỉ hiện khi có cặp bỏ qua). Màn không khớp cũng có `pairsLine` |
 | Hiện danh sách | Mỗi dòng gồm cặp số, tên cung (kèm nhóm nếu có) và ý nghĩa, theo thứ tự cặp gặp đầu tiên |
 | Cặp lặp lại | Chỉ hiện một dòng, ghi `×N` cạnh tên cung; số lần vẫn được cộng đủ vào Kết luận |
-| Kết luận | Đoạn văn nêu **tất cả** cung gặp trong tọa độ, mỗi cung kèm một ý diễn giải ngắn; cung nhiều lần nhất nêu trước |
+| Kết luận | Dòng đậm đánh giá chung ("Nhìn chung: …", 3 mức, `overallVerdict`) rồi đoạn chi tiết nêu **tất cả** cung gặp trong tọa độ, mỗi cung kèm một ý diễn giải ngắn; cung nhiều lần nhất nêu trước |
 | Lưu ý xấu | Gặp Cung Tai Họa hoặc nhóm Tai họa của Đào Hoa thì thêm hộp lưu ý màu cam, kể cả khi không phải cung nhiều nhất |
 | Dòng nhắc | Ngay dưới thẻ Kết luận có một dòng chữ mờ (`resultNotice`): GPS dao động vài giây nên kết quả có thể khác giữa các lần đo, nội dung chỉ mang tính tham khảo. Không hiện khi tọa độ không khớp số nào |
+| Dòng căn nguyên | Gặp Thần Linh Trời Định thì thêm dòng chữ mờ `rootNote` ngay dưới `resultNotice`, giải thích căn nguyên là gì |
 | Dòng chưa có dữ liệu | Bảng hiện đủ ý nghĩa nên không xảy ra. Code vẫn giữ phương án dự phòng: dòng thiếu ý nghĩa hiện "Chưa có dữ liệu" với ô nét đứt và không tính vào Kết luận |
 
 ### Thông tin
@@ -114,9 +116,9 @@ Nguồn: `mobile/lib/theme.dart`.
 | Mã màu | Vai trò | Nơi dùng |
 | --- | --- | --- |
 | `#050608` | Nền chính | Mọi màn hình, màn hình mở app, chữ trên nút trắng |
-| `#F5F6F8` | Chữ chính | Tọa độ, tiêu đề, tên cung, nền nút chính |
-| `#B4B9C4` | Chữ nội dung | Ý nghĩa, đoạn giải thích |
-| `#9BA0AB` | Nhãn | Nhãn nhỏ, tên nhóm |
+| `#F5F6F8` | Chữ chính | Tọa độ, tiêu đề, tên cung, dòng đánh giá chung, nền nút chính |
+| `#B4B9C4` | Chữ nội dung | Ý nghĩa, đoạn giải thích, đoạn chi tiết của Kết luận |
+| `#9BA0AB` | Nhãn | Nhãn nhỏ, tên nhóm, nhãn `gpsLastKnown`, các dòng chú thích nhỏ ở Kết quả |
 | `#7D8390` | Chữ phụ | Đơn vị, chữ mờ, nút bị khóa |
 | `#6EE7B7` | Màu nhấn | Chữ N/S/E/W, cặp số, tiêu đề Kết luận, viền ô đang chọn |
 | `#FFB340` | Cảnh báo | Tên cung xấu, câu lưu ý, chữ lỗi |
@@ -140,14 +142,14 @@ Dùng font Manrope đóng gói trong app (font biến thiên, đủ dấu tiến
 | 32 | 800 | Tiêu đề trang Nhập tọa độ và Thông tin |
 | 30 | 700 | Số trong ô nhập (tự co) |
 | 24 / 22 | 800 | Cặp số |
-| 18 / 17 | 500 | Câu Kết luận |
+| 18 / 17 | 800 | Dòng đánh giá chung trong Kết luận |
 | 18 | 800 | Chữ nút chính |
 | 18 | 800 | Tên app ở Màn hình chính |
 | 17 | 700 | Tên cung, tiêu đề thẻ |
 | 16 | 600–700 | Nút phụ, nút hành động, nút "Quay lại" |
-| 15 | 400 | Ý nghĩa, nội dung Thông tin |
+| 15 | 400 | Ý nghĩa, đoạn chi tiết của Kết luận, nội dung Thông tin |
 | 14 | 400–600 | Gợi ý khi chờ GPS, hộp lỗi, nút đổi ngôn ngữ |
-| 13 | 400–700 | "GPS ĐANG ĐO", số dòng, dòng phụ, dòng giới thiệu, dòng nhắc dưới Kết luận |
+| 13 | 400–700 | "GPS ĐANG ĐO", nhãn `gpsLastKnown`, số dòng, dòng phụ, dòng giới thiệu, các dòng `resultNotice`, `rootNote`, `pairsLine`, `skippedLine` |
 | 12 | 700 | Nhãn nhỏ giãn chữ như "VĨ ĐỘ" |
 
 ### Thành phần
@@ -173,7 +175,7 @@ Nguồn: `mobile/lib/widgets.dart`.
 | Hoạt ảnh | Nơi hiện |
 | --- | --- |
 | Các vòng tròn đồng tâm làm nền, thêm vòng sóng xanh lan ra khi đang chờ GPS | Màn hình chính |
-| Chấm xanh nhấp nháy cạnh "GPS ĐANG ĐO" | Màn hình chính khi có tọa độ |
+| Chấm xanh nhấp nháy cạnh "GPS ĐANG ĐO" | Màn hình chính khi đang đo; số giữ lại (nhãn `gpsLastKnown`) không có chấm |
 | Ba chấm nhấp nháy | Màn hình chính khi đang chờ GPS |
 
 Chuyển trang kiểu iOS trượt ngang.
@@ -205,8 +207,8 @@ Là màn hình đầu tiên khi mở app. Thanh trên cùng có la bàn, tên ap
 │                              │
 │ Cập nhật liên tục · Chạy offline
 │                              │
-│   Bấm Xem để biết ý nghĩa    │  dòng giới thiệu, căn giữa, luôn hiện
-│   vị trí này theo các cặp…   │
+│ Tọa Độ cho biết ý nghĩa của  │  dòng giới thiệu, căn giữa, luôn hiện
+│   vị trí theo các cặp số…    │
 │                              │
 │ ┌──────────────────────────┐ │
 │ │          Xem  →          │ │  nút chính
@@ -221,15 +223,17 @@ Lề hai bên 24 / 20. Vùng giữa chiếm hết phần còn lại và cuộn �
 
 | Trạng thái | Vùng giữa | Nút "Xem" | Nút "Nhập tay" |
 | --- | --- | --- | --- |
-| Đã có tọa độ | "GPS ĐANG ĐO", tọa độ cập nhật liên tục | Bấm được | Bấm được |
+| Đã có tọa độ | "GPS ĐANG ĐO", tọa độ đứng yên khi không di chuyển, đi theo khi di chuyển thật | Bấm được | Bấm được |
+| Đã có tọa độ, số giữ lại khi từ trang con về | Nhãn `gpsLastKnown` màu nhãn, không có chấm nhấp nháy, tọa độ giữ lại | Bấm được | Bấm được |
 | Đang chờ GPS | Biểu tượng định vị, "Đang chờ tín hiệu GPS…", ba chấm, gợi ý `waitingHint`, tọa độ gạch ngang mờ, vòng sóng xanh ở nền | Khóa | Bấm được |
 | Cần xin quyền | Đoạn giải thích dùng vị trí, nút "Cho phép" | Khóa | Bấm được |
 | Đã từ chối quyền | "Chưa cấp quyền vị trí", nút "Mở Cài đặt" | Khóa | Bấm được |
 | Định vị đang tắt | "Định vị đang tắt", nút "Mở Cài đặt" | Khóa | Bấm được |
 | Mọi trạng thái trên | Cuối vùng giữa luôn có dòng giới thiệu `appIntro` | Theo trạng thái | Bấm được |
 
-Từ trang con quay về thì tọa độ đang có được giữ lại (`suspend()`) nên không phải chờ, GPS đo tiếp ngay; số giữ lại vẫn hết
-hạn sau 60 giây nếu không có số mới. Ra nền rồi quay lại app thì tọa độ cũ bị xóa và màn hình chờ số mới, vì người dùng có
+Từ trang con quay về thì tọa độ đang có được giữ lại (`suspend()`) nên không phải chờ, GPS đo tiếp ngay. Cho tới khi có số mới,
+màn hình hiện nhãn `gpsLastKnown` thay cho "GPS ĐANG ĐO", không có chấm nhấp nháy; số giữ lại hết hạn sau 15 giây
+(`staleTimeout`) nếu không có số mới. Ra nền rồi quay lại app thì tọa độ cũ bị xóa và màn hình chờ số mới, vì người dùng có
 thể đã đi nơi khác. Thời gian chờ tùy tín hiệu: vài giây ngoài trời, lâu hơn khi ở trong nhà hoặc khi tắt Wi-Fi.
 
 ### 4.2. Nhập tọa độ — `manual_entry_screen.dart`
@@ -266,7 +270,8 @@ Lề hai bên 20 / 16. Ba ô bằng nhau, cách nhau 8. Toàn trang cuộn đư�
 | Mới vào | Các ô trống với chữ mờ `0`, chọn sẵn N và E |
 | Đang nhập | Ô đang chọn có viền xanh, số trắng |
 | Sai giá trị | Ô sai nền cam, viền cam, số cam, tên đơn vị đậm; hộp lỗi trên nút "Xem"; ở lại trang này |
-| Hợp lệ | Chuyển sang Kết quả |
+| Trống cả 6 ô | Hộp lỗi `emptyCoords` trên nút "Xem", không ô nào đổi màu; ở lại trang này |
+| Hợp lệ | Chuyển sang Kết quả; ô trống còn lại tính là 0, gõ số 0 là đã nhập |
 
 ### 4.3. Kết quả — `result_screen.dart`
 
@@ -285,13 +290,17 @@ danh sách chi tiết.
 │ └──────────────────────────┘ │
 │ ┌──────────────────────────┐ │
 │ │ ✦ KẾT LUẬN               │ │  thẻ nền xanh đậm
-│ │ Vị trí này có 3 cung     │ │
-│ │ cùng nổi bật: …          │ │
+│ │ Nhìn chung: thuận lợi    │ │  dòng đánh giá chung, chữ đậm
+│ │ Vị trí này có 3 cung.    │ │  đoạn chi tiết
+│ │ Nổi bật nhất là Bảo Vệ…  │ │
 │ │ ⚠ Lưu ý: vị trí này có … │ │  hộp cam, chỉ hiện khi có cung xấu
 │ └──────────────────────────┘ │
 │ Tọa độ GPS dao động vài giây │  dòng nhắc, chữ mờ
 │ nên kết quả có thể khác…     │
+│ Căn nguyên là phúc phần…     │  `rootNote`, chỉ hiện khi gặp Thần Linh Trời Định
 │ CHI TIẾT THEO CẶP SỐ  3 dòng │
+│ Tọa độ tách được 7 cặp số: … │  `pairsLine`
+│ Không có trong bảng nên bỏ…  │  `skippedLine`, chỉ hiện khi có cặp bỏ qua
 │ ──────────────────────────── │
 │ [12]  Chăm Chỉ               │  ô cặp số bên trái
 │       Cần cù, bền bỉ và…     │  tên cung + ý nghĩa bên phải
@@ -306,10 +315,12 @@ danh sách chi tiết.
 
 | Trạng thái | Hiển thị |
 | --- | --- |
-| Có dòng khớp | Thẻ tọa độ, thẻ Kết luận, dòng nhắc `resultNotice`, danh sách chi tiết kèm số dòng |
+| Có dòng khớp | Thẻ tọa độ, thẻ Kết luận (dòng đánh giá chung rồi đoạn chi tiết), dòng nhắc `resultNotice`, danh sách chi tiết kèm số dòng và dòng `pairsLine` |
+| Có cặp không trong bảng | Thêm dòng `skippedLine` dưới `pairsLine` |
+| Gặp Thần Linh Trời Định | Thêm dòng `rootNote` dưới `resultNotice` |
 | Có cung xấu | Dòng đó có nhãn "CẢNH BÁO", tên và ô cặp số màu cam; thẻ Kết luận có thêm hộp "Lưu ý: …" |
-| Không khớp số nào | Chỉ có tọa độ căn giữa, biểu tượng tìm kiếm và câu "Tọa độ này không có số nào trong bảng"; không có Kết luận |
-| Dòng thiếu ý nghĩa (dự phòng) | Ô nét đứt, chữ xám nghiêng "Chưa có dữ liệu"; nếu chỉ có các dòng này thì Kết luận ghi "Chưa có dữ liệu để kết luận" |
+| Không khớp số nào | Chỉ có tọa độ căn giữa, biểu tượng tìm kiếm, câu "Tọa độ này không có số nào trong bảng" và dòng `pairsLine`; không có Kết luận |
+| Dòng thiếu ý nghĩa (dự phòng) | Ô nét đứt, chữ xám nghiêng "Chưa có dữ liệu"; nếu chỉ có các dòng này thì Kết luận không có dòng đánh giá chung, chỉ ghi "Chưa có dữ liệu để kết luận" |
 
 Các dòng trong danh sách không bấm được.
 
@@ -329,15 +340,17 @@ giao diện cần chịu được cả hai.
 | Nút chính | Xem | View |
 | Nút phụ | Nhập tay | Enter manually |
 | Trạng thái đo | GPS ĐANG ĐO | GPS ACTIVE |
+| Số giữ lại khi từ trang con về (`gpsLastKnown`) | SỐ ĐO TRƯỚC · ĐANG ĐO LẠI | PREVIOUS READING · UPDATING |
 | Dòng phụ | Cập nhật liên tục · Chạy offline | Live updates · Works offline |
 | Nhãn tọa độ | VĨ ĐỘ, KINH ĐỘ | LATITUDE, LONGITUDE |
 | Tiêu đề trang nhập | Nhập tọa độ | Enter coordinates |
 | Nhãn thẻ nhập | Vĩ độ, Kinh độ | Latitude, Longitude |
 | Tên đơn vị | độ, phút, giây | degrees, minutes, seconds |
 | Lỗi nhập | Tọa độ không hợp lệ. Phút và giây phải dưới 60, vĩ độ tối đa 90°, kinh độ tối đa 180°. | Invalid coordinates. Minutes and seconds must be under 60, latitude at most 90°, longitude at most 180°. |
+| Trống cả 6 ô (`emptyCoords`) | Bạn chưa nhập tọa độ. Hãy nhập ít nhất một ô rồi bấm Xem. | You have not entered any coordinates. Fill in at least one box, then tap View. |
 | Chờ GPS | Đang chờ tín hiệu GPS… | Waiting for GPS signal… |
 | Gợi ý chờ GPS (`waitingHint`) | Hãy ra nơi thoáng, tránh mái che. Bật Wi-Fi có thể giúp nhanh hơn. | Move to an open area away from roofs. Turning on Wi-Fi may speed this up. |
-| Dòng giới thiệu (`appIntro`) | Bấm Xem để biết ý nghĩa vị trí này theo các cặp số trong tọa độ và Bảng số Thiên Cung. | Tap View to see what this location means, based on the number pairs in its coordinates and the Thien Cung table. |
+| Dòng giới thiệu (`appIntro`) | Tọa Độ cho biết ý nghĩa của vị trí theo các cặp số trong tọa độ và Bảng số Thiên Cung. | Toa Do shows what a location means, based on the number pairs in its coordinates and the Thien Cung table. |
 | Giải thích quyền | Tọa Độ dùng vị trí chính xác của điện thoại để hiện kinh độ và vĩ độ. Vị trí chỉ được dùng khi app đang mở, chỉ xử lý trên điện thoại và không gửi đi đâu. Nếu không muốn cho phép, bạn vẫn dùng được Nhập tay. | Toa Do uses your phone's precise location to show your longitude and latitude. It is used only while the app is open, processed only on your phone and never sent anywhere. If you prefer not to allow it, you can still enter coordinates manually. |
 | Nút xin quyền | Cho phép | Allow |
 | Đã từ chối quyền | Chưa cấp quyền vị trí | Location permission not granted |
@@ -346,8 +359,11 @@ giao diện cần chịu được cả hai.
 | Nút lùi | Quay lại | Back |
 | Tiêu đề Kết luận | KẾT LUẬN | CONCLUSION |
 | Dòng nhắc ở Kết quả (`resultNotice`) | Tọa độ GPS dao động vài giây nên kết quả có thể khác giữa các lần đo. Nội dung chỉ mang tính tham khảo. | GPS coordinates drift by a few seconds, so results can differ between readings. This content is for reference only. |
+| Dòng căn nguyên (`rootNote`) | Căn nguyên là phúc phần có sẵn của mỗi người, từ gia đạo và những việc lành đã làm. App không đo được điều này, nên hãy xem đây là lời nhắc giữ đức và thận trọng. | A karmic root is the merit each person carries from family and past good deeds. The app cannot measure it, so read this as a reminder to stay virtuous and careful. |
 | Tiêu đề danh sách | CHI TIẾT THEO CẶP SỐ | DETAILS BY NUMBER PAIR |
 | Số dòng | {n} dòng | 1 row, {n} rows |
+| Dòng cặp số (`pairsLine`) | Tọa độ tách được {n} cặp số: {danh sách}. | The coordinates split into {n} pairs: {danh sách}. |
+| Dòng cặp bỏ qua (`skippedLine`) | Không có trong bảng nên bỏ qua: {danh sách}. | Not in the table, so skipped: {danh sách}. |
 | Nhãn dòng xấu | CẢNH BÁO | WARNING |
 | Không khớp | Tọa độ này không có số nào trong bảng | These coordinates have no numbers in the table |
 | Dòng thiếu ý nghĩa | Chưa có dữ liệu | No data yet |
@@ -361,13 +377,24 @@ Nội dung các thẻ còn lại ở trang Thông tin nằm trong `privacyBody`,
 
 ### Câu Kết luận
 
-Trong đó {mô tả} là `{cung} thiên về {ý}` (tiếng Anh `{cung} pointing to {ý}`), nhiều cung thì nối bằng dấu chấm phẩy; phần
-sau "Bên cạnh đó" / "Alongside this" ghi thêm số lần: `{cung}, {n} lần, thiên về {ý}`. Số lần chỉ ghi khi lớn hơn 1.
+Thẻ Kết luận gồm dòng đậm đánh giá chung (`overallVerdict`) rồi đoạn chi tiết (`conclusionSentence`). Đánh giá chung có 3 mức,
+không hiện khi Kết luận trống:
+
+| Trường hợp | Tiếng Việt | Tiếng Anh |
+| --- | --- | --- |
+| Không có dòng cảnh báo | Nhìn chung: thuận lợi | Overall: favorable |
+| Có dòng cảnh báo và còn dòng khác | Nhìn chung: có thuận lợi, nhưng cần thận trọng | Overall: favorable, with some cautions |
+| Chỉ có dòng cảnh báo | Nhìn chung: cần thận trọng | Overall: take care |
+
+Trong đoạn chi tiết, {mô tả} là `{cung} thiên về {ý}` cho cung đầu và `{cung} về {ý}` cho các cung sau (tiếng Anh
+`{cung} pointing to {ý}` rồi `{cung} to {ý}`), nối bằng dấu chấm phẩy; mỗi {mô tả} bắt đầu lại từ "thiên về". Phần sau
+"Bên cạnh đó" / "Alongside this" ghi thêm số lần: `{cung}, {n} lần, thiên về {ý}`. Số lần chỉ ghi khi lớn hơn 1.
 
 | Trường hợp | Tiếng Việt | Tiếng Anh |
 | --- | --- | --- |
 | Một cung | Vị trí này nổi bật về {cung}, {n} lần, thiên về {ý}. | This location stands out for {cung}, {n} times, pointing to {ý}. |
-| Nhiều cung bằng nhau, không còn cung khác | Vị trí này có {t} cung cùng nổi bật, mỗi cung {n} lần: {mô tả}. | This location has {t} equally strong themes, {n} times each: {mô tả}. |
+| Nhiều cung, mỗi cung một lần | Vị trí này có {t} cung, mỗi cung một lần: {mô tả}. | This location has {t} themes, once each: {mô tả}. |
+| Nhiều cung bằng nhau, mỗi cung từ 2 lần, không còn cung khác | Vị trí này có {t} cung cùng nổi bật, mỗi cung {n} lần: {mô tả}. | This location has {t} equally strong themes, {n} times each: {mô tả}. |
 | Một cung nổi bật, có cung khác | Vị trí này có {t} cung. Nổi bật nhất là {cung}, {n} lần, thiên về {ý}. Bên cạnh đó, {mô tả}. | This location has {t} themes. The strongest is {cung}, {n} times, pointing to {ý}. Alongside this, {mô tả}. |
 | Nhiều cung nổi bật, có cung khác | Vị trí này có {t} cung. Nổi bật nhất là {a} và {b}, mỗi cung {n} lần: {mô tả}. Bên cạnh đó, {mô tả}. | This location has {t} themes. The strongest are {a} and {b}, {n} times each: {mô tả}. Alongside this, {mô tả}. |
 
@@ -423,7 +450,7 @@ Nội dung theo ý chủ app đưa, đã được Claude biên tập cho dễ ng
 | Tai Họa ⚠️ | — | Misfortune | 23, 32, 34, 43, 89, 98, 16, 61 | Vận hạn cần đề phòng: nên giữ gìn sức khỏe, cẩn thận đi lại, giữ chắc tài sản và tránh tranh chấp, thị phi. |
 
 ⚠️ là dòng cảnh báo, hiện màu cam. Hai dòng Thần Linh Trời Định không đánh dấu cảnh báo, vì app không biết người xem có căn
-nguyên hay không; điều kiện chỉ nằm trong câu ý nghĩa.
+nguyên hay không; điều kiện chỉ nằm trong câu ý nghĩa, còn dòng `rootNote` ở Kết quả giải thích căn nguyên là gì.
 
 ### Giới hạn độ dài cần tính khi sửa giao diện
 
@@ -442,38 +469,46 @@ Các mẫu dưới tính theo đúng logic trong `thien_cung.dart` và `strings.
 
 - Cặp số: 12, 48, 05, 31, 14, 10, 02.
 - Dòng hiện ra: 12 Chăm Chỉ, 31 Thiên Tài (Đại tài), 14 Tích Lũy Tài Sản.
-- Kết luận: "Vị trí này có 3 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về tiền tài và cơ hội làm giàu; Tích Lũy Tài
-  Sản thiên về tích góp của cải bền lâu; Chăm Chỉ thiên về sự cần cù và kiên trì."
+- Dòng bỏ qua: "Không có trong bảng nên bỏ qua: 48, 05, 10, 02."
+- Đánh giá chung: "Nhìn chung: thuận lợi"
+- Kết luận: "Vị trí này có 3 cung, mỗi cung một lần: Thiên Tài (Đại tài) thiên về tiền tài và cơ hội làm giàu; Tích Lũy
+  Tài Sản về tích góp của cải bền lâu; Chăm Chỉ về sự cần cù và kiên trì."
 
 **Mẫu dài, có cảnh báo:** `20°59'16"N 105°50'27"E`
 
 - Cặp số: 27, 50, 05, 61, 91, 05, 02.
 - Dòng hiện ra: 27 Thiên Tài (Tiểu tài), 27 Thông Minh (IQ cao), 27 Thần Linh Trời Định (Số trời), 61 Đào Hoa (Tai họa,
   màu cam), 61 Tai Họa (màu cam), 91 Quan Lộc (Đại quan).
-- Kết luận: "Vị trí này có 6 cung cùng nổi bật: Thiên Tài (Tiểu tài) thiên về tiền tài và cơ hội làm giàu; Quan Lộc
-  (Đại quan) thiên về công danh và đường sự nghiệp; Thông Minh (IQ cao) thiên về trí tuệ và khả năng học hỏi; Thần Linh
-  Trời Định (Số trời) thiên về phúc phận do trời định; Đào Hoa (Tai họa) thiên về sóng gió tình cảm cần giữ gìn; Tai Họa
-  thiên về vận hạn cần cẩn trọng."
+- Dòng bỏ qua: "Không có trong bảng nên bỏ qua: 50, 05, 02."
+- Đánh giá chung: "Nhìn chung: có thuận lợi, nhưng cần thận trọng"
+- Kết luận: "Vị trí này có 6 cung, mỗi cung một lần: Thiên Tài (Tiểu tài) thiên về tiền tài và cơ hội làm giàu; Quan Lộc
+  (Đại quan) về công danh và đường sự nghiệp; Thông Minh (IQ cao) về trí tuệ và khả năng học hỏi; Thần Linh Trời Định
+  (Số trời) về phúc phận do trời định; Đào Hoa (Tai họa) về sóng gió tình cảm cần giữ gìn; Tai Họa về vận hạn cần cẩn
+  trọng."
 - Lưu ý: "Lưu ý: vị trí này có Đào Hoa (Tai họa) và Tai Họa."
+- Có thêm dòng `rootNote` vì gặp Thần Linh Trời Định.
 
 **Mẫu một cung lặp lại:** `55°55'55"N 105°55'55"E`
 
 - Cặp số: 55, 55, 05, 51, 55, 55, 05.
 - Dòng hiện ra: một dòng 55 Bảo Vệ, ghi `×4`.
+- Dòng bỏ qua: "Không có trong bảng nên bỏ qua: 05, 51."
+- Đánh giá chung: "Nhìn chung: thuận lợi"
 - Kết luận: "Vị trí này nổi bật về Bảo Vệ, 4 lần, thiên về giữ gìn thành quả và sự bình ổn."
 
 **Mẫu không khớp:** `10°20'30"N 40°50'10"E`
 
 - Cặp số: 10, 50, 40, 30, 20, 10.
-- Không có dòng nào, chỉ hiện tọa độ và câu "Tọa độ này không có số nào trong bảng".
+- Không có dòng nào, chỉ hiện tọa độ, câu "Tọa độ này không có số nào trong bảng" và dòng "Tọa độ tách được 6 cặp số: 10,
+  50, 40, 30, 20, 10."
 
 ## 8. Lưu ý khi sửa giao diện
 
 ### Cần giữ
 
-- Đủ 5 trạng thái của Màn hình chính và các trạng thái của Kết quả ở mục 4.
+- Đủ 5 trạng thái của Màn hình chính (trạng thái đã có tọa độ có thêm dạng số giữ lại) và các trạng thái của Kết quả ở mục 4.
 - Tọa độ giữ nguyên đúng định dạng, không dịch, không đổi cách viết.
-- Chữ số đều độ rộng cho tọa độ, nếu không chữ sẽ giật mỗi giây.
+- Chữ số đều độ rộng cho tọa độ, nếu không chữ sẽ giật mỗi khi số đổi.
 - Cảnh báo phải tách biệt rõ với nội dung thường bằng cả chữ và biểu tượng, không chỉ bằng màu.
 - Mọi chữ đi qua `strings.dart` và luôn có đủ hai ngôn ngữ.
 - Font mới phải có đủ dấu tiếng Việt và ký hiệu `°`.
@@ -482,13 +517,15 @@ Các mẫu dưới tính theo đúng logic trong `thien_cung.dart` và `strings.
 
 ### Điểm còn mở
 
-- **Nội dung chờ duyệt:** 11 ý diễn giải trong Kết luận và ý riêng cho nhóm Tai họa của Đào Hoa do Claude soạn; nội dung 20
-  dòng ý nghĩa chờ chủ app đọc lại.
+- **Nội dung chờ duyệt:** 11 ý diễn giải trong Kết luận, ý riêng cho nhóm Tai họa của Đào Hoa, câu `rootNote` (định nghĩa căn
+  nguyên) và 3 mức `overallVerdict` do Claude soạn; nội dung 20 dòng ý nghĩa chờ chủ app đọc lại.
 - **Chờ quyết định:** cách ghi số ít ở tiếng Anh; đổi N/S có xóa báo lỗi không; ô vừa chọn vừa sai thì viền nào thắng
   (code hiện cho viền lỗi thắng và đổi bán cầu thì xóa lỗi).
 - **Trình đọc màn hình:** chưa kiểm bằng TalkBack trên máy thật, và có thể đọc theo ngôn ngữ của máy thay vì ngôn ngữ app.
 - **Chữ phóng to:** chưa kiểm trên máy thật; số trong ô nhập không lên đủ 200%.
 - **Mất tín hiệu GPS 60 giây:** đã có test tự động, chưa kiểm trên máy thật.
+- **Giới hạn GPS:** `CoordsSmoother` chỉ giữ số ổn định trên từng máy; hai máy khác nhau vẫn có thể ra số khác, nên kết quả có
+  thể khác.
 - **Xoay ngang:** app không khóa hướng màn hình nhưng cũng chưa thiết kế cho màn hình ngang.
 - **iOS:** chưa build; `Info.plist` chưa khai báo ngôn ngữ tiếng Việt.
 
@@ -501,5 +538,6 @@ Nên thay giao diện trong các file màn hình và `widgets.dart`, giữ nguy�
 
 Build AAB release cần `android/key.properties`, thiếu thì dừng và báo lỗi. APK dùng thử vẫn build được bằng khóa debug.
 
-APK dùng thử chỉ build cho arm64 bằng `flutter build apk --release --target-platform android-arm64` (17,9 MB so với 50 MB
-bản 3 kiến trúc), máy 32-bit không cài được; AAB trên Play tự chia theo máy.
+APK dùng thử phải build cả 32-bit và 64-bit bằng `flutter build apk --release --target-platform android-arm,android-arm64`
+(khoảng 32 MB), vì Galaxy A13 SM_A135F chỉ chạy 32-bit. Bản chỉ arm64 cài được nhưng văng khi mở trên máy 32-bit. AAB trên
+Play tự chia theo máy.

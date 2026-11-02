@@ -25,6 +25,7 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
   bool _north = true;
   bool _east = true;
   Set<ManualField> _invalid = const {};
+  bool _isEmptyError = false;
 
   @override
   void dispose() {
@@ -38,10 +39,20 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
   int _value(ManualField field) => int.tryParse(_controllers[field]!.text) ?? 0;
 
   void _clearError() {
-    if (_invalid.isNotEmpty) setState(() => _invalid = const {});
+    if (_invalid.isNotEmpty || _isEmptyError) {
+      setState(() {
+        _invalid = const {};
+        _isEmptyError = false;
+      });
+    }
   }
 
   void _openResult() {
+    // Một ô trống tính là 0, nhưng cả 6 ô trống nghĩa là chưa nhập gì.
+    if (_controllers.values.every((controller) => controller.text.isEmpty)) {
+      setState(() => _isEmptyError = true);
+      return;
+    }
     final invalid = invalidManualFields(
       latDeg: _value(ManualField.latDeg),
       latMin: _value(ManualField.latMin),
@@ -130,6 +141,7 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
                             onHemisphereChanged: (value) => setState(() {
                               _north = value;
                               _invalid = const {};
+                              _isEmptyError = false;
                             }),
                           ),
                           const SizedBox(height: 16),
@@ -149,6 +161,7 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
                             onHemisphereChanged: (value) => setState(() {
                               _east = value;
                               _invalid = const {};
+                              _isEmptyError = false;
                             }),
                           ),
                         ],
@@ -165,8 +178,12 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (_invalid.isNotEmpty) ...[
-                            _ErrorBox(strings.invalidCoords),
+                          if (_invalid.isNotEmpty || _isEmptyError) ...[
+                            _ErrorBox(
+                              _isEmptyError
+                                  ? strings.emptyCoords
+                                  : strings.invalidCoords,
+                            ),
                             const SizedBox(height: 14),
                           ],
                           PrimaryButton(
@@ -281,11 +298,14 @@ class _CoordinateCard extends StatelessWidget {
               Expanded(
                 child: Text(title, style: appText(size: 17, weight: 700)),
               ),
-              _HemisphereSwitch(
-                positive: positive,
-                negative: negative,
-                isPositive: isPositive,
-                onChanged: onHemisphereChanged,
+              // Nút "Tiếp" trên bàn phím phải sang ô số kế tiếp, không dừng ở đây.
+              ExcludeFocusTraversal(
+                child: _HemisphereSwitch(
+                  positive: positive,
+                  negative: negative,
+                  isPositive: isPositive,
+                  onChanged: onHemisphereChanged,
+                ),
               ),
             ],
           ),

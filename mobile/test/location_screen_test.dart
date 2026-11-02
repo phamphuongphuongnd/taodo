@@ -372,7 +372,7 @@ void main() {
 
   group('trang kết quả', () {
     testWidgets('bấm Xem mở trang kết quả với tọa độ lúc bấm', (tester) async {
-      final service = await _pumpApp(tester);
+      final service = await _pumpApp(tester, size: const Size(390, 1400));
       await _emit(tester, service, _hanoi);
 
       await tester.tap(_button('Xem'));
@@ -387,7 +387,7 @@ void main() {
     testWidgets('GPS đổi thì trang kết quả giữ nguyên, bấm lại ra mới', (
       tester,
     ) async {
-      final service = await _pumpApp(tester);
+      final service = await _pumpApp(tester, size: const Size(390, 1400));
       await _emit(tester, service, _hanoi);
       await tester.tap(_button('Xem'));
       await tester.pumpAndSettle();
@@ -416,7 +416,7 @@ void main() {
     testWidgets('đổi ngôn ngữ áp dụng ngay cho cả hai màn hình', (
       tester,
     ) async {
-      final service = await _pumpApp(tester);
+      final service = await _pumpApp(tester, size: const Size(390, 1400));
       await _emit(tester, service, _hanoi);
       await tester.tap(_button('Xem'));
       await tester.pumpAndSettle();

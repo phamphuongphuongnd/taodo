@@ -77,10 +77,11 @@ void main() {
 
   testWidgets('6-02 N1=Đ: ô trống => tính là 0', (tester) async {
     await _open(tester);
+    await _fill(tester, ['21']);
     await tapButton(tester, 'Xem');
     final shown = find.byType(ResultScreen).evaluate().isNotEmpty;
     expect(shown, isTrue);
-    expect(_resultCoords(tester), '00°00\'00"N 00°00\'00"E');
+    expect(_resultCoords(tester), '21°00\'00"N 00°00\'00"E');
   });
 
   // ---- G2 _clearError (N2) ----
@@ -271,8 +272,9 @@ void main() {
     await tester.pump();
     final eastSelected = _selectedSemantics('E').evaluate().isNotEmpty;
     expect(eastSelected, isTrue);
+    await _fill(tester, ['21']);
     await tapButton(tester, 'Xem');
-    expect(_resultCoords(tester), '00°00\'00"N 00°00\'00"E');
+    expect(_resultCoords(tester), '21°00\'00"N 00°00\'00"E');
   });
 
   // ---- G10 _HemisphereOption (N7, N8, N9) ----

@@ -121,7 +121,12 @@ class _LocationScreenState extends State<LocationScreen>
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           if (coordsText != null)
-                            _Measuring(coordsText, strings: strings)
+                            _Measuring(
+                              coordsText,
+                              strings: strings,
+                              isStale:
+                                  state is LocationAvailable && state.isStale,
+                            )
                           else
                             _Status(
                               state: state,
@@ -285,10 +290,17 @@ class _RingsPainter extends CustomPainter {
 }
 
 class _Measuring extends StatelessWidget {
-  const _Measuring(this.coordsText, {required this.strings});
+  const _Measuring(
+    this.coordsText, {
+    required this.strings,
+    required this.isStale,
+  });
 
   final String coordsText;
   final AppStrings strings;
+
+  /// Số giữ lại từ trước, chưa phải số đang đo.
+  final bool isStale;
 
   @override
   Widget build(BuildContext context) {
@@ -297,15 +309,17 @@ class _Measuring extends StatelessWidget {
       children: [
         Row(
           children: [
-            const ExcludeSemantics(child: RepaintBoundary(child: _PingDot())),
-            const SizedBox(width: 12),
+            if (!isStale) ...[
+              const ExcludeSemantics(child: RepaintBoundary(child: _PingDot())),
+              const SizedBox(width: 12),
+            ],
             Expanded(
               child: Text(
-                strings.gpsMeasuring,
+                isStale ? strings.gpsLastKnown : strings.gpsMeasuring,
                 style: appText(
                   size: 13,
                   weight: 700,
-                  color: AppColors.accent,
+                  color: isStale ? AppColors.label : AppColors.accent,
                   letterSpacing: 0.78,
                 ),
               ),

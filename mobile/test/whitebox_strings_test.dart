@@ -268,8 +268,8 @@ void main() {
       ]);
       expect(
         vi.conclusionSentence(c),
-        'Vị trí này có 2 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về '
-        'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh '
+        'Vị trí này có 2 cung, mỗi cung một lần: Thiên Tài (Đại tài) thiên về '
+        'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) về công danh '
         'và đường sự nghiệp.',
       );
     });
@@ -299,7 +299,7 @@ void main() {
         en.conclusionSentence(c),
         'This location has 2 equally strong themes, 2 times each: '
         'Talent (Great) pointing to wealth and opportunities to prosper; Career '
-        '(High Office) pointing to status and career path.',
+        '(High Office) to status and career path.',
       );
     });
     test('6-31a vi, cung nổi bật duy nhất + cung khác 1 lần', () {
@@ -316,7 +316,7 @@ void main() {
         vi.conclusionSentence(c),
         'Vị trí này có 3 cung. Nổi bật nhất là Thiên Tài (Đại tài), 2 lần, '
         'thiên về tiền tài và cơ hội làm giàu. Bên cạnh đó, Quan Lộc (Đại quan) '
-        'thiên về công danh và đường sự nghiệp; Tai Họa thiên về vận hạn cần '
+        'thiên về công danh và đường sự nghiệp; Tai Họa về vận hạn cần '
         'cẩn trọng.',
       );
     });
@@ -335,7 +335,7 @@ void main() {
         'This location has 3 themes. The strongest is Talent '
         '(Great), 2 times, pointing to wealth and opportunities to prosper. '
         'Alongside this, Career (High Office) pointing to status and career path; '
-        'Misfortune pointing to setbacks that call for caution.',
+        'Misfortune to setbacks that call for caution.',
       );
     });
     test('6-31c vi, cung khác gặp nhiều lần ghi số lần', () {
@@ -371,7 +371,7 @@ void main() {
         vi.conclusionSentence(c),
         'Vị trí này có 3 cung. Nổi bật nhất là Thiên Tài (Đại tài) và Quan '
         'Lộc (Đại quan), mỗi cung 2 lần: Thiên Tài (Đại tài) thiên về tiền tài '
-        'và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh và đường '
+        'và cơ hội làm giàu; Quan Lộc (Đại quan) về công danh và đường '
         'sự nghiệp. Bên cạnh đó, Tai Họa thiên về vận hạn cần cẩn trọng.',
       );
     });
@@ -392,7 +392,7 @@ void main() {
         en.conclusionSentence(c),
         'This location has 3 themes. The strongest are Talent '
         '(Great) and Career (High Office), 3 times each: Talent (Great) pointing to wealth and '
-        'opportunities to prosper; Career (High Office) pointing to status and '
+        'opportunities to prosper; Career (High Office) to status and '
         'career path. Alongside this, Misfortune, 2 times, pointing to setbacks '
         'that call for caution.',
       );

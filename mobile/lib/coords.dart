@@ -1,3 +1,59 @@
+import 'dart:math' as math;
+
+/// Giữ số đứng yên khi người dùng không di chuyển, vì GPS dao động vài mét mỗi
+/// giây làm đổi số giây và kéo theo đổi cả Kết luận.
+class CoordsSmoother {
+  CoordsSmoother({
+    this.window = 8,
+    this.holdMeters = 12,
+    this.jumpMeters = 100,
+  });
+
+  /// Số lần đo gần nhất được lấy trung bình.
+  final int window;
+
+  /// Trung bình lệch ít hơn mức này so với số đang hiện thì giữ nguyên số.
+  final double holdMeters;
+
+  /// Lệch hơn mức này là vị trí mới thật, bỏ các lần đo cũ.
+  final double jumpMeters;
+
+  final _recent = <(double, double)>[];
+  (double, double)? _shown;
+
+  (double, double) add(double latitude, double longitude) {
+    final reading = (latitude, longitude);
+    final shown = _shown;
+    if (shown != null && _meters(shown, reading) > jumpMeters) reset();
+
+    _recent.add(reading);
+    if (_recent.length > window) _recent.removeAt(0);
+    final average = (
+      _recent.map((item) => item.$1).reduce((a, b) => a + b) / _recent.length,
+      _recent.map((item) => item.$2).reduce((a, b) => a + b) / _recent.length,
+    );
+
+    final current = _shown;
+    if (current == null || _meters(current, average) > holdMeters) {
+      _shown = average;
+    }
+    return _shown!;
+  }
+
+  void reset() {
+    _recent.clear();
+    _shown = null;
+  }
+
+  double _meters((double, double) a, (double, double) b) {
+    const metersPerDegree = 111320.0;
+    final north = (a.$1 - b.$1) * metersPerDegree;
+    final east =
+        (a.$2 - b.$2) * metersPerDegree * math.cos(a.$1 * math.pi / 180);
+    return math.sqrt(north * north + east * east);
+  }
+}
+
 /// Định dạng tọa độ kiểu `21°01'43"N 105°48'12"E`.
 String formatDmsCoords(double lat, double lon) {
   return '${_formatDms(lat, 'N', 'S')} ${_formatDms(lon, 'E', 'W')}';

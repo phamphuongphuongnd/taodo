@@ -9,6 +9,9 @@ import 'thien_cung_data.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
+/// Cung Thần Linh Trời Định, có câu điều kiện về căn nguyên.
+const _rootPalaceOrder = 3;
+
 /// Kết quả của một chuỗi tọa độ cố định, không nghe GPS.
 class ResultScreen extends StatelessWidget {
   const ResultScreen({
@@ -27,7 +30,9 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = LanguageScope.of(context).strings;
     final metrics = AppMetrics.of(context);
-    final matches = matchPairs(splitPairs(coordsText), table: table);
+    final pairs = splitPairs(coordsText);
+    final matches = matchPairs(pairs, table: table);
+    final skipped = _skipped(pairs, matches);
     final conclusion = buildConclusion(matches);
 
     return CupertinoPageScaffold(
@@ -39,7 +44,11 @@ class ResultScreen extends StatelessWidget {
             BackLink(label: strings.back),
             Expanded(
               child: matches.isEmpty
-                  ? _NoMatches(coordsText: coordsText, strings: strings)
+                  ? _NoMatches(
+                      coordsText: coordsText,
+                      pairs: pairs,
+                      strings: strings,
+                    )
                   : ListView(
                       padding: EdgeInsets.fromLTRB(
                         metrics.pageMargin,
@@ -67,15 +76,14 @@ class ResultScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
+                          child: _SmallNotes([
                             strings.resultNotice,
-                            style: appText(
-                              size: 13,
-                              weight: 400,
-                              color: AppColors.muted,
-                              height: 1.5,
-                            ),
-                          ),
+                            if (matches.any(
+                              (match) =>
+                                  match.group.palaceOrder == _rootPalaceOrder,
+                            ))
+                              strings.rootNote,
+                          ]),
                         ),
                         const SizedBox(height: 24),
                         Padding(
@@ -99,6 +107,15 @@ class ResultScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: _SmallNotes([
+                            strings.pairsLine(pairs),
+                            if (skipped.isNotEmpty)
+                              strings.skippedLine(skipped),
+                          ]),
+                        ),
                         const SizedBox(height: 16),
                         for (final (index, match) in matches.indexed)
                           _MatchRow(
@@ -116,10 +133,50 @@ class ResultScreen extends StatelessWidget {
   }
 }
 
+/// Các cặp không khớp dòng nào, không trùng, theo thứ tự đã tách.
+List<String> _skipped(List<String> pairs, List<PairMatch> matches) {
+  final matched = {for (final match in matches) match.pair};
+  return pairs.where((pair) => !matched.contains(pair)).toSet().toList();
+}
+
+/// Các dòng chú thích nhỏ.
+class _SmallNotes extends StatelessWidget {
+  const _SmallNotes(this.notes);
+
+  final List<String> notes;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final (index, note) in notes.indexed)
+          Padding(
+            padding: EdgeInsets.only(top: index == 0 ? 0 : 6),
+            child: Text(
+              note,
+              style: appText(
+                size: 13,
+                weight: 400,
+                color: AppColors.label,
+                height: 1.5,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
 class _NoMatches extends StatelessWidget {
-  const _NoMatches({required this.coordsText, required this.strings});
+  const _NoMatches({
+    required this.coordsText,
+    required this.pairs,
+    required this.strings,
+  });
 
   final String coordsText;
+  final List<String> pairs;
   final AppStrings strings;
 
   @override
@@ -173,6 +230,20 @@ class _NoMatches extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 280),
+                  child: Text(
+                    strings.pairsLine(pairs),
+                    textAlign: TextAlign.center,
+                    style: appText(
+                      size: 13,
+                      weight: 400,
+                      color: AppColors.label,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -213,14 +284,26 @@ class _ConclusionCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
+          if (!conclusion.isEmpty) ...[
+            Text(
+              strings.overallVerdict(conclusion),
+              style: appText(
+                size: AppMetrics.of(context).conclusionSize,
+                weight: 800,
+                letterSpacing: -0.1,
+                height: 1.35,
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
           Text(
             conclusion.isEmpty
                 ? strings.noConclusion
                 : strings.conclusionSentence(conclusion),
             style: appText(
-              size: AppMetrics.of(context).conclusionSize,
-              weight: 500,
-              letterSpacing: -0.1,
+              size: 15,
+              weight: 400,
+              color: AppColors.meaning,
               height: 1.5,
             ),
           ),

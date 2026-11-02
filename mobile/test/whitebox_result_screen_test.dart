@@ -330,7 +330,7 @@ void main() {
           'Vị trí này có 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, '
           'thiên về sự cần cù và kiên trì. Bên cạnh đó, '
           'Bảo Vệ thiên về giữ gìn thành quả và sự bình ổn; '
-          'Tai Họa thiên về vận hạn cần cẩn trọng.',
+          'Tai Họa về vận hạn cần cẩn trọng.',
         ),
         findsOneWidget,
       );
@@ -384,8 +384,8 @@ void main() {
         findsOneWidget,
       );
       // Số trời chưa có dữ liệu nên bị loại: còn 5 cung, mỗi cung 1 lần ⇒ không ghi số lần.
-      expect(find.textContaining('có 5 cung cùng nổi bật'), findsOneWidget);
-      expect(find.textContaining('mỗi cung'), findsNothing);
+      expect(find.textContaining('có 5 cung, mỗi cung một lần'), findsOneWidget);
+      expect(find.textContaining('mỗi cung 1 lần'), findsNothing);
 
       // Dòng 3 (Số trời): chưa có dữ liệu, có nhóm, không cảnh báo ⇒ nhóm màu nhãn, nét đứt.
       expect(_pairBoxAt(tester, 2).hasData, isFalse);
@@ -578,13 +578,13 @@ void main() {
     expect(find.text('WARNING'), findsNWidgets(2));
     expect(
       find.text(
-        'This location has 6 equally strong themes: '
+        'This location has 6 themes, once each: '
         'Fortune (Minor Fortune) pointing to wealth and opportunities to prosper; '
-        'Career (High Office) pointing to status and career path; '
-        'Intelligence (High IQ) pointing to intellect and the ability to learn; '
-        'Divine Destiny (Heavenly Fate) pointing to blessings ordained by heaven; '
-        'Romance (Misfortune) pointing to relationship troubles that need care; '
-        'Misfortune pointing to setbacks that call for caution.',
+        'Career (High Office) to status and career path; '
+        'Intelligence (High IQ) to intellect and the ability to learn; '
+        'Divine Destiny (Heavenly Fate) to blessings ordained by heaven; '
+        'Romance (Misfortune) to relationship troubles that need care; '
+        'Misfortune to setbacks that call for caution.',
       ),
       findsOneWidget,
     );

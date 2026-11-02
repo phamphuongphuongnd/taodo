@@ -20,6 +20,7 @@ class AppStrings {
     required this.latitude,
     required this.longitude,
     required this.invalidCoords,
+    required this.emptyCoords,
     required this.invalidField,
     required this.waitingForGps,
     required this.waitingHint,
@@ -27,6 +28,7 @@ class AppStrings {
     required this.resultNotice,
     required this.tableTitle,
     required this.tableBody,
+    required this.rootNote,
     required this.permissionDisclosure,
     required this.allowLocation,
     required this.permissionDenied,
@@ -50,6 +52,7 @@ class AppStrings {
     required this.detailsTitle,
     required this.warningBadge,
     required this.gpsMeasuring,
+    required this.gpsLastKnown,
     required this.liveOffline,
     required this.latitudeLabel,
     required this.longitudeLabel,
@@ -81,16 +84,21 @@ class AppStrings {
     invalidCoords:
         'Tọa độ không hợp lệ. Phút và giây phải dưới 60, vĩ độ tối đa 90°, '
         'kinh độ tối đa 180°.',
+    emptyCoords: 'Bạn chưa nhập tọa độ. Hãy nhập ít nhất một ô rồi bấm Xem.',
     invalidField: 'sai',
     waitingForGps: 'Đang chờ tín hiệu GPS…',
     waitingHint:
         'Hãy ra nơi thoáng, tránh mái che. Bật Wi-Fi có thể giúp nhanh hơn.',
     appIntro:
-        'Bấm Xem để biết ý nghĩa vị trí này theo các cặp số trong tọa độ và '
+        'Tọa Độ cho biết ý nghĩa của vị trí theo các cặp số trong tọa độ và '
         'Bảng số Thiên Cung.',
     resultNotice:
         'Tọa độ GPS dao động vài giây nên kết quả có thể khác giữa các lần đo. '
         'Nội dung chỉ mang tính tham khảo.',
+    rootNote:
+        'Căn nguyên là phúc phần có sẵn của mỗi người, từ gia đạo và những việc '
+        'lành đã làm. App không đo được điều này, nên hãy xem đây là lời nhắc '
+        'giữ đức và thận trọng.',
     tableTitle: 'Bảng số Thiên Cung',
     tableBody:
         'Mỗi cặp hai chữ số trong bảng ứng với một cung và một ý nghĩa. App tách '
@@ -133,6 +141,7 @@ class AppStrings {
     detailsTitle: 'CHI TIẾT THEO CẶP SỐ',
     warningBadge: 'CẢNH BÁO',
     gpsMeasuring: 'GPS ĐANG ĐO',
+    gpsLastKnown: 'SỐ ĐO TRƯỚC · ĐANG ĐO LẠI',
     liveOffline: 'Cập nhật liên tục · Chạy offline',
     latitudeLabel: 'VĨ ĐỘ',
     longitudeLabel: 'KINH ĐỘ',
@@ -159,17 +168,24 @@ class AppStrings {
     invalidCoords:
         'Invalid coordinates. Minutes and seconds must be under 60, latitude '
         'at most 90°, longitude at most 180°.',
+    emptyCoords:
+        'You have not entered any coordinates. Fill in at least one box, then '
+        'tap View.',
     invalidField: 'invalid',
     waitingForGps: 'Waiting for GPS signal…',
     waitingHint:
         'Move to an open area away from roofs. Turning on Wi-Fi may speed '
         'this up.',
     appIntro:
-        'Tap View to see what this location means, based on the number pairs '
-        'in its coordinates and the Thien Cung table.',
+        'Toa Do shows what a location means, based on the number pairs in its '
+        'coordinates and the Thien Cung table.',
     resultNotice:
         'GPS coordinates drift by a few seconds, so results can differ between '
         'readings. This content is for reference only.',
+    rootNote:
+        'A karmic root is the merit each person carries from family and past '
+        'good deeds. The app cannot measure it, so read this as a reminder to '
+        'stay virtuous and careful.',
     tableTitle: 'The Thien Cung table',
     tableBody:
         'Each two-digit pair in the table belongs to a theme with its own '
@@ -214,6 +230,7 @@ class AppStrings {
     detailsTitle: 'DETAILS BY NUMBER PAIR',
     warningBadge: 'WARNING',
     gpsMeasuring: 'GPS ACTIVE',
+    gpsLastKnown: 'PREVIOUS READING · UPDATING',
     liveOffline: 'Live updates · Works offline',
     latitudeLabel: 'LATITUDE',
     longitudeLabel: 'LONGITUDE',
@@ -239,6 +256,7 @@ class AppStrings {
   final String latitude;
   final String longitude;
   final String invalidCoords;
+  final String emptyCoords;
   final String invalidField;
   final String waitingForGps;
   final String waitingHint;
@@ -246,6 +264,7 @@ class AppStrings {
   final String resultNotice;
   final String tableTitle;
   final String tableBody;
+  final String rootNote;
   final String permissionDisclosure;
   final String allowLocation;
   final String permissionDenied;
@@ -269,6 +288,7 @@ class AppStrings {
   final String detailsTitle;
   final String warningBadge;
   final String gpsMeasuring;
+  final String gpsLastKnown;
   final String liveOffline;
   final String latitudeLabel;
   final String longitudeLabel;
@@ -309,6 +329,17 @@ class AppStrings {
   /// Đọc thành lời cho nhãn `×N` cạnh một dòng có cặp số lặp lại.
   String timesSpoken(int count) => _isVi ? '$count lần' : '$count times';
 
+  /// Mọi cặp số tách được, để người dùng tự kiểm tra.
+  String pairsLine(List<String> pairs) => _isVi
+      ? 'Tọa độ tách được ${pairs.length} cặp số: ${pairs.join(', ')}.'
+      : 'The coordinates split into ${pairs.length} pairs: '
+            '${pairs.join(', ')}.';
+
+  /// Các cặp số không có trong bảng nên không hiện dòng nào.
+  String skippedLine(List<String> pairs) => _isVi
+      ? 'Không có trong bảng nên bỏ qua: ${pairs.join(', ')}.'
+      : 'Not in the table, so skipped: ${pairs.join(', ')}.';
+
   /// Số dòng trong danh sách chi tiết.
   String rowCount(int count) {
     if (_isVi) return '$count dòng';
@@ -342,6 +373,23 @@ class AppStrings {
     return groups.isEmpty ? palace : '$palace (${joinList(groups)})';
   }
 
+  /// Đánh giá chung, đứng trước câu chính của Kết luận.
+  String overallVerdict(Conclusion conclusion) {
+    final warningRows = conclusion.warnings.toSet();
+    final hasGood = conclusion.all.any(
+      (tally) => tally.groups.any((row) => !warningRows.contains(row)),
+    );
+    if (warningRows.isEmpty) {
+      return _isVi ? 'Nhìn chung: thuận lợi' : 'Overall: favorable';
+    }
+    if (hasGood) {
+      return _isVi
+          ? 'Nhìn chung: có thuận lợi, nhưng cần thận trọng'
+          : 'Overall: favorable, with some cautions';
+    }
+    return _isVi ? 'Nhìn chung: cần thận trọng' : 'Overall: take care';
+  }
+
   /// Câu chính của Kết luận. Các cung trong `top` có cùng số lần.
   String conclusionSentence(Conclusion conclusion) {
     final top = conclusion.top;
@@ -364,6 +412,12 @@ class AppStrings {
                   '$_leansTo ${_aspect(top.first)}.'
             : 'This location stands out for $topLabels${_topNote(count)}, '
                   '$_leansTo ${_aspect(top.first)}.';
+      }
+      // Mỗi cung một lần thì không cung nào thật sự nổi bật.
+      if (count == 1) {
+        return _isVi
+            ? 'Vị trí này có $total cung, mỗi cung một lần: ${_describe(top)}.'
+            : 'This location has $total themes, once each: ${_describe(top)}.';
       }
       return _isVi
           ? 'Vị trí này có $total cung cùng nổi bật$eachNote: '
@@ -390,14 +444,15 @@ class AppStrings {
 
   String get _leansTo => _isVi ? 'thiên về' : 'pointing to';
 
-  /// `A thiên về a; B thiên về b; C thiên về c`. Nối bằng dấu chấm phẩy vì tên
-  /// cung và ý diễn giải đều có thể chứa chữ "và".
+  /// `A thiên về a; B về b; C về c`. Nối bằng dấu chấm phẩy vì tên cung và ý
+  /// diễn giải đều có thể chứa chữ "và".
   String _describe(List<PalaceTally> tallies, {bool withTimes = false}) {
+    final next = _isVi ? 'về' : 'to';
     return [
-      for (final tally in tallies)
+      for (final (index, tally) in tallies.indexed)
         '${_tallyLabel(tally)}'
             '${withTimes ? _timesNote(tally.count) : ''} '
-            '$_leansTo ${_aspect(tally)}',
+            '${index == 0 ? _leansTo : next} ${_aspect(tally)}',
     ].join('; ');
   }
 

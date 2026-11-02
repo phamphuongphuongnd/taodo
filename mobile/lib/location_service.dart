@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'coords.dart';
+
 sealed class LocationState {
   const LocationState();
 }
@@ -26,10 +28,17 @@ final class LocationServiceDisabled extends LocationState {
 }
 
 final class LocationAvailable extends LocationState {
-  const LocationAvailable(this.latitude, this.longitude);
+  const LocationAvailable(
+    this.latitude,
+    this.longitude, {
+    this.isStale = false,
+  });
 
   final double latitude;
   final double longitude;
+
+  /// Số giữ lại từ trước, chưa có lần đo mới xác nhận.
+  final bool isStale;
 }
 
 abstract class LocationService {
@@ -60,6 +69,7 @@ class GeolocatorLocationService implements LocationService {
   GeolocatorLocationService({
     this.signalTimeout = const Duration(seconds: 60),
     this.retryDelay = const Duration(seconds: 5),
+    this.staleTimeout = const Duration(seconds: 15),
   });
 
   /// Lâu hơn mức này không có số mới thì coi như mất tín hiệu, để không hiện số
@@ -69,6 +79,10 @@ class GeolocatorLocationService implements LocationService {
   /// Luồng vị trí lỗi hoặc đóng mà sau chừng này chưa có số mới thì mở lại.
   final Duration retryDelay;
 
+  /// Số giữ lại khi quay về màn hình chính chỉ được hiện chừng này.
+  final Duration staleTimeout;
+
+  final _smoother = CoordsSmoother();
   final _controller = StreamController<LocationState>.broadcast();
   StreamSubscription<Position>? _position;
   StreamSubscription<ServiceStatus>? _serviceStatus;
@@ -100,8 +114,15 @@ class GeolocatorLocationService implements LocationService {
       await _stopPosition();
       await _serviceStatus?.cancel();
       _serviceStatus = null;
-      // Khi quay lại app, người dùng có thể đã đi nơi khác nên phải chờ số mới.
-      if (!keepLast && _state is LocationAvailable) {
+      final state = _state;
+      if (state is! LocationAvailable) return;
+      if (keepLast) {
+        _emit(
+          LocationAvailable(state.latitude, state.longitude, isStale: true),
+        );
+      } else {
+        // Khi quay lại app, người dùng có thể đã đi nơi khác nên phải chờ số mới.
+        _smoother.reset();
         _emit(const LocationWaiting());
       }
     });
@@ -189,9 +210,11 @@ class GeolocatorLocationService implements LocationService {
     }
 
     if (_position != null) return;
-    // Số giữ lại từ [suspend] vẫn hết hạn nếu không có số mới.
+    // Số giữ lại từ [suspend] hết hạn nhanh nếu không có số mới.
     if (_state is LocationAvailable) {
-      _restartSignalTimer();
+      _restartSignalTimer(
+        staleTimeout < signalTimeout ? staleTimeout : signalTimeout,
+      );
     } else {
       _emit(const LocationWaiting());
     }
@@ -202,13 +225,20 @@ class GeolocatorLocationService implements LocationService {
 
   void _onPosition(Position position) {
     _retryTimer?.cancel();
-    _emit(LocationAvailable(position.latitude, position.longitude));
-    _restartSignalTimer();
+    final (latitude, longitude) = _smoother.add(
+      position.latitude,
+      position.longitude,
+    );
+    _emit(LocationAvailable(latitude, longitude));
+    _restartSignalTimer(signalTimeout);
   }
 
-  void _restartSignalTimer() {
+  void _restartSignalTimer(Duration timeout) {
     _signalTimer?.cancel();
-    _signalTimer = Timer(signalTimeout, () => _emit(const LocationWaiting()));
+    _signalTimer = Timer(timeout, () {
+      _smoother.reset();
+      _emit(const LocationWaiting());
+    });
   }
 
   void _onPositionError(Object error) {

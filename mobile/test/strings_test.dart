@@ -42,9 +42,9 @@ void main() {
     test('ví dụ chuẩn tính các cung có dữ liệu, bằng nhau thì nêu hết', () {
       expect(
         vi.conclusionSentence(_conclusionOf(_exampleCoords)),
-        'Vị trí này có 3 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về '
-        'tiền tài và cơ hội làm giàu; Tích Lũy Tài Sản thiên về tích góp của '
-        'cải bền lâu; Chăm Chỉ thiên về sự cần cù và kiên trì.',
+        'Vị trí này có 3 cung, mỗi cung một lần: Thiên Tài (Đại tài) thiên về '
+        'tiền tài và cơ hội làm giàu; Tích Lũy Tài Sản về tích góp của '
+        'cải bền lâu; Chăm Chỉ về sự cần cù và kiên trì.',
       );
     });
 
@@ -55,17 +55,17 @@ void main() {
       final romance = lookupPair('38').single;
       expect(
         vi.conclusionSentence(conclusion),
-        'Vị trí này có 3 cung cùng nổi bật: Thiên Tài (Đại tài) thiên về '
-        'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) thiên về công danh '
-        'và đường sự nghiệp; Đào Hoa (May mắn) thiên về nhân duyên và tình cảm.',
+        'Vị trí này có 3 cung, mỗi cung một lần: Thiên Tài (Đại tài) thiên về '
+        'tiền tài và cơ hội làm giàu; Quan Lộc (Đại quan) về công danh '
+        'và đường sự nghiệp; Đào Hoa (May mắn) về nhân duyên và tình cảm.',
       );
       expect(
         en.conclusionSentence(conclusion),
-        'This location has 3 equally strong themes: '
+        'This location has 3 themes, once each: '
         '${talent.palaceEn} (${talent.groupEn}) pointing to wealth and '
-        'opportunities to prosper; ${career.palaceEn} (${career.groupEn}) pointing '
+        'opportunities to prosper; ${career.palaceEn} (${career.groupEn}) '
         'to status and career path; ${romance.palaceEn} (${romance.groupEn}) '
-        'pointing to relationships and affection.',
+        'to relationships and affection.',
       );
     });
 
@@ -116,8 +116,8 @@ void main() {
         'Vị trí này có 4 cung. Nổi bật nhất là Bảo Vệ, 4 lần, thiên về '
         'giữ gìn thành quả và sự bình ổn. Bên cạnh đó, Thiên Tài (Trung tài và '
         'Tiểu tài), 2 lần, thiên về tiền tài và cơ hội làm giàu; Thông Minh '
-        '(IQ cao) thiên về trí tuệ và khả năng học hỏi; Thần Linh Trời Định '
-        '(Số trời) thiên về phúc phận do trời định.',
+        '(IQ cao) về trí tuệ và khả năng học hỏi; Thần Linh Trời Định '
+        '(Số trời) về phúc phận do trời định.',
       );
     });
 
@@ -128,9 +128,9 @@ void main() {
         'This location has 4 themes. The strongest is Protection, '
         '4 times, pointing to safeguarding achievements and stability. Alongside '
         'this, Fortune (Moderate Fortune and Minor Fortune), 2 times, pointing to '
-        'wealth and opportunities to prosper; Intelligence (High IQ) pointing to '
+        'wealth and opportunities to prosper; Intelligence (High IQ) to '
         'intellect and the ability to learn; Divine Destiny (Heavenly Fate) '
-        'pointing to blessings ordained by heaven.',
+        'to blessings ordained by heaven.',
       );
     });
 
@@ -140,20 +140,20 @@ void main() {
         vi.conclusionSentence(conclusion),
         'Vị trí này có 3 cung. Nổi bật nhất là Chăm Chỉ, 3 lần, thiên về '
         'sự cần cù và kiên trì. Bên cạnh đó, Đào Hoa (Tai họa) thiên về sóng '
-        'gió tình cảm cần giữ gìn; Tai Họa thiên về vận hạn cần cẩn trọng.',
+        'gió tình cảm cần giữ gìn; Tai Họa về vận hạn cần cẩn trọng.',
       );
       expect(
         en.conclusionSentence(conclusion),
         'This location has 3 themes. The strongest is Diligence, '
         '3 times, pointing to steady effort and perseverance. Alongside this, Romance '
-        '(Misfortune) pointing to relationship troubles that need care; Misfortune pointing to '
+        '(Misfortune) pointing to relationship troubles that need care; Misfortune to '
         'setbacks that call for caution.',
       );
       // Chỉ có hai cung Tai Họa bằng nhau thì không còn cung khác.
       expect(
         vi.conclusionSentence(_conclusionOf('16')),
-        'Vị trí này có 2 cung cùng nổi bật: Đào Hoa (Tai họa) thiên về '
-        'sóng gió tình cảm cần giữ gìn; Tai Họa thiên về vận hạn cần cẩn trọng.',
+        'Vị trí này có 2 cung, mỗi cung một lần: Đào Hoa (Tai họa) thiên về '
+        'sóng gió tình cảm cần giữ gìn; Tai Họa về vận hạn cần cẩn trọng.',
       );
     });
 
