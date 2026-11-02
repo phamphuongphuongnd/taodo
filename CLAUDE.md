@@ -3,6 +3,8 @@
 Thông tin riêng của dự án (mục đích, loại dự án, ngôn ngữ & stack, thư mục chính, lệnh chạy / test / kiểm tra
 biên dịch) nằm ở mục **Tổng quan dự án** trong `lmm-wiki/index.md`. Tài liệu các phiên đã làm lưu ở `planhistory/`.
 
+Thư mục kết quả whitebox: test-output/whitebox
+
 > **Dự án mới** (mục Tổng quan còn trống và người dùng bắt đầu nói ý tưởng): chưa có `.git` thì đưa lệnh `git init`
 > cho người dùng **tự chạy** → chạy skill `brainstorming` → chốt tên, loại dự án, stack, thư mục, lệnh → ghi vào mục
 > Tổng quan → bỏ comment nhóm stack trong `.gitignore` → ghi 1 dòng `lmm-wiki/log.md`. Chỉ commit khi người dùng
