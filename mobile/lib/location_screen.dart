@@ -26,6 +26,7 @@ class _LocationScreenState extends State<LocationScreen>
     with WidgetsBindingObserver {
   LocationState _state = const LocationWaiting();
   late final StreamSubscription<LocationState> _subscription;
+  bool _covered = false;
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _LocationScreenState extends State<LocationScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        unawaited(widget.locationService.refresh());
+        if (!_covered) unawaited(widget.locationService.refresh());
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
         unawaited(widget.locationService.pause());
@@ -58,29 +59,26 @@ class _LocationScreenState extends State<LocationScreen>
     }
   }
 
+  /// Mở trang che màn chính; GPS nghỉ tới khi quay lại để đỡ tốn pin.
+  Future<void> _openCovering(WidgetBuilder builder) async {
+    final navigator = Navigator.of(context);
+    _covered = true;
+    unawaited(widget.locationService.pause());
+    await navigator.push(CupertinoPageRoute<void>(builder: builder));
+    _covered = false;
+    if (mounted) unawaited(widget.locationService.refresh());
+  }
+
   void _openResult(String coordsText) {
-    unawaited(
-      Navigator.of(context).push(
-        CupertinoPageRoute<void>(
-          builder: (_) => ResultScreen(coordsText: coordsText),
-        ),
-      ),
-    );
+    unawaited(_openCovering((_) => ResultScreen(coordsText: coordsText)));
   }
 
   void _openAbout() {
-    unawaited(
-      Navigator.of(context)
-          .push(CupertinoPageRoute<void>(builder: (_) => const AboutScreen())),
-    );
+    unawaited(_openCovering((_) => const AboutScreen()));
   }
 
   void _openManualEntry() {
-    unawaited(
-      Navigator.of(context).push(
-        CupertinoPageRoute<void>(builder: (_) => const ManualEntryScreen()),
-      ),
-    );
+    unawaited(_openCovering((_) => const ManualEntryScreen()));
   }
 
   @override
@@ -101,7 +99,11 @@ class _LocationScreenState extends State<LocationScreen>
       backgroundColor: AppColors.screen,
       child: Stack(
         children: [
-          Positioned.fill(child: _Rings(pulsing: state is LocationWaiting)),
+          Positioned.fill(
+            child: RepaintBoundary(
+              child: _Rings(pulsing: state is LocationWaiting),
+            ),
+          ),
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -276,7 +278,7 @@ class _Measuring extends StatelessWidget {
       children: [
         Row(
           children: [
-            const ExcludeSemantics(child: _PingDot()),
+            const ExcludeSemantics(child: RepaintBoundary(child: _PingDot())),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -470,7 +472,7 @@ class _Waiting extends StatelessWidget {
           style: appText(size: 20, weight: 700, letterSpacing: -0.2),
         ),
         const SizedBox(height: 10),
-        const ExcludeSemantics(child: _BlinkingDots()),
+        const ExcludeSemantics(child: RepaintBoundary(child: _BlinkingDots())),
         const SizedBox(height: 32),
         ExcludeSemantics(
           child: FittedBox(

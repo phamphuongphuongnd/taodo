@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:toado/about_screen.dart';
 import 'package:toado/language_store.dart';
 import 'package:toado/location_service.dart';
 import 'package:toado/main.dart';
+import 'package:toado/manual_entry_screen.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/thien_cung.dart';
@@ -521,6 +523,103 @@ void main() {
       await tester.pumpWidget(const SizedBox());
 
       expect(service.disposeCount, 1);
+    });
+  });
+
+  group('trang che màn chính', () {
+    final pages = [
+      (
+        name: 'Nhập tay',
+        screen: ManualEntryScreen,
+        opener: () => _button('Nhập tay'),
+      ),
+      (
+        name: 'Thông tin',
+        screen: AboutScreen,
+        opener: () => find.byKey(const ValueKey('about-button')),
+      ),
+      (name: 'Kết quả', screen: ResultScreen, opener: () => _button('Xem')),
+    ];
+
+    Future<_FakeLocationService> pumpHome(WidgetTester tester) async {
+      final service = await _pumpApp(tester);
+      // Nút Xem chỉ bấm được khi đã có tọa độ.
+      await _emit(tester, service, _hanoi);
+      return service;
+    }
+
+    void toBackground(WidgetTester tester) {
+      tester.binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    }
+
+    void toForeground(WidgetTester tester) {
+      tester.binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    }
+
+    for (final page in pages) {
+      testWidgets('${page.name}: mở thì pause, quay lại thì refresh', (
+        tester,
+      ) async {
+        final service = await pumpHome(tester);
+        expect(service.pauseCount, 0);
+        expect(service.refreshCount, 1);
+
+        await tester.tap(page.opener());
+        await tester.pumpAndSettle();
+
+        expect(find.byType(page.screen), findsOneWidget);
+        expect(service.pauseCount, 1);
+        expect(service.refreshCount, 1);
+
+        await _goBack(tester);
+
+        expect(find.byType(page.screen), findsNothing);
+        expect(service.pauseCount, 1);
+        expect(service.refreshCount, 2);
+      });
+
+      testWidgets('${page.name}: app ra nền rồi quay lại không refresh', (
+        tester,
+      ) async {
+        final service = await pumpHome(tester);
+        await tester.tap(page.opener());
+        await tester.pumpAndSettle();
+
+        toBackground(tester);
+        expect(service.pauseCount, greaterThan(1));
+        expect(service.refreshCount, 1);
+
+        toForeground(tester);
+        await tester.pump();
+
+        expect(find.byType(page.screen), findsOneWidget);
+        expect(service.refreshCount, 1);
+
+        await _goBack(tester);
+
+        expect(service.refreshCount, 2);
+      });
+    }
+
+    testWidgets('quay lại rồi thì ra nền, về app lại refresh như thường', (
+      tester,
+    ) async {
+      final service = await pumpHome(tester);
+      await tester.tap(_button('Nhập tay'));
+      await tester.pumpAndSettle();
+      await _goBack(tester);
+      expect(service.refreshCount, 2);
+
+      toBackground(tester);
+      toForeground(tester);
+
+      expect(service.refreshCount, 3);
     });
   });
 

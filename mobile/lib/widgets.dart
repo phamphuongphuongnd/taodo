@@ -182,13 +182,18 @@ class LanguagePill extends StatelessWidget {
         border: AppColors.outline,
         horizontalPadding: 16,
         onPressed: onPressed,
-        child: _Label(
-          text: label,
-          style: appText(size: 14, weight: 600, color: AppColors.pillText),
-          leading: const Icon(
-            CupertinoIcons.globe,
-            size: 16,
-            color: AppColors.pillText,
+        // [spokenLabel] đã nêu tên ngôn ngữ; để chữ con vào cây semantics thì
+        // nó gộp vào cùng nút và TalkBack đọc lặp. Chỉ bọc phần chữ để nút vẫn
+        // giữ vai trò button và thao tác chạm.
+        child: ExcludeSemantics(
+          child: _Label(
+            text: label,
+            style: appText(size: 14, weight: 600, color: AppColors.pillText),
+            leading: const Icon(
+              CupertinoIcons.globe,
+              size: 16,
+              color: AppColors.pillText,
+            ),
           ),
         ),
       ),

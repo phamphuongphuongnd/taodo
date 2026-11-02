@@ -57,6 +57,13 @@ android {
     }
 }
 
+// Bản nộp Play (AAB) bắt buộc có khóa phát hành; APK dùng thử vẫn được ký khóa debug.
+gradle.taskGraph.whenReady {
+    if (!hasReleaseKey && allTasks.any { it.name == "bundleRelease" }) {
+        throw GradleException("Thiếu android/key.properties: không thể build AAB release bằng khóa debug.")
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17

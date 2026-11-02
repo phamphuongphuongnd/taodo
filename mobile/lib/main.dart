@@ -4,8 +4,8 @@ import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart'
     show LicenseEntryWithLineBreaks, LicenseRegistry;
-import 'package:flutter/material.dart' show DefaultMaterialLocalizations;
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'language_store.dart';
 import 'location_screen.dart';
@@ -114,15 +114,15 @@ class _ToaDoAppState extends State<ToaDoApp> with WidgetsBindingObserver {
         title: 'Tọa Độ',
         debugShowCheckedModeBanner: false,
         color: AppColors.screen,
-        // Locale này chỉ dành cho nhãn có sẵn của Cupertino, vốn chỉ có tiếng
-        // Anh. Chữ của app đi qua LanguageScope.
-        locale: const Locale('en'),
-        // Trang giấy phép là widget Material nên cần thêm bộ nhãn Material.
-        localizationsDelegates: const [
-          DefaultMaterialLocalizations.delegate,
-          DefaultCupertinoLocalizations.delegate,
-          DefaultWidgetsLocalizations.delegate,
+        // Locale này cho nhãn hệ thống (menu chọn chữ, trang giấy phép), đi theo
+        // ngôn ngữ app. Tên enum trùng mã ngôn ngữ. Chữ của app đi qua
+        // LanguageScope.
+        locale: Locale(language.name),
+        supportedLocales: [
+          for (final supported in AppLanguage.values) Locale(supported.name),
         ],
+        // Gồm cả bộ nhãn Material vì trang giấy phép và SelectionArea cần nó.
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         theme: CupertinoThemeData(
           brightness: Brightness.dark,
           primaryColor: AppColors.text,

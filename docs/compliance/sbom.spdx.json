@@ -5,7 +5,7 @@
   "name": "toado-1.0.0",
   "documentNamespace": "https://github.com/phamphuongphuongnd/taodo/sbom/1.0.0",
   "creationInfo": {
-    "created": "2026-11-01T10:25:37Z",
+    "created": "2026-11-02T08:35:26Z",
     "creators": [
       "Tool: toado-generate_sbom"
     ]
@@ -282,6 +282,16 @@
       ]
     },
     {
+      "name": "flutter_localizations",
+      "SPDXID": "SPDXRef-Package-flutter-localizations",
+      "versionInfo": "0.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
       "name": "flutter_test",
       "SPDXID": "SPDXRef-Package-flutter-test",
       "versionInfo": "0.0.0",
@@ -466,6 +476,22 @@
         {
           "algorithm": "SHA256",
           "checksumValue": "89ed75b2f8231fe676808c5564f9590d728024ded7ac782a7ed8474f1c95b72a"
+        }
+      ]
+    },
+    {
+      "name": "intl",
+      "SPDXID": "SPDXRef-Package-intl",
+      "versionInfo": "0.20.3",
+      "downloadLocation": "https://pub.dev/packages/intl/versions/0.20.3",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1ca20c894b1717686a2319b8548763d812bc0aabdac580420a44c5178c57a867"
         }
       ]
     },
@@ -1221,6 +1247,11 @@
     {
       "spdxElementId": "SPDXRef-Package-toado",
       "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-flutter-localizations"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-flutter-test"
     },
     {
@@ -1287,6 +1318,11 @@
       "spdxElementId": "SPDXRef-Package-toado",
       "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-image"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-toado",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-Package-intl"
     },
     {
       "spdxElementId": "SPDXRef-Package-toado",

@@ -14,13 +14,17 @@ String? formatManualCoords({
   required int lonSec,
   required bool east,
 }) {
-  final latTotal = _manualTotalSeconds(latDeg, latMin, latSec, 90);
-  final lonTotal = _manualTotalSeconds(lonDeg, lonMin, lonSec, 180);
-  if (latTotal == null || lonTotal == null) {
-    return null;
-  }
-  return '${_dmsText(latTotal, north ? 'N' : 'S')} '
-      '${_dmsText(lonTotal, east ? 'E' : 'W')}';
+  final invalid = invalidManualFields(
+    latDeg: latDeg,
+    latMin: latMin,
+    latSec: latSec,
+    lonDeg: lonDeg,
+    lonMin: lonMin,
+    lonSec: lonSec,
+  );
+  if (invalid.isNotEmpty) return null;
+  return '${_dmsText(_totalSeconds(latDeg, latMin, latSec), north ? 'N' : 'S')} '
+      '${_dmsText(_totalSeconds(lonDeg, lonMin, lonSec), east ? 'E' : 'W')}';
 }
 
 enum ManualField { latDeg, latMin, latSec, lonDeg, lonMin, lonSec }
@@ -47,7 +51,7 @@ Set<ManualField> invalidManualFields({
     final badSeconds = seconds < 0 || seconds > 59;
     if (badMinutes) yield minuteField;
     if (badSeconds) yield secondField;
-    final total = degrees * 3600 + minutes * 60 + seconds;
+    final total = _totalSeconds(degrees, minutes, seconds);
     if (degrees < 0 ||
         degrees > maxDegrees ||
         (!badMinutes && !badSeconds && total > maxDegrees * 3600)) {
@@ -77,17 +81,8 @@ Set<ManualField> invalidManualFields({
   };
 }
 
-int? _manualTotalSeconds(
-  int degrees,
-  int minutes,
-  int seconds,
-  int maxDegrees,
-) {
-  if (degrees < 0 || minutes < 0 || minutes > 59) return null;
-  if (seconds < 0 || seconds > 59) return null;
-  final total = degrees * 3600 + minutes * 60 + seconds;
-  return total <= maxDegrees * 3600 ? total : null;
-}
+int _totalSeconds(int degrees, int minutes, int seconds) =>
+    degrees * 3600 + minutes * 60 + seconds;
 
 /// Cắt bỏ phần lẻ của giây. Cộng thêm một lượng rất nhỏ để số đúng tròn giây
 /// không bị hụt 1 giây do sai số của phép tính số thực.

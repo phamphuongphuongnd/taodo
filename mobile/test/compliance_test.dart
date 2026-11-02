@@ -11,6 +11,7 @@ import 'package:toado/main.dart';
 import 'package:toado/result_screen.dart';
 import 'package:toado/strings.dart';
 import 'package:toado/theme.dart';
+import 'package:toado/widgets.dart';
 
 class _FakeLocationService implements LocationService {
   final _controller = StreamController<LocationState>.broadcast(sync: true);
@@ -180,6 +181,74 @@ void main() {
           .any((semantics) => semantics.properties.liveRegion == true);
       expect(region, isTrue);
     });
+  });
+
+  group('nút có nhãn đọc riêng không đọc lặp chữ hiển thị', () {
+    testWidgets('LanguagePill: nhãn đọc gồm đúng một câu, vẫn là nút bấm được', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      var taps = 0;
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: Center(
+            child: LanguagePill(
+              label: 'English',
+              spokenLabel: 'Đổi ngôn ngữ sang English',
+              onPressed: () => taps++,
+            ),
+          ),
+        ),
+      );
+
+      final pill = find.byType(LanguagePill);
+      final node = tester.getSemantics(pill);
+      expect(node.getSemanticsData().label, 'Đổi ngôn ngữ sang English');
+      expect(node, isSemantics(isButton: true, hasTapAction: true));
+
+      await tester.tap(pill);
+      expect(taps, 1);
+      handle.dispose();
+    });
+
+    testWidgets('CircleIconButton: nhãn đọc gồm đúng một câu, vẫn là nút', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: Center(
+            child: CircleIconButton(
+              icon: CupertinoIcons.info,
+              spokenLabel: 'Thông tin',
+              onPressed: () {},
+            ),
+          ),
+        ),
+      );
+
+      final node = tester.getSemantics(find.byType(CircleIconButton));
+      expect(node.getSemanticsData().label, 'Thông tin');
+      expect(node, isSemantics(isButton: true, hasTapAction: true));
+      handle.dispose();
+    });
+
+    for (final (language, spoken) in const [
+      (AppLanguage.vi, 'Đổi ngôn ngữ sang English'),
+      (AppLanguage.en, 'Change language to Vietnamese'),
+    ]) {
+      testWidgets('${language.name}: nút ngôn ngữ trong app thật', (
+        tester,
+      ) async {
+        final handle = tester.ensureSemantics();
+        await _pumpApp(tester, language: language);
+
+        final node = tester.getSemantics(find.byType(LanguagePill));
+        expect(node.getSemanticsData().label, spoken);
+        expect(node, isSemantics(isButton: true, hasTapAction: true));
+        handle.dispose();
+      });
+    }
   });
 
   group('chữ phóng to 200%', () {
