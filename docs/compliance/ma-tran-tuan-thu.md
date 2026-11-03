@@ -35,10 +35,10 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 | 5 | Chính sách ghi tên nhà phát triển và nhãn Privacy Policy | Đạt | Phiotron, đã đưa lên GitHub 03/11/2026 |
 | 5 | Chạy thử kín 12 người trong 14 ngày | **Bạn làm** | Bắt buộc với tài khoản cá nhân mới |
 | 5 | Xác minh nhà phát triển | **Bạn làm** | Thực hiện trong Play Console |
-| 5 | App hoàn thiện, không có phần dở dang | Một phần | 6 nhóm từng để trống đã được điền ngày 02/11/2026. Nội dung do Claude soạn nháp, bạn đã duyệt và sửa hai nhóm Thần Linh Trời Định và Linh Ứng. Còn cần xác nhận quyền nội dung |
+| 5 | App hoàn thiện, không có phần dở dang | Đạt | 6 nhóm từng để trống đã được điền ngày 02/11/2026. Nội dung do Claude soạn nháp, bạn đã duyệt và sửa hai nhóm Thần Linh Trời Định và Linh Ứng. Quyền nội dung đã xác nhận ngày 03/11/2026 |
 | 6 | Trừng phạt | Đạt theo phạm vi | Đợt đầu chỉ chọn Việt Nam trong Play Console |
 | 6 | Bản địa hóa | Đạt | Việt và Anh; định dạng tọa độ không đổi theo ngôn ngữ |
-| 6 | Quyền với nội dung | **Bạn làm** | Xác nhận quyền dùng Bảng số Thiên Cung và tên hiển thị; cân nhắc đăng ký nhãn hiệu |
+| 6 | Quyền với nội dung | Đạt theo xác nhận của chủ app | Ngày 03/11/2026 chủ app xác nhận tự soạn Bảng số Thiên Cung và phần ý nghĩa gốc; Claude biên tập câu chữ và dịch tiếng Anh. Cân nhắc đăng ký nhãn hiệu nếu muốn giữ tên |
 
 ## Không áp dụng trong phạm vi này
 
