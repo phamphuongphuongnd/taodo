@@ -40,7 +40,7 @@ Câu trả lời quyết định có phải nộp hồ sơ hay không.
 
 | Mục | Mô tả |
 |---|---|
-| Sản phẩm | Ứng dụng di động Tọa Độ, mã `com.phuong.toado`, phiên bản 1.0.0, Android (iOS chưa phát hành) |
+| Sản phẩm | Ứng dụng di động Tọa Độ, mã `com.phiotron.toado`, phiên bản 1.0.0, Android (iOS chưa phát hành) |
 | Chức năng | Lấy vị trí hiện tại của điện thoại, hiện kinh độ, vĩ độ dạng độ-phút-giây, tách chữ số thành cặp và tra Bảng số Thiên Cung để hiện ý nghĩa tham khảo. Người dùng cũng có thể tự nhập tọa độ |
 | Kênh phân phối | Google Play, miễn phí, chỉ phát hành tại Việt Nam |
 | Đối tượng | Người từ 18 tuổi, không hướng tới trẻ em |

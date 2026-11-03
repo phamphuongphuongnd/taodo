@@ -4,7 +4,7 @@ Tài liệu mô tả đúng những gì app đang có, tính đến lần cập 
 
 ## 1. Tóm tắt app
 
-- **Tên hiển thị:** Tọa Độ (`com.phuong.toado`, phiên bản 1.0.0).
+- **Tên hiển thị:** Tọa Độ (`com.phiotron.toado`, phiên bản 1.0.0).
 - **Nền tảng:** app native viết bằng Flutter, dùng bộ widget Cupertino trên cả Android và iOS. Mới build và thử trên
   Android; iOS chưa build.
 - **Việc app làm:** lấy tọa độ hiện tại từ GPS hoặc do người dùng nhập tay, tách thành các cặp số, tra trong Bảng số

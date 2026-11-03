@@ -10,7 +10,7 @@ updated: 2026-10-22
 > Wiki vận hành theo phương pháp Karpathy "LLM Wiki". Quy tắc đầy đủ ở [[SCHEMA]].
 
 ## Tổng quan dự án
-- **Tên:** Tọa Độ (`toado`, mã định danh `com.phuong.toado`).
+- **Tên:** Tọa Độ (`toado`, mã định danh `com.phiotron.toado`).
 - **Mục đích:** đo vị trí hiện tại offline, hiện tọa độ dạng `21°01'43"N 105°48'12"E`, tách thành cặp số và tra Bảng số Thiên Cung.
 - **Loại dự án:** app mobile native Android + iOS, không có server.
 - **Ngôn ngữ & stack:** Dart / Flutter, `geolocator`, `shared_preferences`.
