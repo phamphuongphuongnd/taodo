@@ -105,12 +105,17 @@ PLEASE NOTE
 First release: offline coordinates, manual entry, Thien Cung table lookup, Vietnamese and English.
 ```
 
-## Đồ họa cần chuẩn bị (bạn làm)
+## Đồ họa
 
-| Mục | Yêu cầu của Play | Gợi ý |
+Đã có sẵn ở `docs/store/`, dựng từ giao diện thật của app bằng `mobile/tool/store_assets_test.dart` với tọa độ mẫu
+của bản thiết kế (không lộ vị trí của ai). Đổi giao diện thì chạy lại trong `mobile/`:
+`flutter test tool/store_assets_test.dart`.
+
+| Mục | Yêu cầu của Play | File |
 |---|---|---|
-| Icon | PNG 32-bit, 512×512, tối đa 1 MB | Xuất lại từ ảnh nguồn của `flutter_launcher_icons.yaml` |
-| Ảnh nổi bật | JPEG hoặc PNG 24-bit, 1024×500 | Nền `#050608`, tên app và một dòng tọa độ màu `#6EE7B7` |
-| Ảnh chụp màn hình điện thoại | 2 đến 8 ảnh, cạnh ngắn tối thiểu 320 px, tỷ lệ không quá 2:1 | Màn hình chính có GPS, Nhập tay, Kết quả, Thông tin. Chụp cả bản tiếng Anh cho trang en-US |
+| Icon | PNG 32-bit, 512×512, tối đa 1 MB | `docs/store/icon-512.png` (RGBA, 15 KB) |
+| Ảnh bìa | JPEG hoặc PNG 24-bit không trong suốt, 1024×500 | `docs/store/vi/anh-bia-1024x500.png`, `docs/store/en/anh-bia-1024x500.png` |
+| Ảnh chụp màn hình điện thoại | 2 đến 8 ảnh, mỗi cạnh 320–3840 px, tỷ lệ không quá 2:1, không trong suốt | 4 ảnh 1080×1920 (RGB) mỗi ngôn ngữ trong `docs/store/vi/` và `docs/store/en/`: màn hình chính, kết quả, kết luận, nhập tay |
 
-Ảnh chụp phải là app thật, không thêm chữ quảng cáo che giao diện. Nên chụp ở nơi không lộ tọa độ nhà riêng.
+Tải bộ `vi/` cho trang tiếng Việt và bộ `en/` cho trang en-US. Ảnh không có thanh trạng thái của điện thoại; nếu muốn
+ảnh chụp từ máy thật thì thay bằng ảnh chụp ở nơi không lộ tọa độ nhà riêng.

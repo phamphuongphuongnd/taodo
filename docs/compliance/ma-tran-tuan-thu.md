@@ -1,6 +1,6 @@
 # Ma trận tuân thủ
 
-Đối chiếu app Tọa Độ 1.0.0 với tài liệu `tieu-chuan-ban-app-toan-cau.md` (cập nhật 28/10/2026). Phạm vi: Google Play, miễn phí, chủ yếu Việt Nam, tài khoản cá nhân. Ngày rà: 01/11/2026.
+Đối chiếu app Tọa Độ 1.0.0 với tài liệu `tieu-chuan-ban-app-toan-cau.md` (cập nhật 28/10/2026). Phạm vi: Google Play, miễn phí, chủ yếu Việt Nam, tài khoản cá nhân. Ngày rà: 01/11/2026, cập nhật 03/11/2026.
 
 Đây là tự đánh giá kỹ thuật, không phải chứng nhận và không phải tư vấn pháp lý.
 
@@ -30,6 +30,9 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 | 5 | Hỗ trợ trang bộ nhớ 16 KB | Đạt | `zipalign -c -P 16` đạt; thư viện native arm64 và x86_64 căn tối thiểu 16384 |
 | 5 | Công bố nổi bật kèm đồng ý | Đạt | Màn hình giải thích, kiểm trên máy thật |
 | 5 | Data safety, xếp hạng nội dung, đối tượng | **Bạn làm** | Câu trả lời soạn sẵn ở `khai-bao-play-console.md` |
+| 5 | Trang Play: mô tả, icon, ảnh bìa, ảnh chụp màn hình | Đạt | `trang-play.md`, ảnh ở `docs/store/` (03/11/2026). Bạn tải lên Play Console |
+| 5 | Chỉ xin quyền thật sự cần, không dịch vụ chạy nền | Đạt | APK chỉ có quyền vị trí chính xác và gần đúng (`aapt2 dump permissions`); vị trí chính xác cần vì 1 giây tọa độ khoảng 30 m. Dịch vụ của `geolocator` không chạy nền được, xem `khai-bao-play-console.md` |
+| 5 | Chính sách ghi tên nhà phát triển và nhãn Privacy Policy | Đạt | Phiotron, đã đưa lên GitHub 03/11/2026 |
 | 5 | Chạy thử kín 12 người trong 14 ngày | **Bạn làm** | Bắt buộc với tài khoản cá nhân mới |
 | 5 | Xác minh nhà phát triển | **Bạn làm** | Thực hiện trong Play Console |
 | 5 | App hoàn thiện, không có phần dở dang | Một phần | 6 nhóm từng để trống đã được điền ngày 02/11/2026. Nội dung do Claude soạn nháp, bạn đã duyệt và sửa hai nhóm Thần Linh Trời Định và Linh Ứng. Còn cần xác nhận quyền nội dung |

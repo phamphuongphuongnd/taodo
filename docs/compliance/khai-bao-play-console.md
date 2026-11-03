@@ -35,6 +35,7 @@ Google hướng dẫn dữ liệu xử lý hoàn toàn trên thiết bị không
 | Xếp hạng nội dung | Điền bảng câu hỏi trung thực. App không có bạo lực, nội dung người lớn, cờ bạc, mua bán hay tương tác giữa người dùng |
 | Quyền truy cập cho người kiểm duyệt | Mọi chức năng dùng được không cần tài khoản |
 | Dịch vụ vị trí nền | Không dùng |
+| Dịch vụ chạy nền (foreground service) | Không dùng. Manifest có `GeolocatorLocationService` loại `location` do thư viện `geolocator` tự thêm; app chỉ gắn vào dịch vụ này để nhận tọa độ khi đang mở, không xin `FOREGROUND_SERVICE` hay `FOREGROUND_SERVICE_LOCATION` nên không thể chạy nền. Không gỡ khỏi manifest: thiếu dịch vụ này thì `geolocator` bỏ luồng vị trí. Nếu Play Console vẫn hỏi, trả lời app không dùng dịch vụ chạy nền |
 
 ## Quyền nhạy cảm
 
