@@ -182,7 +182,11 @@ Chuyển trang kiểu iOS trượt ngang.
 
 ### Icon và màn hình mở app
 
-- **Icon app:** la bàn trên nền tối (`mobile/assets/icon/icon.png`); Android dùng icon thích ứng nên không còn khung trắng.
+- **Icon app:** dấu hiệu "Giao điểm Thiên Cung" trên nền tối: vĩ tuyến và kinh tuyến trắng cắt nhau, hai cung tròn và
+  ngôi sao 4 cánh màu xanh bạc hà ở giao điểm. Vẽ một lần trong `AppMarkPainter` (`mobile/lib/app_mark.dart`); chạy
+  `flutter test tool/app_icon_test.dart` để xuất `mobile/assets/icon/icon.png` và lớp trước của icon thích ứng Android,
+  rồi `dart run flutter_launcher_icons` cho icon iOS và Android 7 trở xuống. Android 8 trở lên dùng icon thích ứng nên
+  không còn khung trắng, và lớp đơn sắc dùng chính lớp trước.
 - **Màn hình mở app:** nền `#050608` trùng màu app trên cả Android và iOS nên không bị chớp sáng.
 
 ## 4. Từng màn hình
@@ -191,7 +195,7 @@ Ví dụ dưới đây dùng tiếng Việt. Khung bố cục chỉ thể hiện
 
 ### 4.1. Màn hình chính — `location_screen.dart`
 
-Là màn hình đầu tiên khi mở app. Thanh trên cùng có la bàn, tên app, nút Thông tin và nút đổi ngôn ngữ.
+Là màn hình đầu tiên khi mở app. Thanh trên cùng có dấu hiệu app (`AppMark`, cỡ 24), tên app, nút Thông tin và nút đổi ngôn ngữ.
 
 ```text
 ┌──────────────────────────────┐

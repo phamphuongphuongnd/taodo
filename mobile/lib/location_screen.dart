@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 
 import 'about_screen.dart';
+import 'app_mark.dart';
 import 'coords.dart';
 import 'language_store.dart';
 import 'location_service.dart';
@@ -201,7 +202,7 @@ class _TopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(CupertinoIcons.compass, size: 24, color: AppColors.text),
+          const AppMark(),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
