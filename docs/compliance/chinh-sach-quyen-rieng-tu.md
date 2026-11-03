@@ -1,10 +1,10 @@
-# Chính sách quyền riêng tư của app Tọa Độ
+# Chính sách quyền riêng tư của app Tọa Độ / Toa Do Privacy Policy
 
-Hiệu lực từ: 01/11/2026
+Hiệu lực từ / Effective date: 03/11/2026
 
 ## Tiếng Việt
 
-Tọa Độ là app xem kinh độ, vĩ độ và tra Bảng số Thiên Cung trên điện thoại. App được làm để không thu thập dữ liệu của bạn.
+Tọa Độ là app xem kinh độ, vĩ độ và tra Bảng số Thiên Cung trên điện thoại, do nhà phát triển Phiotron phát hành trên Google Play. App được làm để không thu thập dữ liệu của bạn.
 
 **Dữ liệu app dùng**
 
@@ -41,7 +41,7 @@ Chính sách thay đổi sẽ được cập nhật tại trang này kèm ngày 
 
 ## English
 
-Toa Do is an app for viewing longitude and latitude and looking up the Thien Cung number table on your phone. It is built not to collect your data.
+This privacy policy covers Toa Do, an app for viewing longitude and latitude and looking up the Thien Cung number table on your phone, published on Google Play by the developer Phiotron. It is built not to collect your data.
 
 **Data the app uses**
 

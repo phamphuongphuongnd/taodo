@@ -7,6 +7,7 @@ Câu trả lời soạn sẵn cho phiên bản 1.0.0. Giao diện Play Console c
 | Mục | Khai báo |
 |---|---|
 | Mã app | `com.phuong.toado` |
+| Tên nhà phát triển | Phiotron (tài khoản cá nhân); phải trùng với tên ghi trong chính sách quyền riêng tư |
 | Loại | Ứng dụng, miễn phí |
 | Danh mục gợi ý | Công cụ |
 | Quảng cáo | Không |
