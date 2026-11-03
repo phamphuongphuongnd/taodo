@@ -28,6 +28,12 @@ dart run tool/generate_sbom.dart
 flutter build appbundle --release
 ```
 
+File ra ở `mobile/build/app/outputs/bundle/release/app-release.aab`. Nếu máy thiếu `cmdline-tools` của Android SDK,
+Flutter báo "failed to strip debug symbols" dù file vẫn được tạo. Lần build ngày 03/11/2026 đã kiểm bằng `llvm-readelf`:
+mọi `.so` trong `base/lib/` đều không có `.symtab` hay `.debug_*`, căn trang tối thiểu 16 KB; ký hiệu debug nằm trong
+`BUNDLE-METADATA/` để Play giải mã báo cáo crash, không tải về máy người dùng. Cài `cmdline-tools` trong SDK Manager của
+Android Studio thì hết báo.
+
 Sau đó test trên máy thật: gỡ app rồi cài lại, xem màn hình giải thích, từ chối quyền, cấp quyền, Nhập tay, Thông tin, đổi ngôn ngữ, đo khi không có mạng.
 
 ## Tạo khóa ký

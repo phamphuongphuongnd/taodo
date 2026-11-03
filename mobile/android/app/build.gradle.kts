@@ -42,7 +42,8 @@ android {
     signingConfigs {
         if (hasReleaseKey) {
             create("release") {
-                storeFile = rootProject.file(keyProperties.getProperty("storeFile"))
+                // Tính từ android/app/ như hướng dẫn của Flutter: ../toado-release.jks là android/toado-release.jks.
+                storeFile = file(keyProperties.getProperty("storeFile"))
                 storePassword = keyProperties.getProperty("storePassword")
                 keyAlias = keyProperties.getProperty("keyAlias")
                 keyPassword = keyProperties.getProperty("keyPassword")
