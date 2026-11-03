@@ -21,8 +21,8 @@ Ký hiệu: **Đạt** có bằng chứng. **Một phần** làm xong phần c�
 | 3 | Bản đồ dữ liệu | Đạt | `ban-do-du-lieu.md` |
 | 3 | Chính sách quyền riêng tư | Một phần | `chinh-sach-quyen-rieng-tu.md`, tóm tắt trong app. Bạn dán link vào Play Console |
 | 3 | Đồng ý theo mục đích, không ép bật quyền | Đạt | Màn hình giải thích trước hộp thoại; từ chối vẫn dùng Nhập tay. Đã test cả 2 nhánh trên Galaxy A13 |
-| 3 | Đánh giá tác động tại Việt Nam, Điều 21 Luật 91/2025/QH15 | **Luật sư** | Dữ liệu không rời khỏi máy, nhưng vị trí chính xác là loại rủi ro cao |
-| 3 | Bộ phận bảo vệ dữ liệu, Điều 33(2) | **Luật sư** | Cần xác nhận có áp dụng với cá nhân không tiếp nhận dữ liệu không |
+| 3 | Đánh giá tác động tại Việt Nam, Điều 21 Luật 91/2025/QH15 | **Luật sư** | Bản nháp hồ sơ và 7 câu hỏi cho luật sư ở `danh-gia-tac-dong-du-lieu.md`. Nếu phải nộp: hạn 60 ngày kể từ ngày đầu xử lý |
+| 3 | Bộ phận bảo vệ dữ liệu, Điều 33(2) | **Luật sư** | Câu hỏi 6 trong `danh-gia-tac-dong-du-lieu.md` |
 | 3 | Kịch bản xử lý vi phạm | Đạt ở mức app | Không có máy chủ hay dữ liệu tập trung; quy trình lỗ hổng trong `quy-trinh-phat-hanh.md` |
 | 4 | Khả năng tiếp cận | Một phần | `bao-cao-tiep-can.md`. Còn TalkBack trên máy thật |
 | 4 | Thông báo giới hạn sử dụng | Đạt | Trang Thông tin: sai số, không dẫn đường, nội dung tham khảo |
